@@ -15,11 +15,18 @@ Single-file (`index.html`) + carpeta de frames + librerías por CDN. Cero build,
 
 ```
 .
-├── index.html          # la landing entera
-├── .nojekyll           # evita que Pages ignore carpetas
-├── frames/
-│   └── we-0001.webp … we-0193.webp   # secuencia optimizada (≈2.9 MB)
-└── .github/workflows/deploy.yml      # deploy CI opcional
+├── index.html              # la landing entera (HTML + CSS + JS embebidos)
+├── .nojekyll               # evita que Pages ignore carpetas
+├── assets/
+│   ├── frames/             # we-0001.webp … we-0193.webp (secuencia, ≈2.9 MB)
+│   ├── favicon/            # favicon.ico, png, apple-touch, site.webmanifest
+│   ├── img/                # eventos.webp
+│   └── brand/              # we-isotipo.svg, we-logotipo.svg (fuente del logo)
+└── .github/workflows/deploy.yml   # deploy CI opcional
+```
+
+> El material pesado no desplegable (video original, manuales, PNGs sin optimizar)
+> queda en `_source/`, que está en `.gitignore` y no se versiona.
 ```
 
 ## Correr en local
@@ -37,9 +44,9 @@ Los 193 frames originales (JPG 1280×720) se convirtieron a WebP con calidad 80:
 
 ```bash
 brew install webp   # cwebp
-for f in frames/out/frame_*.jpg; do
+for f in _source/frames-jpg/frame_*.jpg; do
   n=$(echo "$f" | sed -E 's/.*frame_0*([0-9]+)\.jpg/\1/')
-  cwebp -q 80 -m 6 -quiet "$f" -o "$(printf 'frames/we-%04d.webp' "$n")"
+  cwebp -q 80 -m 6 -quiet "$f" -o "$(printf 'assets/frames/we-%04d.webp' "$n")"
 done
 ```
 

@@ -10,12 +10,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=DM+Sans:opsz,wght@9..40,300..600&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="./frames/we-0001.webp">
-<link rel="icon" href="./favicon_io/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="32x32" href="./favicon_io/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="./favicon_io/favicon-16x16.png">
-<link rel="apple-touch-icon" href="./favicon_io/apple-touch-icon.png">
-<link rel="manifest" href="./favicon_io/site.webmanifest">
+<link rel="preload" as="image" href="./assets/frames/we-0001.webp">
+<link rel="icon" href="./assets/favicon/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png">
+<link rel="apple-touch-icon" href="./assets/favicon/apple-touch-icon.png">
+<link rel="manifest" href="./assets/favicon/site.webmanifest">
 <style>
 :root{
   --bg:#0d0a0a;
@@ -135,7 +135,8 @@ h1.hero-title b{font-weight:600}
 @keyframes rise{to{opacity:1;transform:translateY(0)}}
 .hero-lockup,h1.hero-title,.hero-sub,.type-line,.hero-ctas{transform:translateY(22px)}
 
-.btn{display:inline-flex;align-items:center;gap:.6rem;font-weight:500;font-size:.95rem;padding:.95rem 1.7rem;border-radius:9999px;transition:transform .4s var(--ease),box-shadow .4s var(--ease),background .4s var(--ease);cursor:pointer;border:none;font-family:'DM Sans'}
+.btn{display:inline-flex;align-items:center;gap:.5rem;font-weight:500;font-size:.84rem;padding:.66rem 1.25rem;border-radius:9999px;transition:transform .4s var(--ease),box-shadow .4s var(--ease),background .4s var(--ease);cursor:pointer;border:none;font-family:'DM Sans';white-space:nowrap}
+.btn svg{width:15px;height:15px}
 .btn-primary{background:var(--red);color:#fff;box-shadow:0 10px 30px -8px rgba(241,44,54,.55)}
 .btn-primary:hover{box-shadow:0 16px 40px -8px rgba(241,44,54,.8)}
 .btn-ghost{background:var(--surf2);border:1px solid var(--border2);color:var(--cream)}
@@ -213,18 +214,25 @@ h1.hero-title b{font-weight:600}
 .ba-layer{position:absolute;inset:0}
 .ba-before{background:linear-gradient(135deg,var(--surf),var(--surf2))}
 .ba-after{background:radial-gradient(circle at 50% 35%,rgba(241,44,54,.16),var(--surf));clip-path:inset(0 50% 0 0);z-index:2}
-.ba-tag{position:absolute;top:22px;font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;padding:.4rem .9rem;border-radius:9999px;border:1px solid var(--border2);white-space:nowrap;pointer-events:none}
-.ba-before .ba-tag{left:22px;color:var(--gray)}
-.ba-after .ba-tag{right:22px;color:var(--red);border-color:rgba(241,44,54,.45)}
-.ba-glyph{position:absolute;top:23%;left:50%;transform:translate(-50%,-50%);width:38px;height:61px}
+.ba-tag{position:absolute;top:20px;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;padding:.36rem .8rem;border-radius:9999px;border:1px solid var(--border2);white-space:nowrap;pointer-events:none;z-index:5}
+.ba-after .ba-tag{left:20px;color:var(--red);border-color:rgba(241,44,54,.45)}
+.ba-before .ba-tag{right:20px;color:var(--gray)}
+.ba-glyph{position:absolute;top:24%;left:50%;transform:translate(-50%,-50%);width:34px;height:55px}
 .ba-before .ba-glyph{color:var(--gray2)}
 .ba-after .ba-glyph{color:var(--red)}
-.ba-cap{position:absolute;top:54%;transform:translateY(-50%);width:46%;text-align:center;pointer-events:none;padding:0 22px}
-.ba-before .ba-cap{left:0}
-.ba-after .ba-cap{right:0}
-.ba-cap h3{font-family:'Fraunces';font-weight:500;font-size:1.4rem;line-height:1.1}
-.ba-cap p{color:var(--gray);font-size:.88rem;margin-top:.5rem}
+.ba-cap{position:absolute;top:56%;transform:translateY(-50%);width:48%;text-align:center;pointer-events:none;padding:0 20px;transition:opacity .3s var(--ease)}
+.ba-after .ba-cap{left:0}
+.ba-before .ba-cap{right:0}
+.ba-cap h3{font-family:'Fraunces';font-weight:500;font-size:1.5rem;line-height:1.12}
+.ba-cap p{color:var(--gray);font-size:.85rem;margin-top:.45rem}
 .ba-after .ba-cap h3{color:var(--cream)}
+@media(max-width:580px){
+  .ba-cap{width:50%;padding:0 12px;top:58%}
+  .ba-cap h3{font-size:1.12rem}
+  .ba-cap p{font-size:.76rem}
+  .ba-tag{font-size:.54rem;padding:.3rem .6rem}
+  .ba-after .ba-tag{left:12px}.ba-before .ba-tag{right:12px}
+}
 .ba-divider{position:absolute;top:0;bottom:0;left:50%;width:2px;background:var(--red);z-index:3;box-shadow:0 0 18px rgba(241,44,54,.5)}
 .ba-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:var(--chip-bg);backdrop-filter:blur(8px);border:1.5px solid var(--red);z-index:4;display:flex;align-items:center;justify-content:center;color:var(--red);box-shadow:0 0 24px -4px rgba(241,44,54,.6)}
 
@@ -312,11 +320,13 @@ footer{border-top:1px solid var(--border);padding:60px 0 36px}
 @media(max-width:580px){
   .wrap{padding:0 18px}
   .enc-grid{grid-template-columns:1fr}
-  .stats-grid{grid-template-columns:1fr 1fr}
-  .ba-wrap{height:360px}.ba-layer{padding:24px}
+  .ba-wrap{height:340px}.ba-layer{padding:20px}
   .foot-grid{grid-template-columns:1fr}
   h1.hero-title{font-size:2.8rem}
-  nav{gap:.8rem;padding:.5rem .5rem .5rem 1rem}
+  nav{gap:.8rem;padding:.7rem 18px}
+  .btn{font-size:.78rem;padding:.55rem 1rem;gap:.4rem}
+  .nav-cta{font-size:.76rem;padding:.5rem 1rem}
+  .hero-ctas{gap:.6rem}
 }
 
 /* ============================================================
@@ -384,6 +394,10 @@ nav.scrolled .nav-logo .logo-word{width:52px}
 .hz-intro p{color:var(--gray);font-size:1.05rem;margin-top:1.1rem;max-width:360px}
 .hz-card{width:min(74vw,360px);position:relative;border:1px solid var(--border2);border-radius:22px;padding:30px;background:linear-gradient(160deg,var(--surf),var(--surf2));overflow:hidden;transition:border-color .4s var(--ease)}
 .hz-card:hover{border-color:rgba(241,44,54,.4)}
+.hz-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:transform .8s var(--ease)}
+.hz-card:hover .hz-img{transform:scale(1.05)}
+.hz-card::after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(13,10,10,.3) 0%,rgba(13,10,10,.15) 32%,rgba(13,10,10,.93) 100%)}
+.hz-card>*:not(.hz-img){position:relative;z-index:2}
 .hz-card .hz-idx{font-family:'Fraunces';font-style:italic;color:var(--red);font-size:.95rem}
 .hz-card .hz-glyph{position:absolute;top:24px;right:26px;width:20px;height:32px;color:var(--red);opacity:.5}
 .hz-card h3{font-family:'Fraunces';font-weight:500;font-size:1.9rem;margin-top:auto}
@@ -415,21 +429,65 @@ nav.scrolled .nav-logo .logo-word{width:52px}
 .filo-by{margin-top:1.8rem;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(27,18,18,.55)}
 
 /* ===== VISITA · mapa + info ===== */
-.visit-grid{display:grid;grid-template-columns:.92fr 1.08fr;gap:30px;align-items:stretch;text-align:left;margin-top:46px;position:relative;z-index:2}
-.visit-info{display:flex;flex-direction:column;gap:22px;justify-content:center}
-.vi-block{border-left:2px solid var(--red);padding-left:16px}
-.vi-label{display:block;font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:var(--red);font-weight:600;margin-bottom:.5rem}
-.vi-val{font-family:'Fraunces';font-weight:400;font-size:1.18rem;color:var(--cream);line-height:1.4}
-.vi-link{color:var(--cream);border-bottom:1px solid var(--red);transition:color .3s var(--ease)}
-.vi-link:hover{color:var(--red)}
-.visit-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
-.map-frame{position:relative;border-radius:22px;overflow:hidden;border:1px solid var(--border2);min-height:400px;background:var(--surf2);box-shadow:0 30px 80px -40px rgba(0,0,0,.7)}
-.map-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;filter:invert(.92) hue-rotate(180deg) saturate(.75) contrast(.9) brightness(.95)}
-[data-theme="light"] .map-frame iframe{filter:saturate(.85) contrast(.95)}
-.map-veil{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(13,10,10,.12),transparent 22%);mix-blend-mode:normal}
+.visit-grid{display:grid;grid-template-columns:.86fr 1.14fr;gap:26px;align-items:stretch;text-align:left;margin-top:44px;position:relative;z-index:2}
+.visit-card{display:flex;flex-direction:column;gap:4px;padding:30px;border-radius:22px;border:1px solid var(--border);background:linear-gradient(165deg,var(--surf),var(--surf2));box-shadow:0 30px 70px -44px rgba(0,0,0,.7)}
+.vc-row{display:flex;gap:16px;align-items:flex-start;padding:18px 0;border-bottom:1px solid var(--border)}
+.vc-row:last-of-type{border-bottom:none}
+.vc-ico{flex:none;width:38px;height:38px;border-radius:11px;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;color:var(--red);background:var(--red-soft)}
+.vc-ico svg{width:19px;height:19px}
+.vc-k{display:block;font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gray);font-weight:600;margin-bottom:.45rem}
+.vc-v{font-family:'Fraunces';font-weight:400;font-size:1.15rem;color:var(--cream);line-height:1.35}
+.vc-sub{color:var(--gray);font-size:.92rem}
+.vc-hours{border-collapse:collapse;width:100%}
+.vc-hours td{padding:.18rem 0;font-size:.9rem;color:var(--cream);vertical-align:top}
+.vc-hours td:first-child{color:var(--gray);padding-right:18px;white-space:nowrap}
+.vc-hours td:last-child{font-family:'Fraunces';font-style:italic;text-align:right}
+.vc-closed{color:var(--red)!important}
+.vc-phone{font-family:'Fraunces';font-size:1.4rem;color:var(--cream);border-bottom:1px solid rgba(241,44,54,.5);transition:color .3s var(--ease)}
+.vc-phone:hover{color:var(--red)}
+.visit-ctas{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.map-frame{position:relative;border-radius:22px;overflow:hidden;border:1px solid var(--border2);min-height:430px;background:var(--surf2);box-shadow:0 36px 90px -44px rgba(0,0,0,.8),inset 0 0 0 1px rgba(241,44,54,.06)}
+.map-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;filter:grayscale(.35) invert(.9) hue-rotate(185deg) brightness(.92) contrast(.92) saturate(.7)}
+[data-theme="light"] .map-frame iframe{filter:grayscale(.3) contrast(1.02) saturate(.92)}
+.map-veil{position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 50%,transparent 55%,rgba(13,10,10,.5)),linear-gradient(180deg,rgba(13,10,10,.25),transparent 18%,transparent 80%,rgba(13,10,10,.4))}
+[data-theme="light"] .map-veil{background:radial-gradient(120% 90% at 50% 50%,transparent 60%,rgba(246,241,232,.4))}
+.map-open{position:absolute;bottom:16px;right:16px;z-index:3;display:inline-flex;align-items:center;gap:.4rem;font-size:.72rem;font-weight:500;color:#fff;padding:.5rem .85rem;border-radius:9999px;background:rgba(13,10,10,.7);backdrop-filter:blur(10px);border:1px solid rgba(241,44,54,.4);transition:background .3s var(--ease),transform .3s var(--ease)}
+.map-open:hover{background:var(--red);transform:translateY(-1px)}
+.map-open svg{width:13px;height:13px}
 @media(max-width:860px){
-  .visit-grid{grid-template-columns:1fr;gap:22px}
-  .map-frame{min-height:300px;order:-1}
+  .visit-grid{grid-template-columns:1fr;gap:18px}
+  .map-frame{min-height:320px;order:-1}
+  .visit-card{padding:22px}
+}
+
+/* ===== EVENTOS · Acción ===== */
+.eventos-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:44px;align-items:center}
+.eventos-media{position:relative;border-radius:22px;overflow:hidden;border:1px solid var(--border2);box-shadow:0 36px 90px -46px rgba(0,0,0,.85)}
+.eventos-media img{width:100%;height:100%;min-height:400px;object-fit:cover;display:block;transition:transform .9s var(--ease)}
+.eventos-media:hover img{transform:scale(1.04)}
+.eventos-media::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,transparent 55%,rgba(13,10,10,.55))}
+.eventos-badge{position:absolute;top:18px;left:18px;z-index:2;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#fff;font-weight:600;padding:.4rem .85rem;border-radius:9999px;background:var(--red);box-shadow:0 8px 24px -8px rgba(241,44,54,.7)}
+.eventos-copy .eyebrow{margin-bottom:1rem}
+.eventos-copy h2{font-size:clamp(2rem,4.6vw,3.3rem);font-weight:300;line-height:1.05}
+.eventos-copy h2 b{font-weight:600}
+.eventos-copy>p{color:var(--gray);font-size:1.05rem;margin:1.1rem 0 1.4rem;max-width:460px}
+.eventos-feats{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:1.7rem}
+.eventos-feats li{display:flex;gap:11px;align-items:flex-start;color:var(--cream);font-size:.94rem}
+.eventos-feats li::before{content:'';width:7px;height:7px;flex:none;margin-top:7px;border-radius:50%;background:var(--red)}
+@media(max-width:860px){.eventos-grid{grid-template-columns:1fr;gap:22px}.eventos-media img{min-height:260px}}
+
+/* ===== Section snap: cada sección encaja en pantalla ===== */
+html{scroll-snap-type:y proximity}
+.hero,#club,#seleccion,#encontras,#maridajes,#testimonios,.filo,#faq,#eventos,#visita{scroll-snap-align:start;scroll-snap-stop:normal}
+#club,#seleccion,#encontras,#maridajes,#testimonios,#faq,#eventos,#visita{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:96px;padding-bottom:72px}
+.filo{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+/* compactar club para que entre completo */
+.pc{padding:28px 24px}
+.pc-cost{font-size:2.3rem}
+.pc-feats{gap:9px;margin:12px 0 18px}
+@media(max-width:900px){
+  #club,#seleccion,#encontras,#maridajes,#testimonios,#faq,#eventos,#visita{min-height:auto}
+  html{scroll-snap-type:none}
 }
 
 /* ===== focus visible (a11y) ===== */
@@ -628,7 +686,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
     </div>
     <div class="prod-grid" id="prodGrid">
       <div class="prod-card">
-        <div class="pc-media"><img src="./frames/we-0010.webp" alt="Botella de vino tinto" loading="lazy" width="1280" height="720"></div>
+        <div class="pc-media"><img src="./assets/frames/we-0010.webp" alt="Botella de vino tinto" loading="lazy" width="1280" height="720"></div>
         <span class="pc-badge">Caja curada</span>
         <h3>Caja Descubrimiento</h3>
         <p class="pc-notes">6 botellas elegidas a mano. Tintos, blancos y un espumante para arrancar.</p>
@@ -636,7 +694,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
         <div class="pc-meta"><span><b>6</b> botellas</span><span><b>3</b> regiones</span><span><b>Regalo</b></span></div>
       </div>
       <div class="prod-card featured">
-        <div class="pc-media"><img src="./frames/we-0150.webp" alt="Copa de vino tinto" loading="lazy" width="1280" height="720"></div>
+        <div class="pc-media"><img src="./assets/frames/we-0150.webp" alt="Copa de vino tinto" loading="lazy" width="1280" height="720"></div>
         <span class="pc-badge">El más pedido</span>
         <h3>Malbec Gran Reserva</h3>
         <p class="pc-notes">Valle de Uco, 12 meses de roble. Ciruela, vainilla y un final largo y goloso.</p>
@@ -644,7 +702,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
         <div class="pc-meta"><span><b>14,5%</b> vol</span><span><b>2021</b></span><span><b>★ 4.9</b></span></div>
       </div>
       <div class="prod-card">
-        <div class="pc-media"><img src="./frames/we-0088.webp" alt="Servido de vino" loading="lazy" width="1280" height="720"></div>
+        <div class="pc-media"><img src="./assets/frames/we-0088.webp" alt="Servido de vino" loading="lazy" width="1280" height="720"></div>
         <span class="pc-badge">Para brindar</span>
         <h3>Brut Nature de la casa</h3>
         <p class="pc-notes">Método tradicional, burbuja fina y bien seco. El que nunca falla.</p>
@@ -689,6 +747,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
         <div class="hz-hint"><svg viewBox="0 0 30 8" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 4h28M24 1l4 3-4 3"/></svg> Deslizá</div>
       </div>
       <article class="hz-panel hz-card">
+        <img class="hz-img" src="./assets/frames/we-0010.webp" alt="" loading="lazy" width="1280" height="720">
         <span class="hz-glyph logo-iso"><svg><use href="#we-iso"/></svg></span>
         <div class="hz-idx">01</div>
         <h3>Tintos de autor</h3>
@@ -696,6 +755,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
         <span class="hz-tag">Valle de Uco</span>
       </article>
       <article class="hz-panel hz-card">
+        <img class="hz-img" src="./assets/frames/we-0045.webp" alt="" loading="lazy" width="1280" height="720">
         <span class="hz-glyph logo-iso"><svg><use href="#we-iso"/></svg></span>
         <div class="hz-idx">02</div>
         <h3>Espumantes</h3>
@@ -703,6 +763,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
         <span class="hz-tag">Para celebrar</span>
       </article>
       <article class="hz-panel hz-card">
+        <img class="hz-img" src="./assets/frames/we-0120.webp" alt="" loading="lazy" width="1280" height="720">
         <span class="hz-glyph logo-iso"><svg><use href="#we-iso"/></svg></span>
         <div class="hz-idx">03</div>
         <h3>Quesos &amp; fiambres</h3>
@@ -710,6 +771,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
         <span class="hz-tag">Tabla lista</span>
       </article>
       <article class="hz-panel hz-card">
+        <img class="hz-img" src="./assets/frames/we-0150.webp" alt="" loading="lazy" width="1280" height="720">
         <span class="hz-glyph logo-iso"><svg><use href="#we-iso"/></svg></span>
         <div class="hz-idx">04</div>
         <h3>Olivas &amp; conservas</h3>
@@ -717,6 +779,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
         <span class="hz-tag">Gourmet</span>
       </article>
       <article class="hz-panel hz-card">
+        <img class="hz-img" src="./assets/frames/we-0030.webp" alt="" loading="lazy" width="1280" height="720">
         <span class="hz-glyph logo-iso"><svg><use href="#we-iso"/></svg></span>
         <div class="hz-idx">05</div>
         <h3>Vinos naturales</h3>
@@ -724,6 +787,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
         <span class="hz-tag">Baja intervención</span>
       </article>
       <article class="hz-panel hz-card">
+        <img class="hz-img" src="./assets/frames/we-0185.webp" alt="" loading="lazy" width="1280" height="720">
         <span class="hz-glyph logo-iso"><svg><use href="#we-iso"/></svg></span>
         <div class="hz-idx">06</div>
         <h3>El final dulce</h3>
@@ -800,6 +864,32 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
   </div>
 </section>
 
+<!-- EVENTOS · Acción -->
+<section class="sec eventos-sec" id="eventos">
+  <div class="wrap">
+    <div class="eventos-grid">
+      <div class="eventos-media reveal">
+        <img src="./assets/img/eventos.webp" alt="Gente en un evento en el patio de We" loading="lazy" width="1536" height="1024">
+        <span class="eventos-badge">Acción · Eventos</span>
+      </div>
+      <div class="eventos-copy reveal">
+        <span class="eyebrow">Eventos a medida</span>
+        <h2>Tu festejo, <b class="red-text">servido</b></h2>
+        <p>Armamos tu mini-evento para 15 a 20 personas: un cumple, una reunión o una excusa para juntarse. Elegimos los vinos, los quesos y la picada, y nos ocupamos de todo.</p>
+        <ul class="eventos-feats">
+          <li>En el local, en el patio delantero o trasero según convenga</li>
+          <li>O a domicilio: llevamos todo a donde sea</li>
+          <li>Coctelería a medida, vinos y espumantes</li>
+          <li>Servicio de mozo y barman incluido</li>
+        </ul>
+        <a href="https://wa.me/5493435172449" target="_blank" rel="noopener" class="btn btn-primary">Armar mi evento
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CTA FINAL · Vení a descorchar + mapa -->
 <section class="cta-final" id="visita">
   <div class="glowc"></div>
@@ -810,34 +900,42 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
       <p>Pasá por la vinería en Crespo o escribinos. Te ayudamos a encontrar tu próxima botella favorita.</p>
     </div>
     <div class="visit-grid reveal">
-      <div class="visit-info">
-        <div class="vi-block">
-          <span class="vi-label">Dónde</span>
-          <p class="vi-val">We · Cava &amp; Gourmet<br>Entre Ríos 1347, Crespo</p>
+      <div class="visit-card">
+        <div class="vc-row">
+          <span class="vc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></span>
+          <div><span class="vc-k">Dónde</span><p class="vc-v">Entre Ríos 1347, Crespo<br><span class="vc-sub">Entre Ríos</span></p></div>
         </div>
-        <div class="vi-block">
-          <span class="vi-label">Horarios</span>
-          <p class="vi-val">Lun y mar · 17 a 22<br>Mié y jue · 10 a 13 · 17 a 22<br>Vie y sáb · 10 a 13 · 17 a 01<br>Dom · cerrado</p>
+        <div class="vc-row">
+          <span class="vc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          <div><span class="vc-k">Horarios</span>
+            <table class="vc-hours">
+              <tr><td>Lun &amp; mar</td><td>17 – 22</td></tr>
+              <tr><td>Mié &amp; jue</td><td>10–13 · 17–22</td></tr>
+              <tr><td>Vie &amp; sáb</td><td>10–13 · 17–01</td></tr>
+              <tr><td>Dom</td><td class="vc-closed">Cerrado</td></tr>
+            </table>
+          </div>
         </div>
-        <div class="vi-block">
-          <span class="vi-label">Contacto</span>
-          <p class="vi-val"><a href="https://wa.me/5493435172449" target="_blank" rel="noopener" class="vi-link">+54 9 3435 17-2449</a></p>
+        <div class="vc-row">
+          <span class="vc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span>
+          <div><span class="vc-k">Contacto</span><a href="https://wa.me/5493435172449" target="_blank" rel="noopener" class="vc-phone">+54 9 3435 17-2449</a></div>
         </div>
         <div class="visit-ctas">
           <a href="https://www.google.com/maps/dir/?api=1&destination=Entre+R%C3%ADos+1347,+Crespo,+Entre+R%C3%ADos" target="_blank" rel="noopener" class="btn btn-primary">Cómo llegar
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
           <a href="https://wa.me/5493435172449" target="_blank" rel="noopener" class="btn btn-ghost">WhatsApp</a>
-          <a href="https://www.instagram.com/wedrinkcrespo/" target="_blank" rel="noopener" class="btn btn-ghost">Instagram</a>
         </div>
       </div>
       <div class="map-frame">
         <iframe title="Ubicación de We · Cava & Gourmet — Entre Ríos 1347, Crespo" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-          src="https://maps.google.com/maps?q=Entre%20R%C3%ADos%201347,%20Crespo,%20Entre%20R%C3%ADos&z=16&hl=es&output=embed"></iframe>
+          src="https://maps.google.com/maps?q=-32.0259874,-60.3031153&z=16&hl=es&output=embed"></iframe>
         <div class="map-veil"></div>
+        <a class="map-open" href="https://maps.google.com/?q=-32.0259874,-60.3031153" target="_blank" rel="noopener" aria-label="Abrir en Google Maps">Ver en Maps
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+        </a>
       </div>
     </div>
-    <div style="text-align:center;margin-top:42px"><a href="#hero" class="btn btn-ghost">Volver arriba</a></div>
   </div>
 </section>
 
@@ -914,8 +1012,13 @@ function weCountUp(node){
 /* BEFORE/AFTER */
 (function(){
   const wrap=document.getElementById('baWrap'),after=document.getElementById('baAfter'),divider=document.getElementById('baDivider'),handle=document.getElementById('baHandle');
+  const capAfter=after.querySelector('.ba-cap'),capBefore=wrap.querySelector('.ba-before .ba-cap');
   let drag=false;
-  function setPos(cx){const r=wrap.getBoundingClientRect();const p=Math.max(2,Math.min(98,((cx-r.left)/r.width)*100));after.style.clipPath=`inset(0 ${100-p}% 0 0)`;divider.style.left=p+'%';handle.style.left=p+'%';}
+  const cl=(v)=>Math.max(0,Math.min(1,v));
+  function setPos(cx){const r=wrap.getBoundingClientRect();const p=Math.max(2,Math.min(98,((cx-r.left)/r.width)*100));after.style.clipPath=`inset(0 ${100-p}% 0 0)`;divider.style.left=p+'%';handle.style.left=p+'%';
+    if(capAfter)capAfter.style.opacity=cl((p-20)/25);
+    if(capBefore)capBefore.style.opacity=cl((80-p)/25);
+  }
   wrap.addEventListener('mousedown',e=>{drag=true;setPos(e.clientX);});
   window.addEventListener('mousemove',e=>{if(drag)setPos(e.clientX);});
   window.addEventListener('mouseup',()=>drag=false);
@@ -942,7 +1045,7 @@ function initSequenceStatic(){
   const canvas=document.getElementById('seqCanvas');if(!canvas)return;
   const ctx=canvas.getContext('2d');const img=new Image();
   img.onload=()=>{const dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=canvas.clientWidth*dpr;canvas.height=canvas.clientHeight*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);const cw=canvas.clientWidth,ch=canvas.clientHeight,ir=img.naturalWidth/img.naturalHeight,cr=cw/ch;let w,h;if(cr>ir){w=cw;h=cw/ir;}else{h=ch;w=ch*ir;}ctx.drawImage(img,(cw-w)/2,(ch-h)/2,w,h);const l=document.getElementById('seqLoad');if(l)l.classList.add('done');};
-  img.src='./frames/we-0097.webp';
+  img.src='./assets/frames/we-0097.webp';
 }
 
 (function(){
@@ -1069,7 +1172,7 @@ function initSequenceStatic(){
   (function(){
     const canvas=document.getElementById('seqCanvas');if(!canvas)return;
     const FRAMES=193,ctx=canvas.getContext('2d');
-    const path=i=>'./frames/we-'+String(i).padStart(4,'0')+'.webp';
+    const path=i=>'./assets/frames/we-'+String(i).padStart(4,'0')+'.webp';
     const imgs=new Array(FRAMES);let loaded=0,cur=-1;
     const loadEl=document.getElementById('seqLoad'),bar=document.getElementById('slBar');
     function draw(i){const img=imgs[i];if(!img||!img.complete||!img.naturalWidth)return;cur=i;
