@@ -1,0 +1,24 @@
+# OS
+.DS_Store
+
+# Frames: solo se versionan los WebP optimizados (./frames/we-*.webp)
+frames/out/
+frames/*.mp4
+
+# Material pesado / no relacionado con el deploy
+*.mp4
+Manual - Dropbox.html
+Manual - Dropbox_files/
+We-Manual_Dic_Brunop_2025.pdf.html
+We-Manual_Dic_Brunop_2025.pdf_files/
+*.pdf
+*.pdf.html
+
+# Fuente original (ya migrada a index.html)
+we-landing.html
+
+# Temporales de optimización
+node_modules/
+*.log
+.cache/
+.gstack/
