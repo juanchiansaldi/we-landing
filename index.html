@@ -11,6 +11,11 @@
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=DM+Sans:opsz,wght@9..40,300..600&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="./frames/we-0001.webp">
+<link rel="icon" href="./favicon_io/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon_io/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./favicon_io/favicon-16x16.png">
+<link rel="apple-touch-icon" href="./favicon_io/apple-touch-icon.png">
+<link rel="manifest" href="./favicon_io/site.webmanifest">
 <style>
 :root{
   --bg:#0d0a0a;
@@ -104,7 +109,8 @@ nav{
 .theme-toggle .ic-moon{display:none}
 [data-theme="light"] .theme-toggle .ic-sun{display:none}
 [data-theme="light"] .theme-toggle .ic-moon{display:block}
-.nav-logo{display:flex;align-items:center;gap:.55rem;font-family:'Fraunces';font-weight:600;font-size:1.4rem;color:var(--white)}
+.nav-logo{display:flex;align-items:center;color:var(--white)}
+.nav-logo .logo-word{width:62px;display:block;transition:width .45s var(--ease)}
 .nav-logo .logo-iso{width:17px;height:27px}
 .nav-links{display:flex;gap:1.5rem;font-size:.85rem}
 .nav-links a{color:var(--gray);transition:color .3s var(--ease)}
@@ -210,12 +216,12 @@ h1.hero-title b{font-weight:600}
 .ba-tag{position:absolute;top:22px;font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;padding:.4rem .9rem;border-radius:9999px;border:1px solid var(--border2);white-space:nowrap;pointer-events:none}
 .ba-before .ba-tag{left:22px;color:var(--gray)}
 .ba-after .ba-tag{right:22px;color:var(--red);border-color:rgba(241,44,54,.45)}
-.ba-glyph{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);width:56px;height:90px}
+.ba-glyph{position:absolute;top:23%;left:50%;transform:translate(-50%,-50%);width:38px;height:61px}
 .ba-before .ba-glyph{color:var(--gray2)}
 .ba-after .ba-glyph{color:var(--red)}
-.ba-cap{position:absolute;bottom:36px;max-width:40%;pointer-events:none}
-.ba-before .ba-cap{left:32px;text-align:left}
-.ba-after .ba-cap{right:32px;text-align:right}
+.ba-cap{position:absolute;top:54%;transform:translateY(-50%);width:46%;text-align:center;pointer-events:none;padding:0 22px}
+.ba-before .ba-cap{left:0}
+.ba-after .ba-cap{right:0}
 .ba-cap h3{font-family:'Fraunces';font-weight:500;font-size:1.4rem;line-height:1.1}
 .ba-cap p{color:var(--gray);font-size:.88rem;margin-top:.5rem}
 .ba-after .ba-cap h3{color:var(--cream)}
@@ -224,7 +230,11 @@ h1.hero-title b{font-weight:600}
 
 /* ===== SELECCIÓN ===== */
 .prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.prod-card{position:relative;background:var(--surf);border:1px solid var(--border);border-radius:18px;padding:30px 26px;display:flex;flex-direction:column;gap:13px;transition:border-color .4s var(--ease),transform .4s var(--ease)}
+.prod-card{position:relative;overflow:hidden;background:var(--surf);border:1px solid var(--border);border-radius:18px;padding:30px 26px;display:flex;flex-direction:column;gap:13px;transition:border-color .4s var(--ease),transform .4s var(--ease)}
+.pc-media{margin:-30px -26px 6px;height:184px;overflow:hidden;position:relative}
+.pc-media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s var(--ease)}
+.pc-media::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,var(--surf))}
+.prod-card:hover .pc-media img{transform:scale(1.06)}
 .prod-card:hover{border-color:rgba(241,44,54,.4);transform:translateY(-4px)}
 .prod-card.featured{border-color:rgba(241,44,54,.35)}
 .pc-badge{align-self:flex-start;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--red);border:1px solid rgba(241,44,54,.4);padding:.25rem .7rem;border-radius:9999px;font-weight:600}
@@ -322,7 +332,7 @@ footer{border-top:1px solid var(--border);padding:60px 0 36px}
 
 /* nav scrolled state */
 nav.scrolled{padding-top:.7rem;padding-bottom:.7rem;background:var(--nav-bg);backdrop-filter:blur(44px) saturate(1.7);-webkit-backdrop-filter:blur(44px) saturate(1.7);border-bottom-color:var(--nav-border);box-shadow:0 12px 40px -22px rgba(0,0,0,.6)}
-nav.scrolled .nav-logo{font-size:1.25rem}
+nav.scrolled .nav-logo .logo-word{width:52px}
 
 /* hero static isotipo (fill moved to #esencia) */
 .hero-iso{height:300px;width:auto;color:var(--red);display:block;filter:drop-shadow(0 26px 46px rgba(241,44,54,.32))}
@@ -342,7 +352,7 @@ nav.scrolled .nav-logo{font-size:1.25rem}
 @keyframes mq{to{transform:translateX(-50%)}}
 
 /* ===== ESENCIA — sticky fill storytelling ===== */
-.esencia{position:relative;min-height:300vh;background:linear-gradient(180deg,transparent,rgba(241,44,54,.03),transparent)}
+.esencia{position:relative;min-height:300vh}
 .es-sticky{position:sticky;top:0;height:100vh;display:flex;align-items:center;overflow:hidden}
 .es-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:60px;align-items:center;width:100%}
 .es-vis{display:flex;align-items:center;justify-content:center;position:relative}
@@ -383,7 +393,7 @@ nav.scrolled .nav-logo{font-size:1.25rem}
 .hz-hint svg{width:30px;height:8px;color:var(--red)}
 
 /* ===== SECUENCIA 193 FRAMES ===== */
-.seq-sec{position:relative;height:320vh;background:#000}
+.seq-sec{position:relative;height:320vh;background:var(--bg)}
 .seq-sticky{position:sticky;top:0;height:100vh;overflow:hidden}
 #seqCanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .seq-veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,10,10,.55),transparent 30%,transparent 64%,rgba(13,10,10,.85));pointer-events:none}
@@ -416,9 +426,7 @@ nav.scrolled .nav-logo{font-size:1.25rem}
 .map-frame{position:relative;border-radius:22px;overflow:hidden;border:1px solid var(--border2);min-height:400px;background:var(--surf2);box-shadow:0 30px 80px -40px rgba(0,0,0,.7)}
 .map-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;filter:invert(.92) hue-rotate(180deg) saturate(.75) contrast(.9) brightness(.95)}
 [data-theme="light"] .map-frame iframe{filter:saturate(.85) contrast(.95)}
-.map-veil{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 42%,transparent 38%,rgba(241,44,54,.1) 100%),linear-gradient(180deg,rgba(13,10,10,.18),transparent 26%);mix-blend-mode:normal}
-.map-pin{position:absolute;top:42%;left:50%;transform:translate(-50%,-100%);width:24px;height:36px;color:var(--red);z-index:3;pointer-events:none;filter:drop-shadow(0 8px 12px rgba(0,0,0,.55));animation:pinbob 3s ease-in-out infinite}
-@keyframes pinbob{0%,100%{transform:translate(-50%,-100%)}50%{transform:translate(-50%,-118%)}}
+.map-veil{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(13,10,10,.12),transparent 22%);mix-blend-mode:normal}
 @media(max-width:860px){
   .visit-grid{grid-template-columns:1fr;gap:22px}
   .map-frame{min-height:300px;order:-1}
@@ -438,7 +446,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
 /* ===== prefers-reduced-motion ===== */
 @media(prefers-reduced-motion:reduce){
   *{scroll-behavior:auto!important}
-  .atmos .blob,.iso-stage,.fc1,.fc2,.fc3,.pc.rec::before,.tw-cursor,.map-pin{animation:none!important}
+  .atmos .blob,.iso-stage,.pc.rec::before,.tw-cursor{animation:none!important}
   .marquee-track{animation:none!important;transform:none!important}
   .reveal{opacity:1!important;transform:none!important}
   .esencia{min-height:0}
@@ -466,7 +474,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="#hero" class="nav-logo"><span class="logo-iso"><svg><use href="#we-iso"/></svg></span>We</a>
+  <a href="#hero" class="nav-logo" aria-label="We · Cava &amp; Gourmet"><span class="logo-word"><svg viewBox="0 0 520.10 261.99"><use href="#we-word"/></svg></span></a>
   <div class="nav-right">
     <div class="nav-links">
       <a href="#seleccion">Selección</a>
@@ -501,9 +509,6 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
 
       <div class="hero-vis">
         <div class="glow"></div>
-        <div class="fchip fc1"><div class="fc-t">Nota de cata</div><div class="fc-d">Frutos rojos · especias</div></div>
-        <div class="fchip fc2"><div class="fc-t">Maridaje ideal</div><div class="fc-d">Cordero &amp; quesos curados</div></div>
-        <div class="fchip fc3"><div class="fc-t">Región</div><div class="fc-d">Valle de Uco · 1.100 msnm</div></div>
         <div class="iso-stage">
           <svg viewBox="0 0 183.92 299.00" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -519,6 +524,22 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
     </div>
   </div>
 </header>
+
+<!-- SECUENCIA · 193 frames -->
+<section class="seq-sec" id="seq" aria-label="El descorche">
+  <div class="seq-sticky">
+    <canvas id="seqCanvas"></canvas>
+    <div class="seq-veil"></div>
+    <div class="seq-overlay">
+      <span class="eyebrow">El descorche</span>
+      <h2>Cada botella merece <b>su momento.</b></h2>
+    </div>
+    <div class="seq-load" id="seqLoad">
+      <div class="sl-bar"><i id="slBar"></i></div>
+      <em>Sirviendo la secuencia…</em>
+    </div>
+  </div>
+</section>
 
 <!-- ESENCIA · sticky fill storytelling -->
 <section class="esencia" id="esencia">
@@ -558,22 +579,6 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- SECUENCIA · 193 frames -->
-<section class="seq-sec" id="seq" aria-label="El descorche">
-  <div class="seq-sticky">
-    <canvas id="seqCanvas"></canvas>
-    <div class="seq-veil"></div>
-    <div class="seq-overlay">
-      <span class="eyebrow">El descorche</span>
-      <h2>Cada botella merece <b>su momento.</b></h2>
-    </div>
-    <div class="seq-load" id="seqLoad">
-      <div class="sl-bar"><i id="slBar"></i></div>
-      <em>Sirviendo la secuencia…</em>
     </div>
   </div>
 </section>
@@ -623,6 +628,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
     </div>
     <div class="prod-grid" id="prodGrid">
       <div class="prod-card">
+        <div class="pc-media"><img src="./frames/we-0010.webp" alt="Botella de vino tinto" loading="lazy" width="1280" height="720"></div>
         <span class="pc-badge">Caja curada</span>
         <h3>Caja Descubrimiento</h3>
         <p class="pc-notes">6 botellas elegidas a mano. Tintos, blancos y un espumante para arrancar.</p>
@@ -630,6 +636,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
         <div class="pc-meta"><span><b>6</b> botellas</span><span><b>3</b> regiones</span><span><b>Regalo</b></span></div>
       </div>
       <div class="prod-card featured">
+        <div class="pc-media"><img src="./frames/we-0150.webp" alt="Copa de vino tinto" loading="lazy" width="1280" height="720"></div>
         <span class="pc-badge">El más pedido</span>
         <h3>Malbec Gran Reserva</h3>
         <p class="pc-notes">Valle de Uco, 12 meses de roble. Ciruela, vainilla y un final largo y goloso.</p>
@@ -637,6 +644,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
         <div class="pc-meta"><span><b>14,5%</b> vol</span><span><b>2021</b></span><span><b>★ 4.9</b></span></div>
       </div>
       <div class="prod-card">
+        <div class="pc-media"><img src="./frames/we-0088.webp" alt="Servido de vino" loading="lazy" width="1280" height="720"></div>
         <span class="pc-badge">Para brindar</span>
         <h3>Brut Nature de la casa</h3>
         <p class="pc-notes">Método tradicional, burbuja fina y bien seco. El que nunca falla.</p>
@@ -775,42 +783,6 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
   <div class="filo-by">— Filosofía We</div>
 </section>
 
-<!-- STATS -->
-<section class="stats">
-  <div class="wrap">
-    <div class="stats-grid">
-      <div class="stat-item"><div class="stat-n"><span data-t="600">0</span><span class="u">+</span></div><div class="stat-l">Etiquetas en cava</div></div>
-      <div class="stat-item"><div class="stat-n"><span data-t="45">0</span></div><div class="stat-l">Bodegas representadas</div></div>
-      <div class="stat-item"><div class="stat-n"><span data-t="8">0</span></div><div class="stat-l">Regiones vitivinícolas</div></div>
-      <div class="stat-item"><div class="stat-n"><span data-t="4.9" data-dec="1">0</span></div><div class="stat-l">Valoración de clientes</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- REGIONES -->
-<section class="regions">
-  <div class="wrap">
-    <div class="regions-lbl reveal">De cada rincón que vale la pena</div>
-    <div class="regions-row" id="regionsRow">
-      <div class="region-chip">Valle de Uco</div>
-      <div class="region-chip">Mendoza</div>
-      <div class="region-chip">Patagonia</div>
-      <div class="region-chip">Salta</div>
-      <div class="region-chip">San Juan</div>
-      <div class="region-chip">Cafayate</div>
-      <div class="region-chip">La Rioja</div>
-      <div class="region-chip">Selección internacional</div>
-    </div>
-  </div>
-</section>
-
-<!-- MARQUEE -->
-<div class="marquee" aria-hidden="true">
-  <div class="marquee-track" id="mqTrack">
-    <span class="mq-item">Vinos de autor</span><span class="mq-item">Espumantes</span><span class="mq-item">Quesos &amp; fiambres</span><span class="mq-item">Olivas &amp; conservas</span><span class="mq-item">Vinos naturales</span><span class="mq-item">Destilados selectos</span><span class="mq-item">Cajas de regalo</span><span class="mq-item">Charcutería</span>
-  </div>
-</div>
-
 <!-- FAQ -->
 <section class="sec" id="faq">
   <div class="wrap">
@@ -841,19 +813,18 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
       <div class="visit-info">
         <div class="vi-block">
           <span class="vi-label">Dónde</span>
-          <p class="vi-val">We · Cava &amp; Gourmet<br>Crespo, Entre Ríos</p>
+          <p class="vi-val">We · Cava &amp; Gourmet<br>Entre Ríos 1347, Crespo</p>
         </div>
-        <!-- HORARIOS: placeholder — confirmá/ajustá con Andrés -->
         <div class="vi-block">
           <span class="vi-label">Horarios</span>
-          <p class="vi-val">Lunes a viernes · 9 a 13 y 17 a 21<br>Sábados · 9 a 13 y 17 a 22<br>Domingos · cerrado</p>
+          <p class="vi-val">Lun y mar · 17 a 22<br>Mié y jue · 10 a 13 · 17 a 22<br>Vie y sáb · 10 a 13 · 17 a 01<br>Dom · cerrado</p>
         </div>
         <div class="vi-block">
           <span class="vi-label">Contacto</span>
-          <p class="vi-val"><a href="https://wa.me/5493435172449" target="_blank" rel="noopener" class="vi-link">+54 9 3435 17-2449</a> · Andrés</p>
+          <p class="vi-val"><a href="https://wa.me/5493435172449" target="_blank" rel="noopener" class="vi-link">+54 9 3435 17-2449</a></p>
         </div>
         <div class="visit-ctas">
-          <a href="https://maps.google.com/?q=We+cava+%26+Gourmet,+Crespo" target="_blank" rel="noopener" class="btn btn-primary">Cómo llegar
+          <a href="https://www.google.com/maps/dir/?api=1&destination=Entre+R%C3%ADos+1347,+Crespo,+Entre+R%C3%ADos" target="_blank" rel="noopener" class="btn btn-primary">Cómo llegar
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
           <a href="https://wa.me/5493435172449" target="_blank" rel="noopener" class="btn btn-ghost">WhatsApp</a>
@@ -861,9 +832,8 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
         </div>
       </div>
       <div class="map-frame">
-        <iframe title="Ubicación de We · Cava & Gourmet en Crespo" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-          src="https://maps.google.com/maps?q=-32.0259874,-60.3031153&z=16&hl=es&output=embed"></iframe>
-        <span class="map-pin"><svg viewBox="0 0 24 36" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12c0 8 12 24 12 24s12-16 12-24C24 5.4 18.6 0 12 0z"/><circle cx="12" cy="12" r="4.5" fill="#0d0a0a"/></svg></span>
+        <iframe title="Ubicación de We · Cava & Gourmet — Entre Ríos 1347, Crespo" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          src="https://maps.google.com/maps?q=Entre%20R%C3%ADos%201347,%20Crespo,%20Entre%20R%C3%ADos&z=16&hl=es&output=embed"></iframe>
         <div class="map-veil"></div>
       </div>
     </div>
