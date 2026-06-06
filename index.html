@@ -214,7 +214,7 @@ h1.hero-title b{font-weight:600}
 .ba-layer{position:absolute;inset:0}
 .ba-before{background:linear-gradient(135deg,var(--surf),var(--surf2))}
 .ba-after{background:radial-gradient(circle at 50% 35%,rgba(241,44,54,.16),var(--surf));clip-path:inset(0 50% 0 0);z-index:2}
-.ba-tag{position:absolute;top:20px;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;padding:.36rem .8rem;border-radius:9999px;border:1px solid var(--border2);white-space:nowrap;pointer-events:none;z-index:5}
+.ba-tag{position:absolute;top:20px;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;padding:.36rem .8rem;border-radius:9999px;border:1px solid var(--border2);white-space:nowrap;pointer-events:none;z-index:5;transition:opacity .3s var(--ease)}
 .ba-after .ba-tag{left:20px;color:var(--red);border-color:rgba(241,44,54,.45)}
 .ba-before .ba-tag{right:20px;color:var(--gray)}
 .ba-glyph{position:absolute;top:24%;left:50%;transform:translate(-50%,-50%);width:34px;height:55px}
@@ -289,12 +289,13 @@ h1.hero-title b{font-weight:600}
 .faq-a p{color:var(--gray);padding:0 0 24px;font-size:.95rem;line-height:1.65}
 
 /* ===== CTA FINAL ===== */
-.cta-final{padding:130px 0;text-align:center;position:relative;overflow:hidden}
-.cta-final .glowc{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:420px;background:radial-gradient(ellipse,rgba(241,44,54,.28),transparent 70%);filter:blur(60px);z-index:0}
+.cta-final{padding:80px 0 90px;text-align:center;position:relative;overflow:hidden}
+.cta-final .glowc{position:absolute;top:22%;left:50%;transform:translate(-50%,-50%);width:620px;height:340px;background:radial-gradient(ellipse,rgba(241,44,54,.22),transparent 70%);filter:blur(60px);z-index:0}
 .cta-final .logo-iso{width:34px;height:55px;color:var(--red);margin-bottom:26px;position:relative;z-index:2}
-.cta-final h2{font-size:clamp(2.4rem,6vw,4.4rem);font-weight:300;position:relative;z-index:2}
+.cta-final h2{font-size:clamp(1.9rem,3.6vw,2.9rem);font-weight:300;position:relative;z-index:2}
 .cta-final h2 b{font-weight:600}
-.cta-final p{color:var(--gray);font-size:1.1rem;max-width:480px;margin:1.2rem auto 2.4rem;position:relative;z-index:2}
+.cta-final p{color:var(--gray);font-size:1rem;max-width:460px;margin:1rem auto 0;position:relative;z-index:2}
+.cta-final .sec-head{margin-bottom:34px}
 .cta-final .hero-ctas{justify-content:center;animation:none;opacity:1;transform:none;position:relative;z-index:2}
 
 /* ===== FOOTER ===== */
@@ -475,20 +476,6 @@ nav.scrolled .nav-logo .logo-word{width:52px}
 .eventos-feats li{display:flex;gap:11px;align-items:flex-start;color:var(--cream);font-size:.94rem}
 .eventos-feats li::before{content:'';width:7px;height:7px;flex:none;margin-top:7px;border-radius:50%;background:var(--red)}
 @media(max-width:860px){.eventos-grid{grid-template-columns:1fr;gap:22px}.eventos-media img{min-height:260px}}
-
-/* ===== Section snap: cada sección encaja en pantalla ===== */
-html{scroll-snap-type:y proximity}
-.hero,#club,#seleccion,#encontras,#maridajes,#testimonios,.filo,#faq,#eventos,#visita{scroll-snap-align:start;scroll-snap-stop:normal}
-#club,#seleccion,#encontras,#maridajes,#testimonios,#faq,#eventos,#visita{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:96px;padding-bottom:72px}
-.filo{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center}
-/* compactar club para que entre completo */
-.pc{padding:28px 24px}
-.pc-cost{font-size:2.3rem}
-.pc-feats{gap:9px;margin:12px 0 18px}
-@media(max-width:900px){
-  #club,#seleccion,#encontras,#maridajes,#testimonios,#faq,#eventos,#visita{min-height:auto}
-  html{scroll-snap-type:none}
-}
 
 /* ===== focus visible (a11y) ===== */
 a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:6px}
@@ -1013,11 +1000,15 @@ function weCountUp(node){
 (function(){
   const wrap=document.getElementById('baWrap'),after=document.getElementById('baAfter'),divider=document.getElementById('baDivider'),handle=document.getElementById('baHandle');
   const capAfter=after.querySelector('.ba-cap'),capBefore=wrap.querySelector('.ba-before .ba-cap');
+  const tagAfter=after.querySelector('.ba-tag'),tagBefore=wrap.querySelector('.ba-before .ba-tag');
   let drag=false;
   const cl=(v)=>Math.max(0,Math.min(1,v));
   function setPos(cx){const r=wrap.getBoundingClientRect();const p=Math.max(2,Math.min(98,((cx-r.left)/r.width)*100));after.style.clipPath=`inset(0 ${100-p}% 0 0)`;divider.style.left=p+'%';handle.style.left=p+'%';
-    if(capAfter)capAfter.style.opacity=cl((p-20)/25);
-    if(capBefore)capBefore.style.opacity=cl((80-p)/25);
+    const oA=cl((p-20)/25),oB=cl((80-p)/25);
+    if(capAfter)capAfter.style.opacity=oA;
+    if(capBefore)capBefore.style.opacity=oB;
+    if(tagAfter)tagAfter.style.opacity=oA;
+    if(tagBefore)tagBefore.style.opacity=oB;
   }
   wrap.addEventListener('mousedown',e=>{drag=true;setPos(e.clientX);});
   window.addEventListener('mousemove',e=>{if(drag)setPos(e.clientX);});
