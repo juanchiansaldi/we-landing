@@ -89,22 +89,23 @@ h1,h2,h3,h4,.serif{font-family:'Fraunces',serif;font-weight:400;letter-spacing:-
 .logo-iso svg,.logo-word svg{display:block;width:100%;height:100%}
 .logo-iso path,.logo-word path{fill:currentColor}
 
-/* ===== NAV ===== */
+/* ===== NAV (barra full-width, logo a la izquierda) ===== */
 nav{
-  position:fixed;top:1.2rem;left:50%;transform:translateX(-50%);z-index:1000;width:max-content;max-width:calc(100% - 32px);
-  display:flex;align-items:center;gap:1.6rem;padding:.55rem .6rem .55rem 1.3rem;border-radius:9999px;
-  background:var(--nav-bg);backdrop-filter:blur(40px) saturate(1.6);-webkit-backdrop-filter:blur(40px) saturate(1.6);
-  border:1px solid var(--nav-border);box-shadow:0 18px 50px -14px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.08);
-  transition:transform .5s var(--ease),opacity .5s var(--ease),background .5s var(--ease),border-color .5s var(--ease);
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;gap:1.5rem;
+  padding:1.15rem clamp(20px,4vw,52px);
+  background:transparent;border-bottom:1px solid transparent;
+  transition:padding .45s var(--ease),background .45s var(--ease),border-color .45s var(--ease),backdrop-filter .45s var(--ease);
 }
+.nav-right{display:flex;align-items:center;gap:1.9rem}
 .theme-toggle{width:34px;height:34px;border-radius:50%;border:1px solid var(--border2);background:transparent;color:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .3s var(--ease),color .3s var(--ease),transform .3s var(--ease)}
 .theme-toggle:hover{transform:rotate(15deg);background:var(--red-soft)}
 .theme-toggle svg{width:17px;height:17px}
 .theme-toggle .ic-moon{display:none}
 [data-theme="light"] .theme-toggle .ic-sun{display:none}
 [data-theme="light"] .theme-toggle .ic-moon{display:block}
-.nav-logo{display:flex;align-items:center;gap:.5rem;font-family:'Fraunces';font-weight:600;font-size:1.2rem}
-.nav-logo .logo-iso{width:15px;height:24px}
+.nav-logo{display:flex;align-items:center;gap:.55rem;font-family:'Fraunces';font-weight:600;font-size:1.4rem;color:var(--white)}
+.nav-logo .logo-iso{width:17px;height:27px}
 .nav-links{display:flex;gap:1.5rem;font-size:.85rem}
 .nav-links a{color:var(--gray);transition:color .3s var(--ease)}
 .nav-links a:hover{color:var(--white)}
@@ -206,13 +207,13 @@ h1.hero-title b{font-weight:600}
 .ba-layer{position:absolute;inset:0}
 .ba-before{background:linear-gradient(135deg,var(--surf),var(--surf2))}
 .ba-after{background:radial-gradient(circle at 50% 35%,rgba(241,44,54,.16),var(--surf));clip-path:inset(0 50% 0 0);z-index:2}
-.ba-tag{position:absolute;top:22px;font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;padding:.4rem .9rem;border-radius:9999px;border:1px solid var(--border2);white-space:nowrap}
+.ba-tag{position:absolute;top:22px;font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;padding:.4rem .9rem;border-radius:9999px;border:1px solid var(--border2);white-space:nowrap;pointer-events:none}
 .ba-before .ba-tag{left:22px;color:var(--gray)}
 .ba-after .ba-tag{right:22px;color:var(--red);border-color:rgba(241,44,54,.45)}
 .ba-glyph{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);width:56px;height:90px}
 .ba-before .ba-glyph{color:var(--gray2)}
 .ba-after .ba-glyph{color:var(--red)}
-.ba-cap{position:absolute;bottom:40px;max-width:46%}
+.ba-cap{position:absolute;bottom:36px;max-width:40%;pointer-events:none}
 .ba-before .ba-cap{left:32px;text-align:left}
 .ba-after .ba-cap{right:32px;text-align:right}
 .ba-cap h3{font-family:'Fraunces';font-weight:500;font-size:1.4rem;line-height:1.1}
@@ -319,25 +320,9 @@ footer{border-top:1px solid var(--border);padding:60px 0 36px}
 /* scroll progress bar */
 .scroll-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:1200;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,var(--red),#ff6a72);box-shadow:0 0 14px rgba(241,44,54,.6);pointer-events:none}
 
-/* section indicator */
-.sec-nav{position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:1100;display:flex;flex-direction:column;gap:14px}
-.sec-nav a{width:9px;height:9px;border-radius:50%;border:1px solid var(--border2);background:transparent;transition:transform .35s var(--ease),background .35s var(--ease),border-color .35s var(--ease);position:relative}
-.sec-nav a::after{content:attr(data-label);position:absolute;right:20px;top:50%;transform:translateY(-50%) translateX(6px);white-space:nowrap;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gray);opacity:0;pointer-events:none;transition:opacity .3s var(--ease),transform .3s var(--ease)}
-.sec-nav a:hover::after{opacity:1;transform:translateY(-50%) translateX(0)}
-.sec-nav a.active{background:var(--red);border-color:var(--red);transform:scale(1.35)}
-@media(max-width:820px){.sec-nav{display:none}}
-
-/* custom cursor (desktop, fine pointer only) */
-.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;border-radius:50%;pointer-events:none;z-index:1300;mix-blend-mode:difference;opacity:0;transition:opacity .3s var(--ease)}
-.cursor-dot{width:6px;height:6px;background:#fff;margin:-3px 0 0 -3px}
-.cursor-ring{width:34px;height:34px;border:1px solid rgba(255,255,255,.6);margin:-17px 0 0 -17px;transition:width .3s var(--ease),height .3s var(--ease),margin .3s var(--ease),background .3s var(--ease),opacity .3s var(--ease)}
-.cursor-ring.is-hover{width:54px;height:54px;margin:-27px 0 0 -27px;background:rgba(255,255,255,.12)}
-body.has-cursor,body.has-cursor a,body.has-cursor button{cursor:none}
-@media(hover:none),(pointer:coarse){.cursor-dot,.cursor-ring{display:none}}
-
 /* nav scrolled state */
-nav.scrolled{padding:.4rem .5rem .4rem 1.1rem;gap:1.25rem;background:var(--nav-bg);backdrop-filter:blur(54px) saturate(1.7);-webkit-backdrop-filter:blur(54px) saturate(1.7);border-color:var(--border2);box-shadow:0 14px 44px -16px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.1)}
-nav.scrolled .nav-logo{font-size:1.05rem}
+nav.scrolled{padding-top:.7rem;padding-bottom:.7rem;background:var(--nav-bg);backdrop-filter:blur(44px) saturate(1.7);-webkit-backdrop-filter:blur(44px) saturate(1.7);border-bottom-color:var(--nav-border);box-shadow:0 12px 40px -22px rgba(0,0,0,.6)}
+nav.scrolled .nav-logo{font-size:1.25rem}
 
 /* hero static isotipo (fill moved to #esencia) */
 .hero-iso{height:300px;width:auto;color:var(--red);display:block;filter:drop-shadow(0 26px 46px rgba(241,44,54,.32))}
@@ -412,6 +397,33 @@ nav.scrolled .nav-logo{font-size:1.05rem}
 .seq-load .sl-bar i{display:block;height:100%;width:0;background:var(--red);transition:width .2s linear}
 .seq-load em{font-style:normal;font-size:.7rem;letter-spacing:.26em;text-transform:uppercase;color:#9a8d83}
 
+/* ===== FILOSOFIA · cita de marca (full-bleed rojo) ===== */
+.filo{background:var(--red);color:#1b1212;text-align:center;padding:clamp(90px,15vh,170px) 24px;position:relative;overflow:hidden}
+.filo .logo-iso{width:44px;height:71px;color:#1b1212;display:block;margin:0 auto 1.8rem;opacity:.92}
+.filo h2{font-family:'Fraunces';font-weight:300;font-size:clamp(2.1rem,6vw,4.3rem);line-height:1.04;color:#1b1212}
+.filo h2 i{font-style:italic;font-weight:400}
+.filo-by{margin-top:1.8rem;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(27,18,18,.55)}
+
+/* ===== VISITA · mapa + info ===== */
+.visit-grid{display:grid;grid-template-columns:.92fr 1.08fr;gap:30px;align-items:stretch;text-align:left;margin-top:46px;position:relative;z-index:2}
+.visit-info{display:flex;flex-direction:column;gap:22px;justify-content:center}
+.vi-block{border-left:2px solid var(--red);padding-left:16px}
+.vi-label{display:block;font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:var(--red);font-weight:600;margin-bottom:.5rem}
+.vi-val{font-family:'Fraunces';font-weight:400;font-size:1.18rem;color:var(--cream);line-height:1.4}
+.vi-link{color:var(--cream);border-bottom:1px solid var(--red);transition:color .3s var(--ease)}
+.vi-link:hover{color:var(--red)}
+.visit-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+.map-frame{position:relative;border-radius:22px;overflow:hidden;border:1px solid var(--border2);min-height:400px;background:var(--surf2);box-shadow:0 30px 80px -40px rgba(0,0,0,.7)}
+.map-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;filter:invert(.92) hue-rotate(180deg) saturate(.75) contrast(.9) brightness(.95)}
+[data-theme="light"] .map-frame iframe{filter:saturate(.85) contrast(.95)}
+.map-veil{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 42%,transparent 38%,rgba(241,44,54,.1) 100%),linear-gradient(180deg,rgba(13,10,10,.18),transparent 26%);mix-blend-mode:normal}
+.map-pin{position:absolute;top:42%;left:50%;transform:translate(-50%,-100%);width:24px;height:36px;color:var(--red);z-index:3;pointer-events:none;filter:drop-shadow(0 8px 12px rgba(0,0,0,.55));animation:pinbob 3s ease-in-out infinite}
+@keyframes pinbob{0%,100%{transform:translate(-50%,-100%)}50%{transform:translate(-50%,-118%)}}
+@media(max-width:860px){
+  .visit-grid{grid-template-columns:1fr;gap:22px}
+  .map-frame{min-height:300px;order:-1}
+}
+
 /* ===== focus visible (a11y) ===== */
 a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:6px}
 
@@ -426,7 +438,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
 /* ===== prefers-reduced-motion ===== */
 @media(prefers-reduced-motion:reduce){
   *{scroll-behavior:auto!important}
-  .atmos .blob,.iso-stage,.fc1,.fc2,.fc3,.pc.rec::before,.tw-cursor{animation:none!important}
+  .atmos .blob,.iso-stage,.fc1,.fc2,.fc3,.pc.rec::before,.tw-cursor,.map-pin{animation:none!important}
   .marquee-track{animation:none!important;transform:none!important}
   .reveal{opacity:1!important;transform:none!important}
   .esencia{min-height:0}
@@ -442,17 +454,6 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
 <body>
 
 <div class="scroll-bar" id="scrollBar"></div>
-<nav class="sec-nav" id="secNav" aria-label="Navegación de secciones">
-  <a href="#hero" data-label="Inicio"></a>
-  <a href="#esencia" data-label="La esencia"></a>
-  <a href="#encontras" data-label="Selección"></a>
-  <a href="#universo" data-label="El universo We"></a>
-  <a href="#seq" data-label="El descorche"></a>
-  <a href="#club" data-label="Club We"></a>
-  <a href="#faq" data-label="FAQ"></a>
-</nav>
-<div class="cursor-ring" id="cursorRing"></div>
-<div class="cursor-dot" id="cursorDot"></div>
 
 <!-- hidden SVG defs (logo + isotipo) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -466,17 +467,19 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
 <!-- NAV -->
 <nav id="nav">
   <a href="#hero" class="nav-logo"><span class="logo-iso"><svg><use href="#we-iso"/></svg></span>We</a>
-  <div class="nav-links">
-    <a href="#encontras">Selección</a>
-    <a href="#universo">El universo We</a>
-    <a href="#club">Club We</a>
-    <a href="#faq">FAQ</a>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#seleccion">Selección</a>
+      <a href="#universo">El universo We</a>
+      <a href="#club">Club We</a>
+      <a href="#visita">Visitanos</a>
+    </div>
+    <a href="#club" class="nav-cta">Sumarme al Club</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
+      <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
   </div>
-  <a href="#club" class="nav-cta">Sumarme al Club</a>
-  <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
-    <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-    <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-  </button>
 </nav>
 
 <!-- HERO -->
@@ -508,7 +511,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
             </defs>
             <path d="M 0.0,59.19999999999999 C 0.10000000000000142,123.80000000000001 0.3000000000000007,127.19999999999999 5.700000000000003,141.1 C 9.800000000000004,151.5 16.500000000000007,161.3 25.400000000000006,169.7 C 36.2,180.0 49.10000000000001,187.0 63.30000000000001,190.1 L 69.0,191.29999999999998 L 69.0,234.2 L 69.0,277.0 L 34.5,277.0 L 0.0,277.0 L 0.0,288.0 L 0.0,299.0 L 80.0,299.0 L 160.0,299.0 L 160.0,288.0 L 160.0,277.0 L 125.5,277.0 L 91.0,277.0 L 91.0,234.10000000000002 L 91.0,191.2 L 95.30000000000001,190.5 C 102.9,189.2 115.9,183.9 123.30000000000001,179.0 C 136.9,170.1 147.4,157.6 153.60000000000002,143.0 C 159.8,128.6 160.00000000000003,126.4 160.0,60.0 L 160.0,0.0 L 149.60000000000002,0.0 L 139.10000000000002,0.0 L 138.8,61.19999999999999 C 138.4,121.19999999999999 138.4,122.6 136.20000000000002,129.0 C 131.10000000000002,144.2 119.4,157.9 105.80000000000001,164.39999999999998 C 101.80000000000001,166.29999999999998 96.80000000000001,168.2 94.80000000000001,168.5 L 91.10000000000001,169.2 L 90.80000000000001,118.29999999999998 C 90.4,69.1 90.30000000000001,67.29999999999998 88.10000000000001,59.5 C 77.9,23.69999999999999 46.400000000000006,0.0 8.899999999999999,0.0 L 0.0,0.0 L 0.0,59.19999999999999 M 38.5,28.30000000000001 C 46.8,32.60000000000002 58.599999999999994,44.69999999999999 62.7,53.0 C 68.9,65.69999999999999 69.0,66.5 69.0,120.29999999999998 L 69.0,169.2 L 65.30000000000001,168.5 C 63.20000000000002,168.2 58.10000000000001,166.2 54.0,164.29999999999998 C 44.2,159.6 32.8,148.39999999999998 28.1,139.0 C 21.6,125.69999999999999 21.700000000000003,126.19999999999999 21.300000000000004,73.19999999999999 C 21.000000000000007,46.599999999999966 21.1,24.19999999999999 21.400000000000006,23.399999999999977 C 22.10000000000001,21.599999999999966 30.000000000000007,23.899999999999977 38.50000000000001,28.299999999999955 M 168.5,281.5 C 166.6,283.3 166.0,285.0 166.0,288.0 C 166.0,296.5 175.0,300.1 181.10000000000002,294.1 C 185.20000000000002,290.0 184.8,283.9 180.10000000000002,280.3 C 177.3,278.1 171.20000000000002,278.7 168.50000000000003,281.5 M 178.5,280.6 C 180.9,281.6 183.1,286.6 182.4,289.5 C 181.6,292.7 177.5,296.0 174.3,296.0 C 173.0,296.0 170.8,294.9 169.5,293.5 C 163.2,287.3 170.1,277.4 178.5,280.6 M 171.4,288.0 C 171.3,292.4 171.6,293.0 173.4,293.0 C 174.9,293.0 175.1,292.7 174.20000000000002,291.8 C 172.60000000000002,290.2 172.70000000000002,289.0 174.4,289.0 C 175.20000000000002,289.0 176.20000000000002,289.9 176.5,291.0 C 176.8,292.1 177.8,293.0 178.60000000000002,293.0 C 179.90000000000003,293.0 179.90000000000003,292.7 178.60000000000002,290.8 C 177.50000000000003,289.2 177.3,288.3 178.10000000000002,287.3 C 180.00000000000003,285.1 178.3,283.0 174.8,283.0 C 171.5,283.0 171.5,283.0 171.4,288.0 M 176.5,286.0 C 176.5,288.2 173.6,287.8 173.20000000000002,285.7 C 172.9,284.3 173.3,283.9 174.70000000000002,284.2 C 175.70000000000002,284.4 176.50000000000003,285.2 176.50000000000003,286.0" class="iso-empty"/>
             <g clip-path="url(#isoFillClip)">
-              <rect id="wineRect" x="0" y="0" width="183.92" height="299.00" fill="#F12C36" transform="translate(0 0)"></rect>
+              <rect id="wineRect" x="0" y="0" width="183.92" height="299.00" fill="#F12C36" transform="translate(0 299)"></rect>
             </g>
           </svg>
         </div>
@@ -516,18 +519,6 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
     </div>
   </div>
 </header>
-
-<!-- STATS -->
-<section class="stats">
-  <div class="wrap">
-    <div class="stats-grid">
-      <div class="stat-item"><div class="stat-n"><span data-t="600">0</span><span class="u">+</span></div><div class="stat-l">Etiquetas en cava</div></div>
-      <div class="stat-item"><div class="stat-n"><span data-t="45">0</span></div><div class="stat-l">Bodegas representadas</div></div>
-      <div class="stat-item"><div class="stat-n"><span data-t="8">0</span></div><div class="stat-l">Regiones vitivinícolas</div></div>
-      <div class="stat-item"><div class="stat-n"><span data-t="4.9" data-dec="1">0</span></div><div class="stat-l">Valoración de clientes</div></div>
-    </div>
-  </div>
-</section>
 
 <!-- ESENCIA · sticky fill storytelling -->
 <section class="esencia" id="esencia">
@@ -571,26 +562,87 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
   </div>
 </section>
 
-<!-- MARQUEE -->
-<div class="marquee" aria-hidden="true">
-  <div class="marquee-track" id="mqTrack">
-    <span class="mq-item">Vinos de autor</span><span class="mq-item">Espumantes</span><span class="mq-item">Quesos &amp; fiambres</span><span class="mq-item">Olivas &amp; conservas</span><span class="mq-item">Vinos naturales</span><span class="mq-item">Destilados selectos</span><span class="mq-item">Cajas de regalo</span><span class="mq-item">Charcutería</span>
+<!-- SECUENCIA · 193 frames -->
+<section class="seq-sec" id="seq" aria-label="El descorche">
+  <div class="seq-sticky">
+    <canvas id="seqCanvas"></canvas>
+    <div class="seq-veil"></div>
+    <div class="seq-overlay">
+      <span class="eyebrow">El descorche</span>
+      <h2>Cada botella merece <b>su momento.</b></h2>
+    </div>
+    <div class="seq-load" id="seqLoad">
+      <div class="sl-bar"><i id="slBar"></i></div>
+      <em>Sirviendo la secuencia…</em>
+    </div>
   </div>
-</div>
+</section>
 
-<!-- REGIONES -->
-<section class="regions">
+<!-- CLUB -->
+<section class="sec" id="club">
   <div class="wrap">
-    <div class="regions-lbl reveal">De cada rincón que vale la pena</div>
-    <div class="regions-row" id="regionsRow">
-      <div class="region-chip">Valle de Uco</div>
-      <div class="region-chip">Mendoza</div>
-      <div class="region-chip">Patagonia</div>
-      <div class="region-chip">Salta</div>
-      <div class="region-chip">San Juan</div>
-      <div class="region-chip">Cafayate</div>
-      <div class="region-chip">La Rioja</div>
-      <div class="region-chip">Selección internacional</div>
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Club We</span>
+      <h2>Recibí lo bueno <b>todos los meses</b></h2>
+      <p>Una suscripción para los que quieren descubrir sin pensarlo. Cancelás cuando quieras, sin permanencia.</p>
+    </div>
+    <div class="price-grid" id="priceGrid">
+      <div class="pc">
+        <div class="pc-name">Iniciado</div>
+        <div class="pc-cost">$ 14.900<small>/mes</small></div>
+        <div class="pc-desc">Para empezar a explorar sin compromiso.</div>
+        <ul class="pc-feats"><li>2 botellas curadas por mes</li><li>Ficha de cata de cada vino</li><li>10% off en toda la tienda</li></ul>
+        <a href="#visita" class="btn btn-ghost">Empezar</a>
+      </div>
+      <div class="pc rec">
+        <div class="pc-tag">Recomendado</div>
+        <div class="pc-name">Sibarita</div>
+        <div class="pc-cost">$ 24.900<small>/mes</small></div>
+        <div class="pc-desc">El equilibrio perfecto entre vino y gourmet.</div>
+        <ul class="pc-feats"><li>3 botellas + 1 producto gourmet</li><li>15% off en toda la tienda</li><li>Acceso a catas presenciales</li><li>Envío sin cargo en Crespo</li></ul>
+        <a href="#visita" class="btn btn-primary">Sumarme ahora</a>
+      </div>
+      <div class="pc">
+        <div class="pc-name">Coleccionista</div>
+        <div class="pc-cost">$ 44.900<small>/mes</small></div>
+        <div class="pc-desc">Para el que ya sabe lo que quiere: lo mejor.</div>
+        <ul class="pc-feats"><li>4 botellas premium &amp; ediciones limitadas</li><li>20% off + acceso anticipado</li><li>Cata privada trimestral</li><li>Asesoría personal por WhatsApp</li></ul>
+        <a href="#visita" class="btn btn-ghost">Quiero esto</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SELECCIÓN -->
+<section class="sec" id="seleccion">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Recomendados de la casa</span>
+      <h2>La <b>selección destacada</b></h2>
+      <p>Lo que más sale, lo que más volvemos a pedir. Precios de referencia.</p>
+    </div>
+    <div class="prod-grid" id="prodGrid">
+      <div class="prod-card">
+        <span class="pc-badge">Caja curada</span>
+        <h3>Caja Descubrimiento</h3>
+        <p class="pc-notes">6 botellas elegidas a mano. Tintos, blancos y un espumante para arrancar.</p>
+        <div class="pc-price">$ 42.000 <small>/ caja x6</small></div>
+        <div class="pc-meta"><span><b>6</b> botellas</span><span><b>3</b> regiones</span><span><b>Regalo</b></span></div>
+      </div>
+      <div class="prod-card featured">
+        <span class="pc-badge">El más pedido</span>
+        <h3>Malbec Gran Reserva</h3>
+        <p class="pc-notes">Valle de Uco, 12 meses de roble. Ciruela, vainilla y un final largo y goloso.</p>
+        <div class="pc-price">$ 11.500 <small>/ botella</small></div>
+        <div class="pc-meta"><span><b>14,5%</b> vol</span><span><b>2021</b></span><span><b>★ 4.9</b></span></div>
+      </div>
+      <div class="prod-card">
+        <span class="pc-badge">Para brindar</span>
+        <h3>Brut Nature de la casa</h3>
+        <p class="pc-notes">Método tradicional, burbuja fina y bien seco. El que nunca falla.</p>
+        <div class="pc-price">$ 9.200 <small>/ botella</small></div>
+        <div class="pc-meta"><span><b>12%</b> vol</span><span><b>Seco</b></span><span><b>6°C</b></span></div>
+      </div>
     </div>
   </div>
 </section>
@@ -701,56 +753,6 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
   </div>
 </section>
 
-<!-- SECUENCIA · 193 frames -->
-<section class="seq-sec" id="seq" aria-label="El descorche">
-  <div class="seq-sticky">
-    <canvas id="seqCanvas"></canvas>
-    <div class="seq-veil"></div>
-    <div class="seq-overlay">
-      <span class="eyebrow">El descorche</span>
-      <h2>Cada botella merece <b>su momento.</b></h2>
-    </div>
-    <div class="seq-load" id="seqLoad">
-      <div class="sl-bar"><i id="slBar"></i></div>
-      <em>Sirviendo la secuencia…</em>
-    </div>
-  </div>
-</section>
-
-<!-- SELECCIÓN -->
-<section class="sec" id="seleccion">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <span class="eyebrow">Recomendados de la casa</span>
-      <h2>La <b>selección destacada</b></h2>
-      <p>Lo que más sale, lo que más volvemos a pedir. Precios de referencia.</p>
-    </div>
-    <div class="prod-grid" id="prodGrid">
-      <div class="prod-card">
-        <span class="pc-badge">Caja curada</span>
-        <h3>Caja Descubrimiento</h3>
-        <p class="pc-notes">6 botellas elegidas a mano. Tintos, blancos y un espumante para arrancar.</p>
-        <div class="pc-price">$ 42.000 <small>/ caja x6</small></div>
-        <div class="pc-meta"><span><b>6</b> botellas</span><span><b>3</b> regiones</span><span><b>Regalo</b></span></div>
-      </div>
-      <div class="prod-card featured">
-        <span class="pc-badge">El más pedido</span>
-        <h3>Malbec Gran Reserva</h3>
-        <p class="pc-notes">Valle de Uco, 12 meses de roble. Ciruela, vainilla y un final largo y goloso.</p>
-        <div class="pc-price">$ 11.500 <small>/ botella</small></div>
-        <div class="pc-meta"><span><b>14,5%</b> vol</span><span><b>2021</b></span><span><b>★ 4.9</b></span></div>
-      </div>
-      <div class="prod-card">
-        <span class="pc-badge">Para brindar</span>
-        <h3>Brut Nature de la casa</h3>
-        <p class="pc-notes">Método tradicional, burbuja fina y bien seco. El que nunca falla.</p>
-        <div class="pc-price">$ 9.200 <small>/ botella</small></div>
-        <div class="pc-meta"><span><b>12%</b> vol</span><span><b>Seco</b></span><span><b>6°C</b></span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- TESTIMONIOS -->
 <section class="sec" id="testimonios">
   <div class="wrap">
@@ -766,40 +768,48 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
   </div>
 </section>
 
-<!-- CLUB -->
-<section class="sec" id="club">
+<!-- FILOSOFIA · cita de marca -->
+<section class="filo" aria-label="Filosofía We">
+  <span class="logo-iso"><svg><use href="#we-iso"/></svg></span>
+  <h2>El vino no se vende.<br><i>Se recomienda.</i></h2>
+  <div class="filo-by">— Filosofía We</div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
   <div class="wrap">
-    <div class="sec-head center reveal">
-      <span class="eyebrow">Club We</span>
-      <h2>Recibí lo bueno <b>todos los meses</b></h2>
-      <p>Una suscripción para los que quieren descubrir sin pensarlo. Cancelás cuando quieras, sin permanencia.</p>
-    </div>
-    <div class="price-grid" id="priceGrid">
-      <div class="pc">
-        <div class="pc-name">Iniciado</div>
-        <div class="pc-cost">$ 14.900<small>/mes</small></div>
-        <div class="pc-desc">Para empezar a explorar sin compromiso.</div>
-        <ul class="pc-feats"><li>2 botellas curadas por mes</li><li>Ficha de cata de cada vino</li><li>10% off en toda la tienda</li></ul>
-        <a href="#visita" class="btn btn-ghost">Empezar</a>
-      </div>
-      <div class="pc rec">
-        <div class="pc-tag">Recomendado</div>
-        <div class="pc-name">Sibarita</div>
-        <div class="pc-cost">$ 24.900<small>/mes</small></div>
-        <div class="pc-desc">El equilibrio perfecto entre vino y gourmet.</div>
-        <ul class="pc-feats"><li>3 botellas + 1 producto gourmet</li><li>15% off en toda la tienda</li><li>Acceso a catas presenciales</li><li>Envío sin cargo en Crespo</li></ul>
-        <a href="#visita" class="btn btn-primary">Sumarme ahora</a>
-      </div>
-      <div class="pc">
-        <div class="pc-name">Coleccionista</div>
-        <div class="pc-cost">$ 44.900<small>/mes</small></div>
-        <div class="pc-desc">Para el que ya sabe lo que quiere: lo mejor.</div>
-        <ul class="pc-feats"><li>4 botellas premium &amp; ediciones limitadas</li><li>20% off + acceso anticipado</li><li>Cata privada trimestral</li><li>Asesoría personal por WhatsApp</li></ul>
-        <a href="#visita" class="btn btn-ghost">Quiero esto</a>
-      </div>
+    <div class="stats-grid">
+      <div class="stat-item"><div class="stat-n"><span data-t="600">0</span><span class="u">+</span></div><div class="stat-l">Etiquetas en cava</div></div>
+      <div class="stat-item"><div class="stat-n"><span data-t="45">0</span></div><div class="stat-l">Bodegas representadas</div></div>
+      <div class="stat-item"><div class="stat-n"><span data-t="8">0</span></div><div class="stat-l">Regiones vitivinícolas</div></div>
+      <div class="stat-item"><div class="stat-n"><span data-t="4.9" data-dec="1">0</span></div><div class="stat-l">Valoración de clientes</div></div>
     </div>
   </div>
 </section>
+
+<!-- REGIONES -->
+<section class="regions">
+  <div class="wrap">
+    <div class="regions-lbl reveal">De cada rincón que vale la pena</div>
+    <div class="regions-row" id="regionsRow">
+      <div class="region-chip">Valle de Uco</div>
+      <div class="region-chip">Mendoza</div>
+      <div class="region-chip">Patagonia</div>
+      <div class="region-chip">Salta</div>
+      <div class="region-chip">San Juan</div>
+      <div class="region-chip">Cafayate</div>
+      <div class="region-chip">La Rioja</div>
+      <div class="region-chip">Selección internacional</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="mqTrack">
+    <span class="mq-item">Vinos de autor</span><span class="mq-item">Espumantes</span><span class="mq-item">Quesos &amp; fiambres</span><span class="mq-item">Olivas &amp; conservas</span><span class="mq-item">Vinos naturales</span><span class="mq-item">Destilados selectos</span><span class="mq-item">Cajas de regalo</span><span class="mq-item">Charcutería</span>
+  </div>
+</div>
 
 <!-- FAQ -->
 <section class="sec" id="faq">
@@ -818,19 +828,46 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
   </div>
 </section>
 
-<!-- CTA FINAL -->
+<!-- CTA FINAL · Vení a descorchar + mapa -->
 <section class="cta-final" id="visita">
   <div class="glowc"></div>
   <div class="wrap">
-    <span class="logo-iso"><svg><use href="#we-iso"/></svg></span>
-    <h2>Vení a descorchar <b class="red-text">con nosotros.</b></h2>
-    <p>Pasá por la vinería en Crespo o escribinos. Te ayudamos a encontrar tu próxima botella favorita.</p>
-    <div class="hero-ctas">
-      <a href="https://www.instagram.com/wedrinkcrespo/" target="_blank" rel="noopener" class="btn btn-primary">Escribinos por Instagram
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-      <a href="#hero" class="btn btn-ghost">Volver arriba</a>
+    <div class="sec-head center reveal" style="margin-inline:auto">
+      <span class="eyebrow">Dónde encontrarnos</span>
+      <h2>Vení a descorchar <b class="red-text">con nosotros.</b></h2>
+      <p>Pasá por la vinería en Crespo o escribinos. Te ayudamos a encontrar tu próxima botella favorita.</p>
     </div>
+    <div class="visit-grid reveal">
+      <div class="visit-info">
+        <div class="vi-block">
+          <span class="vi-label">Dónde</span>
+          <p class="vi-val">We · Cava &amp; Gourmet<br>Crespo, Entre Ríos</p>
+        </div>
+        <!-- HORARIOS: placeholder — confirmá/ajustá con Andrés -->
+        <div class="vi-block">
+          <span class="vi-label">Horarios</span>
+          <p class="vi-val">Lunes a viernes · 9 a 13 y 17 a 21<br>Sábados · 9 a 13 y 17 a 22<br>Domingos · cerrado</p>
+        </div>
+        <div class="vi-block">
+          <span class="vi-label">Contacto</span>
+          <p class="vi-val"><a href="https://wa.me/5493435172449" target="_blank" rel="noopener" class="vi-link">+54 9 3435 17-2449</a> · Andrés</p>
+        </div>
+        <div class="visit-ctas">
+          <a href="https://maps.google.com/?q=We+cava+%26+Gourmet,+Crespo" target="_blank" rel="noopener" class="btn btn-primary">Cómo llegar
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="https://wa.me/5493435172449" target="_blank" rel="noopener" class="btn btn-ghost">WhatsApp</a>
+          <a href="https://www.instagram.com/wedrinkcrespo/" target="_blank" rel="noopener" class="btn btn-ghost">Instagram</a>
+        </div>
+      </div>
+      <div class="map-frame">
+        <iframe title="Ubicación de We · Cava & Gourmet en Crespo" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          src="https://maps.google.com/maps?q=-32.0259874,-60.3031153&z=16&hl=es&output=embed"></iframe>
+        <span class="map-pin"><svg viewBox="0 0 24 36" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12c0 8 12 24 12 24s12-16 12-24C24 5.4 18.6 0 12 0z"/><circle cx="12" cy="12" r="4.5" fill="#0d0a0a"/></svg></span>
+        <div class="map-veil"></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:42px"><a href="#hero" class="btn btn-ghost">Volver arriba</a></div>
   </div>
 </section>
 
@@ -908,7 +945,7 @@ function weCountUp(node){
 (function(){
   const wrap=document.getElementById('baWrap'),after=document.getElementById('baAfter'),divider=document.getElementById('baDivider'),handle=document.getElementById('baHandle');
   let drag=false;
-  function setPos(cx){const r=wrap.getBoundingClientRect();const p=Math.max(6,Math.min(94,((cx-r.left)/r.width)*100));after.style.clipPath=`inset(0 ${100-p}% 0 0)`;divider.style.left=p+'%';handle.style.left=p+'%';}
+  function setPos(cx){const r=wrap.getBoundingClientRect();const p=Math.max(2,Math.min(98,((cx-r.left)/r.width)*100));after.style.clipPath=`inset(0 ${100-p}% 0 0)`;divider.style.left=p+'%';handle.style.left=p+'%';}
   wrap.addEventListener('mousedown',e=>{drag=true;setPos(e.clientX);});
   window.addEventListener('mousemove',e=>{if(drag)setPos(e.clientX);});
   window.addEventListener('mouseup',()=>drag=false);
@@ -953,7 +990,7 @@ function initSequenceStatic(){
     statNodes.forEach(weCountUp);
   }
 
-  if(!hasGSAP){ revealAllStatic(); initSequenceStatic(); return; }
+  if(!hasGSAP){ revealAllStatic(); initSequenceStatic(); var _wr=document.getElementById('wineRect'); if(_wr)_wr.setAttribute('transform','translate(0 0)'); return; }
   gsap.registerPlugin(ScrollTrigger);
 
   /* ---------- Lenis smooth scroll ---------- */
@@ -1026,12 +1063,13 @@ function initSequenceStatic(){
   const nav=document.getElementById('nav');
   ScrollTrigger.create({trigger:'.hero',start:'bottom 80%',onEnter:()=>nav.classList.add('scrolled'),onLeaveBack:()=>nav.classList.remove('scrolled')});
 
-  /* ---------- section indicator ---------- */
-  const dots=[...document.querySelectorAll('.sec-nav a')];
-  dots.forEach(d=>{
-    const sec=document.querySelector(d.getAttribute('href'));if(!sec)return;
-    ScrollTrigger.create({trigger:sec,start:'top 55%',end:'bottom 55%',onToggle:self=>{if(self.isActive){dots.forEach(x=>x.classList.remove('active'));d.classList.add('active');}}});
-  });
+  /* ---------- HERO · isotipo fills on load (slow) ---------- */
+  (function(){
+    const wr=document.getElementById('wineRect');if(!wr)return;
+    if(REDUCE){wr.setAttribute('transform','translate(0 0)');return;}
+    const o={v:0};
+    gsap.to(o,{v:1,duration:3.6,ease:'power2.inOut',delay:0.35,onUpdate:()=>wr.setAttribute('transform','translate(0 '+(299*(1-o.v))+')')});
+  })();
 
   /* ---------- ESENCIA · isotipo fill 0→100 ---------- */
   (function(){
@@ -1090,22 +1128,6 @@ function initSequenceStatic(){
       btn.addEventListener('mousemove',e=>{const r=btn.getBoundingClientRect();xTo((e.clientX-r.left-r.width/2)*0.3);yTo((e.clientY-r.top-r.height/2)*0.5);});
       btn.addEventListener('mouseleave',()=>{xTo(0);yTo(0);});
     });
-  }
-
-  /* ---------- CUSTOM CURSOR (desktop, fine pointer) ---------- */
-  if(FINE){
-    const dot=document.getElementById('cursorDot'),ring=document.getElementById('cursorRing');
-    if(dot&&ring){
-      document.body.classList.add('has-cursor');
-      const rx=gsap.quickTo(ring,'x',{duration:.35,ease:'power3'}),ry=gsap.quickTo(ring,'y',{duration:.35,ease:'power3'});
-      const dx=gsap.quickTo(dot,'x',{duration:.08,ease:'power2'}),dy=gsap.quickTo(dot,'y',{duration:.08,ease:'power2'});
-      window.addEventListener('mousemove',e=>{rx(e.clientX);ry(e.clientY);dx(e.clientX);dy(e.clientY);dot.style.opacity=1;ring.style.opacity=1;},{passive:true});
-      window.addEventListener('mouseleave',()=>{dot.style.opacity=0;ring.style.opacity=0;});
-      document.querySelectorAll('a, button, .btn, .faq-q, .region-chip, .hz-card').forEach(el=>{
-        el.addEventListener('mouseenter',()=>ring.classList.add('is-hover'));
-        el.addEventListener('mouseleave',()=>ring.classList.remove('is-hover'));
-      });
-    }
   }
 
   window.addEventListener('load',()=>ScrollTrigger.refresh());
