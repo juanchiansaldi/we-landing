@@ -71,12 +71,12 @@ body::after{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 .atmos{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;opacity:var(--atmos-op);transition:opacity .5s var(--ease)}
-.atmos .blob{position:absolute;border-radius:50%;filter:blur(120px)}
-.atmos .b1{width:620px;height:620px;background:radial-gradient(circle,rgba(241,44,54,.22),transparent 70%);top:-180px;left:-140px;animation:drift 22s ease-in-out infinite}
-.atmos .b2{width:520px;height:520px;background:radial-gradient(circle,rgba(241,44,54,.10),transparent 70%);bottom:-160px;right:-120px;animation:drift 27s ease-in-out infinite reverse}
-.atmos .b3{width:400px;height:400px;background:radial-gradient(circle,rgba(160,30,40,.12),transparent 70%);top:40%;left:55%;animation:drift 30s ease-in-out infinite}
+.atmos .blob{position:absolute;border-radius:50%;filter:blur(180px)}
+.atmos .b1{width:820px;height:820px;background:radial-gradient(circle,rgba(241,44,54,.13),transparent 68%);top:-320px;left:-280px;animation:drift 22s ease-in-out infinite}
+.atmos .b2{width:720px;height:720px;background:radial-gradient(circle,rgba(241,44,54,.07),transparent 68%);bottom:-300px;right:-260px;animation:drift 27s ease-in-out infinite reverse}
+.atmos .b3{display:none}
 @keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,-50px)}}
-.grad-top{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(110% 80% at 50% -10%,rgba(241,44,54,.06),transparent 55%)}
+.grad-top{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(130% 100% at 50% -30%,rgba(241,44,54,.035),transparent 62%)}
 
 ::selection{background:var(--red);color:#fff}
 a{color:inherit;text-decoration:none}
@@ -586,48 +586,6 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
   </div>
 </section>
 
-<!-- ESENCIA · sticky fill storytelling -->
-<section class="esencia" id="esencia">
-  <div class="es-sticky">
-    <div class="wrap">
-      <div class="es-grid">
-        <div class="es-vis">
-          <div class="es-glow"></div>
-          <svg class="es-svg" viewBox="0 0 183.92 299.00" aria-hidden="true">
-            <use href="#we-iso" class="es-empty"/>
-            <clipPath id="esClip"><use href="#we-iso"/></clipPath>
-            <g clip-path="url(#esClip)">
-              <rect id="esFillRect" x="0" y="-1" width="183.92" height="301" fill="#F12C36" transform="translate(0 299)"></rect>
-            </g>
-          </svg>
-        </div>
-        <div class="es-copy">
-          <div class="es-beats" id="esBeats">
-            <div class="es-beat on" data-beat="0">
-              <div class="es-step">01 — La copa vacía</div>
-              <h2>Una góndola más <b>no alcanza.</b></h2>
-              <p>Elegir vino a ciegas es cruzar los dedos. Nosotros arrancamos por otro lado: escuchando qué vas a comer, con quién y para qué ocasión.</p>
-            </div>
-            <div class="es-beat" data-beat="1">
-              <div class="es-step">02 — Se va llenando</div>
-              <h2>Probamos <b>antes</b> que vos.</h2>
-              <p>Cada etiqueta pasa por la cava. Catamos, descartamos, y solo se queda lo que vale el descorche. Curaduría obsesiva, sin relleno.</p>
-            </div>
-            <div class="es-beat" data-beat="2">
-              <div class="es-step">03 — Copa llena</div>
-              <h2>Y te la servimos <b class="red-text">justa.</b></h2>
-              <p>El match exacto entre tu mesa y la botella. Eso es We: el vino se disfruta en plural, y mejor con alguien que sepa qué abrir.</p>
-            </div>
-          </div>
-          <div class="es-prog" id="esProg" aria-hidden="true">
-            <span class="on"><i></i></span><span><i></i></span><span><i></i></span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- CLUB -->
 <section class="sec" id="club">
   <div class="wrap">
@@ -1133,23 +1091,6 @@ function initSequenceStatic(){
     if(REDUCE){wr.setAttribute('transform','translate(0 0)');return;}
     const o={v:0};
     gsap.to(o,{v:1,duration:3.6,ease:'power2.inOut',delay:0.35,onUpdate:()=>wr.setAttribute('transform','translate(0 '+(299*(1-o.v))+')')});
-  })();
-
-  /* ---------- ESENCIA · isotipo fill 0→100 ---------- */
-  (function(){
-    const rect=document.getElementById('esFillRect');if(!rect)return;
-    const beats=[...document.querySelectorAll('#esBeats .es-beat')];
-    const prog=[...document.querySelectorAll('#esProg span')];
-    if(REDUCE){rect.setAttribute('transform','translate(0 0)');beats.forEach(b=>b.classList.add('on'));prog.forEach(p=>p.classList.add('on'));return;}
-    const o={v:0};
-    function apply(){
-      rect.setAttribute('transform','translate(0 '+(299*(1-o.v))+')');
-      const idx=o.v<0.36?0:o.v<0.72?1:2;
-      beats.forEach((b,i)=>b.classList.toggle('on',i===idx));
-      prog.forEach((p,i)=>p.classList.toggle('on',i<=idx));
-    }
-    gsap.to(o,{v:1,ease:'none',onUpdate:apply,scrollTrigger:{trigger:'#esencia',start:'top top',end:'bottom bottom',scrub:0.5}});
-    apply();
   })();
 
   /* ---------- UNIVERSO · horizontal pin ---------- */
