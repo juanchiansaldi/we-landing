@@ -264,19 +264,18 @@ h1.hero-title b{font-weight:600}
 .testi .who b{font-size:.88rem;display:block}.testi .who span{font-size:.74rem;color:var(--gray)}
 
 /* ===== CLUB / PRECIOS ===== */
-.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:start}
-.pc{position:relative;background:var(--surf);border:1px solid var(--border);border-radius:22px;padding:34px 28px;overflow:visible;display:flex;flex-direction:column;gap:6px}
-.pc.rec{border-color:transparent}
-.pc.rec::before{content:'';position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:linear-gradient(135deg,var(--red),rgba(241,44,54,.2),var(--red));background-size:200% 200%;animation:shimmer 4s ease infinite;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
-@keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-.pc-tag{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;padding:.35rem .9rem;border-radius:9999px;white-space:nowrap}
-.pc-name{font-family:'Fraunces';font-style:italic;font-size:1.35rem;color:var(--red)}
-.pc-cost{font-family:'Fraunces';font-size:2.7rem;font-weight:500;margin:.3rem 0}
-.pc-cost small{font-size:.85rem;color:var(--gray);font-family:'DM Sans';font-weight:400}
-.pc-desc{font-size:.85rem;color:var(--gray);margin-bottom:8px}
-.pc-feats{list-style:none;display:flex;flex-direction:column;gap:11px;margin:14px 0 22px;font-size:.88rem}
-.pc-feats li{display:flex;gap:10px;align-items:flex-start;color:var(--cream)}
-.pc-feats li::before{content:'';width:7px;height:7px;flex:none;margin-top:7px;border-radius:50%;background:var(--red)}
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
+.pc{position:relative;background:var(--surf);border:1px solid var(--border);border-radius:20px;padding:36px 30px;display:flex;flex-direction:column;gap:2px;transition:transform .45s var(--ease),border-color .45s var(--ease),box-shadow .45s var(--ease)}
+.pc:hover{transform:translateY(-4px);border-color:var(--border2)}
+.pc.rec{background:linear-gradient(180deg,rgba(241,44,54,.09),var(--surf) 44%);border-color:rgba(241,44,54,.42);box-shadow:0 36px 84px -46px rgba(241,44,54,.55)}
+.pc-tag{position:absolute;top:-11px;left:30px;background:var(--red);color:#fff;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;padding:.34rem .85rem;border-radius:9999px;white-space:nowrap;box-shadow:0 8px 20px -6px rgba(241,44,54,.6)}
+.pc-name{font-family:'Fraunces';font-style:italic;font-size:1.3rem;color:var(--red);margin-bottom:.35rem}
+.pc-cost{font-family:'Fraunces';font-size:2.5rem;font-weight:500;letter-spacing:-.01em;line-height:1}
+.pc-cost small{font-size:.82rem;color:var(--gray);font-family:'DM Sans';font-weight:400;letter-spacing:0}
+.pc-desc{font-size:.85rem;color:var(--gray);margin:.7rem 0 0;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.pc-feats{list-style:none;display:flex;flex-direction:column;gap:12px;margin:20px 0 26px;font-size:.9rem}
+.pc-feats li{display:flex;gap:11px;align-items:flex-start;color:var(--cream);line-height:1.42}
+.pc-feats li::before{content:'';flex:none;width:18px;height:18px;margin-top:1px;border-radius:50%;background-color:var(--red-soft);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F12C36' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center;background-size:11px}
 .pc .btn{width:100%;justify-content:center;margin-top:auto}
 
 /* ===== FAQ ===== */
@@ -384,11 +383,13 @@ nav.scrolled .nav-logo .logo-word{width:52px}
 .es-prog span.on i{transform:scaleX(1)}
 
 /* ===== HORIZONTAL — El universo We ===== */
-.hz-sec{position:relative}
-.hz-pin{height:100vh;overflow:hidden;display:flex;align-items:center}
-.hz-track{display:flex;align-items:stretch;gap:26px;padding:0 max(28px,calc((100vw - 1180px)/2));height:74vh;max-height:560px;will-change:transform}
-.hz-panel{flex:0 0 auto;display:flex;flex-direction:column;justify-content:flex-end}
-.hz-intro{width:min(72vw,440px);justify-content:center;padding-right:20px}
+.hz-sec{position:relative;padding:90px 0}
+.hz-pin{overflow:visible}
+.hz-track{display:flex;align-items:stretch;gap:22px;padding:0 max(28px,calc((100vw - 1180px)/2));overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:none;cursor:grab}
+.hz-track::-webkit-scrollbar{display:none}
+.hz-track.dragging{cursor:grabbing;scroll-snap-type:none}
+.hz-panel{flex:0 0 auto;display:flex;flex-direction:column;justify-content:flex-end;height:500px;scroll-snap-align:start}
+.hz-intro{width:min(82vw,420px);justify-content:center;padding-right:20px}
 .hz-intro .eyebrow{margin-bottom:1.1rem}
 .hz-intro h2{font-size:clamp(2.2rem,5vw,3.6rem);font-weight:300;line-height:1.04}
 .hz-intro h2 b{font-weight:600}
@@ -459,6 +460,7 @@ nav.scrolled .nav-logo .logo-word{width:52px}
   .visit-grid{grid-template-columns:1fr;gap:18px}
   .map-frame{min-height:320px;order:-1}
   .visit-card{padding:22px}
+  .cta-final .glowc{width:92vw;height:280px}
 }
 
 /* ===== EVENTOS · Acción ===== */
@@ -477,6 +479,29 @@ nav.scrolled .nav-logo .logo-word{width:52px}
 .eventos-feats li::before{content:'';width:7px;height:7px;flex:none;margin-top:7px;border-radius:50%;background:var(--red)}
 @media(max-width:860px){.eventos-grid{grid-template-columns:1fr;gap:22px}.eventos-media img{min-height:260px}}
 
+/* ===== ambiente rojo sutil, contenido por sección (sin bandas) ===== */
+#seleccion::before,#maridajes::before,#club::before,#visita .glowc{will-change:auto}
+#seleccion::before,#maridajes::before,#club::before{content:'';position:absolute;z-index:0;pointer-events:none;border-radius:50%;filter:blur(150px);background:radial-gradient(circle,rgba(241,44,54,.07),transparent 70%)}
+#seleccion::before{width:55%;height:46%;top:8%;left:-8%}
+#maridajes::before{width:58%;height:48%;top:14%;right:-10%}
+#club::before{width:60%;height:50%;top:28%;left:34%}
+
+/* ===== AGE GATE (+18, primera visita) ===== */
+html.age-locked{overflow:hidden}
+.age-gate{position:fixed;inset:0;z-index:3000;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(8,6,6,.86);backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);transition:opacity .45s var(--ease)}
+.age-gate.gone{opacity:0;pointer-events:none}
+.ag-card{max-width:470px;width:100%;text-align:center;background:linear-gradient(165deg,var(--surf),var(--surf2));border:1px solid var(--border2);border-radius:24px;padding:46px 40px;box-shadow:0 50px 120px -40px rgba(0,0,0,.9);position:relative;overflow:hidden;animation:agUp .6s var(--ease)}
+@keyframes agUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.ag-card::before{content:'';position:absolute;top:-45%;left:50%;transform:translateX(-50%);width:130%;height:65%;background:radial-gradient(ellipse,rgba(241,44,54,.2),transparent 70%);pointer-events:none}
+.ag-iso{width:38px;height:61px;color:var(--red);display:block;margin:0 auto 22px;position:relative;filter:drop-shadow(0 10px 24px rgba(241,44,54,.4))}
+.ag-card .eyebrow{justify-content:center;margin-bottom:14px;position:relative}
+.ag-card h2{font-family:'Fraunces';font-weight:300;font-size:clamp(1.8rem,5vw,2.6rem);line-height:1.06;margin-bottom:14px;position:relative}
+.ag-card h2 b{font-weight:600}
+.ag-card p{color:var(--gray);font-size:.97rem;max-width:380px;margin:0 auto 28px;line-height:1.6;position:relative}
+.ag-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative}
+.ag-actions .btn{font-size:.88rem;padding:.78rem 1.55rem}
+.ag-foot{display:block;margin-top:26px;font-size:.66rem;letter-spacing:.03em;color:var(--gray);opacity:.65;position:relative}
+
 /* ===== focus visible (a11y) ===== */
 a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:6px}
 
@@ -491,7 +516,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
 /* ===== prefers-reduced-motion ===== */
 @media(prefers-reduced-motion:reduce){
   *{scroll-behavior:auto!important}
-  .atmos .blob,.iso-stage,.pc.rec::before,.tw-cursor{animation:none!important}
+  .atmos .blob,.iso-stage,.tw-cursor{animation:none!important}
   .marquee-track{animation:none!important;transform:none!important}
   .reveal{opacity:1!important;transform:none!important}
   .esencia{min-height:0}
@@ -499,14 +524,29 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
   .es-sticky{position:relative;height:auto;padding:80px 0}
   .seq-sec{height:auto}
   .seq-sticky{position:relative;height:80vh}
-  .hz-pin{height:auto;overflow:visible}
-  .hz-track{transform:none!important;flex-wrap:wrap;height:auto;max-height:none}
+  .hz-track{transform:none!important}
 }
 </style>
 </head>
 <body>
 
 <div class="scroll-bar" id="scrollBar"></div>
+
+<!-- AGE GATE · +18 (solo primera visita) -->
+<div class="age-gate" id="ageGate" role="dialog" aria-modal="true" aria-labelledby="agTitle">
+  <div class="ag-card">
+    <span class="ag-iso logo-iso"><svg><use href="#we-iso"/></svg></span>
+    <span class="eyebrow">+18 · Consumo responsable</span>
+    <h2 id="agTitle">¿Sos mayor de <b class="red-text">18 años?</b></h2>
+    <p>We es una cava y tienda de bebidas con alcohol. Para entrar tenés que ser mayor de edad.</p>
+    <div class="ag-actions">
+      <button class="btn btn-primary" id="agYes" type="button">Sí, soy mayor de 18</button>
+      <button class="btn btn-ghost" id="agNo" type="button">Soy menor</button>
+    </div>
+    <span class="ag-foot">Prohibida la venta de bebidas alcohólicas a menores de 18 años (Ley 24.788). Beber con moderación.</span>
+  </div>
+</div>
+<script>(function(){try{if(localStorage.getItem('we-age')==='1'){var g=document.getElementById('ageGate');if(g)g.remove();}else{document.documentElement.classList.add('age-locked');}}catch(e){}})();</script>
 
 <!-- hidden SVG defs (logo + isotipo) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -1005,6 +1045,21 @@ function initSequenceStatic(){
     });
   }
 
+  /* ---------- AGE GATE (+18) ---------- */
+  (function(){
+    const gate=document.getElementById('ageGate');if(!gate)return; // ya removido si estaba verificado
+    if(lenis)lenis.stop();
+    const yes=document.getElementById('agYes'),no=document.getElementById('agNo');
+    yes&&yes.addEventListener('click',()=>{
+      try{localStorage.setItem('we-age','1');}catch(e){}
+      gate.classList.add('gone');document.documentElement.classList.remove('age-locked');
+      if(lenis)lenis.start();setTimeout(()=>{gate.remove();ScrollTrigger.refresh();},480);
+    });
+    no&&no.addEventListener('click',()=>{
+      gate.querySelector('.ag-card').innerHTML='<span class="ag-iso logo-iso"><svg><use href="#we-iso"/></svg></span><h2 style="position:relative">Volvé cuando <b class="red-text">seas mayor.</b></h2><p style="position:relative">Lo sentimos: tenés que ser mayor de 18 años para entrar. El consumo de alcohol es exclusivo para adultos. Beber con moderación.</p>';
+    });
+  })();
+
   /* ---------- scroll progress bar ---------- */
   gsap.to('#scrollBar',{scaleX:1,ease:'none',scrollTrigger:{trigger:document.documentElement,start:'top top',end:'bottom bottom',scrub:0.3}});
 
@@ -1070,11 +1125,15 @@ function initSequenceStatic(){
     gsap.to(o,{v:1,duration:3.6,ease:'power2.inOut',delay:0.35,onUpdate:()=>wr.setAttribute('transform','translate(0 '+(299*(1-o.v))+')')});
   })();
 
-  /* ---------- UNIVERSO · horizontal pin ---------- */
+  /* ---------- UNIVERSO · carrusel horizontal (drag, sin secuestrar el scroll) ---------- */
   (function(){
-    const track=document.getElementById('hzTrack');if(!track||REDUCE)return;
-    const amount=()=>Math.max(0,track.scrollWidth-window.innerWidth);
-    gsap.to(track,{x:()=>-amount(),ease:'none',scrollTrigger:{trigger:'#universo',start:'top top',end:()=>'+='+amount(),scrub:1,pin:'.hz-pin',anticipatePin:1,invalidateOnRefresh:true}});
+    const track=document.getElementById('hzTrack');if(!track)return;
+    let down=false,sx=0,sl=0,moved=0;
+    track.addEventListener('pointerdown',e=>{if(e.pointerType==='touch')return;down=true;moved=0;sx=e.clientX;sl=track.scrollLeft;track.classList.add('dragging');});
+    window.addEventListener('pointermove',e=>{if(!down)return;const dx=e.clientX-sx;moved=Math.max(moved,Math.abs(dx));track.scrollLeft=sl-dx;});
+    window.addEventListener('pointerup',()=>{down=false;track.classList.remove('dragging');});
+    // evitar que un drag dispare el click del card/enlace
+    track.addEventListener('click',e=>{if(moved>6){e.preventDefault();e.stopPropagation();}},true);
   })();
 
   /* ---------- SEQUENCE · 193 frames canvas ---------- */
