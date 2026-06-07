@@ -70,13 +70,13 @@ body::after{
   opacity:var(--grain-op);mix-blend-mode:var(--grain-blend);
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-.atmos{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;opacity:var(--atmos-op);transition:opacity .5s var(--ease)}
+.atmos{position:absolute;top:0;left:0;right:0;height:105vh;z-index:0;pointer-events:none;overflow:hidden;opacity:var(--atmos-op);transition:opacity .5s var(--ease)}
 .atmos .blob{position:absolute;border-radius:50%;filter:blur(180px)}
 .atmos .b1{width:820px;height:820px;background:radial-gradient(circle,rgba(241,44,54,.13),transparent 68%);top:-320px;left:-280px;animation:drift 22s ease-in-out infinite}
 .atmos .b2{width:720px;height:720px;background:radial-gradient(circle,rgba(241,44,54,.07),transparent 68%);bottom:-300px;right:-260px;animation:drift 27s ease-in-out infinite reverse}
 .atmos .b3{display:none}
 @keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,-50px)}}
-.grad-top{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(130% 100% at 50% -30%,rgba(241,44,54,.035),transparent 62%)}
+.grad-top{position:absolute;top:0;left:0;right:0;height:105vh;z-index:0;pointer-events:none;background:radial-gradient(130% 90% at 50% -20%,rgba(241,44,54,.05),transparent 60%)}
 
 ::selection{background:var(--red);color:#fff}
 a{color:inherit;text-decoration:none}
@@ -545,7 +545,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
         <p class="hero-sub">Vinería y tienda gourmet en Crespo. Etiquetas que no vas a encontrar en cualquier góndola, y todo para armar la mesa perfecta.</p>
         <div class="type-line">Hoy descorchamos <span class="tw" id="tw"></span><span class="tw-cursor"></span></div>
         <div class="hero-ctas">
-          <a href="#encontras" class="btn btn-primary" id="magBtn">Ver la selección
+          <a href="#seleccion" class="btn btn-primary" id="magBtn">Ver la selección
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
           <a href="#visita" class="btn btn-ghost">Cómo llegar</a>
@@ -657,29 +657,6 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
     </div>
   </div>
 </section>
-
-<!-- ENCONTRÁS -->
-<section class="sec" id="encontras">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <span class="eyebrow">La góndola</span>
-      <h2>Lo que vas a <b>encontrar</b> en We</h2>
-      <p>Una curaduría obsesiva. Probamos antes de que entre, y solo se queda lo que vale el descorche.</p>
-    </div>
-    <div class="enc-grid" id="encGrid">
-      <div class="enc-card reveal"><div class="enc-num">01</div><h4>Tintos de autor</h4><p>Malbec, Cabernet Franc, Bonarda y blends de pequeños productores.</p><div class="uline"></div></div>
-      <div class="enc-card reveal"><div class="enc-num">02</div><h4>Blancos &amp; rosados</h4><p>Chardonnay, Torrontés y rosados frescos para cualquier mesa.</p><div class="uline"></div></div>
-      <div class="enc-card reveal"><div class="enc-num">03</div><h4>Espumantes &amp; Cava</h4><p>Brut Nature, método tradicional y burbujas para celebrar.</p><div class="uline"></div></div>
-      <div class="enc-card reveal"><div class="enc-num">04</div><h4>Quesos &amp; fiambres</h4><p>Tablas que se arman solas: estacionados, ahumados y charcutería.</p><div class="uline"></div></div>
-      <div class="enc-card reveal"><div class="enc-num">05</div><h4>Aceites &amp; conservas</h4><p>Aceite de oliva, antipastos, aceitunas y delicatessen regionales.</p><div class="uline"></div></div>
-      <div class="enc-card reveal"><div class="enc-num">06</div><h4>Cajas de regalo</h4><p>Sets armados con sentido, listos para sorprender a quien sea.</p><div class="uline"></div></div>
-      <div class="enc-card reveal"><div class="enc-num">07</div><h4>Vinos naturales</h4><p>Etiquetas de baja intervención, biodinámicas y orgánicas.</p><div class="uline"></div></div>
-      <div class="enc-card reveal"><div class="enc-num">08</div><h4>Destilados selectos</h4><p>Gin, vermut artesanal y whiskies para los que buscan más.</p><div class="uline"></div></div>
-    </div>
-  </div>
-</section>
-
-<div class="wrap"><div class="divider"><span class="line"></span><span class="logo-iso"><svg><use href="#we-iso"/></svg></span><span class="line"></span></div></div>
 
 <!-- UNIVERSO · horizontal pinned -->
 <section class="hz-sec" id="universo">
@@ -895,7 +872,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
       </div>
       <div class="foot-col">
         <h5>Explorar</h5>
-        <a href="#encontras">Selección</a><a href="#seleccion">Destacados</a><a href="#club">Club We</a><a href="#faq">FAQ</a>
+        <a href="#seleccion">Selección</a><a href="#universo">El universo We</a><a href="#club">Club We</a><a href="#faq">FAQ</a>
       </div>
       <div class="foot-col">
         <h5>Contacto</h5>
