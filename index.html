@@ -64,6 +64,7 @@ body{
   font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.65;
   overflow-x:hidden;-webkit-font-smoothing:antialiased;letter-spacing:.1px;
   transition:background .5s var(--ease),color .5s var(--ease);
+  font-variation-settings:"WONK" 0,"SOFT" 0;font-variant-ligatures:no-discretionary-ligatures;
 }
 body::after{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
@@ -185,14 +186,14 @@ h1.hero-title b{font-weight:600}
 .regions{padding:64px 0;border-bottom:1px solid var(--border)}
 .regions-lbl{text-align:center;font-size:.7rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gray);margin-bottom:30px}
 .regions-row{display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
-.region-chip{padding:.6rem 1.25rem;border:1px solid var(--border2);border-radius:9999px;font-size:.95rem;color:var(--cream);font-family:'Fraunces';font-style:italic;transition:border-color .4s var(--ease),color .4s var(--ease),background .4s var(--ease)}
+.region-chip{padding:.6rem 1.25rem;border:1px solid var(--border2);border-radius:9999px;font-size:.95rem;color:var(--cream);font-family:'Fraunces';font-style:normal;transition:border-color .4s var(--ease),color .4s var(--ease),background .4s var(--ease)}
 .region-chip:hover{border-color:var(--red);color:var(--red);background:var(--red-soft)}
 
 /* ===== ENCONTRÁS — editorial numbered ===== */
 .enc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:18px;overflow:hidden}
 .enc-card{background:var(--bg);padding:30px 26px;min-height:188px;display:flex;flex-direction:column;transition:background .45s var(--ease)}
 .enc-card:hover{background:var(--surf)}
-.enc-num{font-family:'Fraunces';font-size:.95rem;color:var(--red);font-style:italic;margin-bottom:auto}
+.enc-num{font-family:'Fraunces';font-size:.95rem;color:var(--red);font-style:normal;margin-bottom:auto}
 .enc-card h4{font-family:'Fraunces';font-weight:500;font-size:1.3rem;margin-top:26px}
 .enc-card p{font-size:.84rem;color:var(--gray);margin-top:.4rem}
 .enc-card .uline{height:2px;width:0;background:var(--red);margin-top:14px;transition:width .5s var(--ease)}
@@ -206,7 +207,7 @@ h1.hero-title b{font-weight:600}
 .orbit-ring{position:absolute;top:50%;left:50%;border:1px solid var(--border);border-radius:50%;transform:translate(-50%,-50%)}
 .ring-out{width:430px;height:430px}.ring-in{width:240px;height:240px}
 .orbit-item{position:absolute;top:50%;left:50%;width:96px;height:96px;border-radius:50%;background:var(--chip-bg);backdrop-filter:blur(8px);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;text-align:center;z-index:4;box-shadow:0 10px 30px -12px rgba(0,0,0,.4)}
-.orbit-item span{font-family:'Fraunces';font-style:italic;font-size:.92rem;color:var(--cream)}
+.orbit-item span{font-family:'Fraunces';font-style:normal;font-size:.92rem;color:var(--cream)}
 
 /* ===== MARIDAJES (before/after) ===== */
 .ba-wrap{position:relative;width:100%;max-width:900px;margin:0 auto;height:420px;border-radius:22px;overflow:hidden;cursor:ew-resize;border:1px solid var(--border2);user-select:none;opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
@@ -251,7 +252,7 @@ h1.hero-title b{font-weight:600}
 .pc-price{font-family:'Fraunces';font-size:1.7rem;font-weight:500;color:var(--white)}
 .pc-price small{font-size:.7rem;color:var(--gray);font-family:'DM Sans'}
 .pc-meta{display:flex;gap:18px;font-size:.78rem;color:var(--cream);border-top:1px solid var(--border);padding-top:14px;margin-top:auto}
-.pc-meta b{color:var(--red);font-family:'Fraunces';font-weight:500;font-style:italic}
+.pc-meta b{color:var(--red);font-family:'Fraunces';font-weight:500;font-style:normal}
 
 /* ===== TESTIMONIOS ===== */
 .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
@@ -269,7 +270,7 @@ h1.hero-title b{font-weight:600}
 .pc:hover{transform:translateY(-4px);border-color:var(--border2)}
 .pc.rec{background:linear-gradient(180deg,rgba(241,44,54,.09),var(--surf) 44%);border-color:rgba(241,44,54,.42);box-shadow:0 36px 84px -46px rgba(241,44,54,.55)}
 .pc-tag{position:absolute;top:-11px;left:30px;background:var(--red);color:#fff;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;padding:.34rem .85rem;border-radius:9999px;white-space:nowrap;box-shadow:0 8px 20px -6px rgba(241,44,54,.6)}
-.pc-name{font-family:'Fraunces';font-style:italic;font-size:1.3rem;color:var(--red);margin-bottom:.35rem}
+.pc-name{font-family:'Fraunces';font-style:normal;font-size:1.3rem;color:var(--red);margin-bottom:.35rem}
 .pc-cost{font-family:'Fraunces';font-size:2.5rem;font-weight:500;letter-spacing:-.01em;line-height:1}
 .pc-cost small{font-size:.82rem;color:var(--gray);font-family:'DM Sans';font-weight:400;letter-spacing:0}
 .pc-desc{font-size:.85rem;color:var(--gray);margin:.7rem 0 0;padding-bottom:20px;border-bottom:1px solid var(--border)}
@@ -308,6 +309,11 @@ footer{border-top:1px solid var(--border);padding:60px 0 36px}
 .foot-bottom{border-top:1px solid var(--border);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;font-size:.78rem;color:var(--gray)}
 .age-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border2);padding:.4rem .8rem;border-radius:9999px;color:var(--cream)}
 .age-badge b{color:var(--red)}
+.age-strip{display:flex;align-items:center;gap:18px;margin-bottom:24px;padding:16px 22px;border:1px solid var(--border2);border-radius:16px;background:linear-gradient(90deg,var(--red-soft),transparent 55%)}
+.age-strip .age-num{flex:none;display:inline-flex;align-items:center;justify-content:center;width:50px;height:50px;border-radius:50%;background:var(--red);color:#fff;font-family:'Fraunces';font-weight:600;font-size:1.05rem;letter-spacing:-.02em;box-shadow:0 8px 22px -6px rgba(241,44,54,.6)}
+.age-strip p{color:var(--gray);font-size:.86rem;line-height:1.55;margin:0}
+.age-strip p b{color:var(--cream);font-weight:600}
+@media(max-width:560px){.age-strip{gap:14px;padding:14px 16px}.age-strip .age-num{width:42px;height:42px;font-size:.95rem}.age-strip p{font-size:.8rem}}
 
 @media(max-width:900px){
   .hero-grid{grid-template-columns:1fr;gap:20px}
@@ -357,7 +363,7 @@ nav.scrolled .nav-logo .logo-word{width:52px}
 .marquee{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:20px 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
 .marquee-track{display:flex;width:max-content;gap:0;animation:mq 38s linear infinite;will-change:transform}
 .marquee:hover .marquee-track{animation-play-state:paused}
-.mq-item{font-family:'Fraunces';font-style:italic;font-size:clamp(1.3rem,2.6vw,2rem);color:var(--cream);padding:0 1.4rem;display:inline-flex;align-items:center;gap:1.4rem;white-space:nowrap}
+.mq-item{font-family:'Fraunces';font-style:normal;font-size:clamp(1.3rem,2.6vw,2rem);color:var(--cream);padding:0 1.4rem;display:inline-flex;align-items:center;gap:1.4rem;white-space:nowrap}
 .mq-item::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--red);flex:none}
 @keyframes mq{to{transform:translateX(-50%)}}
 
@@ -373,7 +379,7 @@ nav.scrolled .nav-logo .logo-word{width:52px}
 .es-beats{position:relative}
 .es-beat{position:absolute;inset:0;opacity:0;transform:translateY(26px);transition:opacity .6s var(--ease),transform .6s var(--ease);pointer-events:none}
 .es-beat.on{opacity:1;transform:translateY(0);pointer-events:auto}
-.es-beat .es-step{font-family:'Fraunces';font-style:italic;color:var(--red);font-size:.95rem;margin-bottom:1rem}
+.es-beat .es-step{font-family:'Fraunces';font-style:normal;color:var(--red);font-size:.95rem;margin-bottom:1rem}
 .es-beat h2{font-size:clamp(2rem,4.4vw,3.3rem);font-weight:300;line-height:1.05;margin-bottom:1.1rem}
 .es-beat h2 b{font-weight:600}
 .es-beat p{color:var(--gray);font-size:1.06rem;max-width:440px}
@@ -405,7 +411,7 @@ nav.scrolled .nav-logo .logo-word{width:52px}
 .hz-card:hover .hz-img{transform:scale(1.05)}
 .hz-card::after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(13,10,10,.3) 0%,rgba(13,10,10,.15) 32%,rgba(13,10,10,.93) 100%)}
 .hz-card>*:not(.hz-img){position:relative;z-index:2}
-.hz-card .hz-idx{font-family:'Fraunces';font-style:italic;color:var(--red);font-size:.95rem}
+.hz-card .hz-idx{font-family:'Fraunces';font-style:normal;color:var(--red);font-size:.95rem}
 .hz-card .hz-glyph{position:absolute;top:24px;right:26px;width:20px;height:32px;color:var(--red);opacity:.5}
 .hz-card h3{font-family:'Fraunces';font-weight:500;font-size:1.9rem;margin-top:auto}
 .hz-card p{color:var(--gray);font-size:.9rem;margin-top:.6rem}
@@ -421,7 +427,7 @@ nav.scrolled .nav-logo .logo-word{width:52px}
 .seq-overlay{position:absolute;left:0;right:0;bottom:9vh;text-align:center;color:#faf6ef;pointer-events:none;padding:0 24px}
 .seq-overlay .eyebrow{color:#ff6a72}
 .seq-overlay h2{font-family:'Fraunces';font-weight:300;font-size:clamp(2rem,5vw,3.6rem);margin-top:1rem;line-height:1.05;text-shadow:0 6px 30px rgba(0,0,0,.5)}
-.seq-overlay h2 b{font-weight:600;font-style:italic;color:#ff5d65}
+.seq-overlay h2 b{font-weight:600;font-style:normal;color:#ff5d65}
 .seq-load{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:#000;color:#f1e9dc;z-index:3;transition:opacity .6s var(--ease)}
 .seq-load.done{opacity:0;pointer-events:none}
 .seq-load .sl-bar{width:min(220px,52vw);height:2px;background:rgba(241,233,220,.18);overflow:hidden;border-radius:2px}
@@ -432,7 +438,7 @@ nav.scrolled .nav-logo .logo-word{width:52px}
 .filo{background:var(--red);color:#1b1212;text-align:center;padding:clamp(90px,15vh,170px) 24px;position:relative;overflow:hidden}
 .filo .logo-iso{width:44px;height:71px;color:#1b1212;display:block;margin:0 auto 1.8rem;opacity:.92}
 .filo h2{font-family:'Fraunces';font-weight:300;font-size:clamp(2.1rem,6vw,4.3rem);line-height:1.04;color:#1b1212}
-.filo h2 i{font-style:italic;font-weight:400}
+.filo h2 i{font-style:normal;font-weight:400}
 .filo-by{margin-top:1.8rem;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(27,18,18,.55)}
 
 /* ===== VISITA · mapa + info ===== */
@@ -448,7 +454,7 @@ nav.scrolled .nav-logo .logo-word{width:52px}
 .vc-hours{border-collapse:collapse;width:100%}
 .vc-hours td{padding:.18rem 0;font-size:.9rem;color:var(--cream);vertical-align:top}
 .vc-hours td:first-child{color:var(--gray);padding-right:18px;white-space:nowrap}
-.vc-hours td:last-child{font-family:'Fraunces';font-style:italic;text-align:right}
+.vc-hours td:last-child{font-family:'Fraunces';font-style:normal;text-align:right}
 .vc-closed{color:var(--red)!important}
 .vc-phone{font-family:'Fraunces';font-size:1.4rem;color:var(--cream);border-bottom:1px solid rgba(241,44,54,.5);transition:color .3s var(--ease)}
 .vc-phone:hover{color:var(--red)}
@@ -917,7 +923,6 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
       <div>
         <div class="foot-logo logo-word"><svg viewBox="0 0 520.10 261.99"><use href="#we-word"/></svg></div>
         <p>El vino se disfruta en plural. Vinería y tienda gourmet en Crespo, Entre Ríos.</p>
-        <div class="age-badge" style="margin-top:18px"><b>+18</b> Beber con moderación. Prohibida la venta a menores de 18 años.</div>
       </div>
       <div class="foot-col">
         <h5>Explorar</h5>
@@ -927,6 +932,10 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
         <h5>Contacto</h5>
         <a href="https://www.instagram.com/wedrinkcrespo/" target="_blank" rel="noopener">@wedrinkcrespo</a><a href="#visita">Cómo llegar</a><a href="#visita">WhatsApp</a><a href="#club">Sumarme al Club</a>
       </div>
+    </div>
+    <div class="age-strip">
+      <span class="age-num">+18</span>
+      <p><b>Beber con moderación.</b> Prohibida la venta de bebidas alcohólicas a menores de 18 años (Ley Nacional 24.788). Si vas a manejar, no tomes.</p>
     </div>
     <div class="foot-bottom">
       <span>© 2026 We · Cava &amp; Gourmet. Todos los derechos reservados.</span>
