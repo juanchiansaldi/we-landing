@@ -1,6 +1,8 @@
-# Configuración de hosting en Netlify (sitio estático, sin build)
+# Deploy de la plataforma Next.js (vive en platform/).
+# Con base="platform", Netlify construye la app aunque no se setee el base dir en la UI.
 [build]
-  publish = "."
-  command = ""
+  base = "platform"
+  command = "npm run build"
 
-# El panel de carga vive en /admin (Decap CMS)
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
