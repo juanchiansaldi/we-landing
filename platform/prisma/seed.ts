@@ -66,8 +66,9 @@ async function main() {
     });
   }
 
-  // 4) Productos
-  for (const p of products) {
+  // 4) Productos de PRUEBA (solo unos pocos; los reales vienen del Excel)
+  const TEST_COUNT = 6;
+  for (const p of products.slice(0, TEST_COUNT)) {
     const slug = p.id || slugify(p.name);
     const product = await prisma.product.upsert({
       where: { storeId_slug: { storeId: store.id, slug } },
@@ -90,7 +91,7 @@ async function main() {
     }
   }
 
-  console.log(`Seed OK → tienda "${store.name}", ${cats.length} categorías, ${PLANS.length} planes, ${products.length} productos.`);
+  console.log(`Seed OK → tienda "${store.name}", ${cats.length} categorías, ${PLANS.length} planes, ${TEST_COUNT} productos de PRUEBA.`);
 }
 
 main().catch((e) => { console.error(e); process.exit(1); }).finally(() => prisma.$disconnect());
