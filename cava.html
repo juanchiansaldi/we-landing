@@ -70,11 +70,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 .shop{padding:90px 0 20px;position:relative;overflow:hidden}
 .shop::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(120% 55% at 50% -25%,rgba(241,44,54,.13),transparent 56%)}
 .shop>.wrap{position:relative;z-index:2}
-.shop-head{max-width:780px}
+.shop-head{max-width:none}
+.shop-head-top{display:flex;justify-content:space-between;align-items:flex-end;gap:32px}
+.shop-head-text{max-width:620px}
 .shop-head h1{font-size:clamp(1.9rem,4.2vw,3rem);font-weight:300;line-height:1.04}
 .shop-head h1 b{font-weight:600}
 .shop-head p{color:var(--gray);font-size:.97rem;margin-top:.65rem;max-width:540px}
-.shop-ship{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.shop-ship{display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex:none}
+@media(max-width:760px){
+  .shop-head-top{flex-direction:column;align-items:stretch;gap:16px}
+  .shop-ship{flex-direction:row;align-items:flex-start;flex-wrap:wrap}
+}
 .shop-ship span{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;color:var(--cream);background:var(--surf);border:1px solid var(--border2);border-radius:9999px;padding:.45rem .85rem}
 .shop-ship span b{color:var(--red);font-weight:600}
 .shop-ship svg{width:15px;height:15px;color:var(--red);flex:none}
@@ -323,12 +329,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 <header class="shop">
   <div class="wrap">
     <div class="shop-head">
-      <span class="eyebrow">La Cava · Tienda online</span>
-      <h1>Llevate la cava <b class="red-text">a tu mesa.</b></h1>
-      <p>Hacé tu pedido y te lo llevamos. Vinos, espumantes, quesos, chocolates y todo lo de We.</p>
-      <div class="shop-ship">
-        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Crespo: <b>24–48 hs hábiles</b></span>
-        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="18.5" cy="18.5" r="2"/></svg>Todo el país: <b>2–4 días</b></span>
+      <div class="shop-head-top">
+        <div class="shop-head-text">
+          <span class="eyebrow">La Cava · Tienda online</span>
+          <h1>Llevate la cava <b class="red-text">a tu mesa.</b></h1>
+          <p>Hacé tu pedido y te lo llevamos. Vinos, espumantes, quesos, chocolates y todo lo de We.</p>
+        </div>
+        <div class="shop-ship">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Crespo: <b>24–48 hs hábiles</b></span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="18.5" cy="18.5" r="2"/></svg>Todo el país: <b>2–4 días</b></span>
+        </div>
       </div>
       <div class="shop-search">
         <div class="search-box">
