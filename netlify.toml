@@ -1,0 +1,6 @@
+# Configuración de hosting en Netlify (sitio estático, sin build)
+[build]
+  publish = "."
+  command = ""
+
+# El panel de carga vive en /admin (Decap CMS)

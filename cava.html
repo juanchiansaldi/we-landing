@@ -432,7 +432,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
   </div>
 </footer>
 
-<script src="./assets/data/products.js"></script>
 <script>
 /* THEME (compartido con la landing) */
 (function(){
@@ -458,8 +457,21 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 })();
 
 /* STORE */
-(function(){
-  const P=window.WE_PRODUCTS||[], CATS=window.WE_CATS||[], SHOP=window.WE_SHOP||{};
+(async function(){
+  let P=[], CATS=[], SHOP={};
+  try{
+    const [pr,st]=await Promise.all([
+      fetch('./assets/data/products.json').then(r=>r.json()),
+      fetch('./assets/data/settings.json').then(r=>r.json())
+    ]);
+    P=(pr&&Array.isArray(pr.products))?pr.products:(Array.isArray(pr)?pr:[]); SHOP=st||{}; CATS=(st&&st.cats)||[];
+  }catch(e){
+    console.error('No se pudieron cargar los productos:',e);
+    document.getElementById('shopGrid').innerHTML='<div class="shop-empty">No pudimos cargar el catálogo. Recargá la página en un momento.</div>';
+    return;
+  }
+  const slugify=s=>(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  P.forEach((p,i)=>{ if(!p.id) p.id=slugify(p.name)||('p'+i); });
   const fmt=n=>'$ '+Math.round(n).toLocaleString('es-AR');
   const eff=p=>p.promo&&p.promo<p.price?p.promo:p.price;
   const maxPrice=Math.max(...P.map(p=>p.price),1);

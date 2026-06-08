@@ -1,0 +1,66 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "assets/img/productos"
+public_folder: "/assets/img/productos"
+
+locale: es
+site_url: https://wecavagourmet.com
+display_url: https://wecavagourmet.com
+logo_url: https://wecavagourmet.com/assets/favicon/android-chrome-512x512.png
+
+collections:
+  - name: "tienda"
+    label: "Tienda"
+    files:
+      - name: "productos"
+        label: "Productos"
+        file: "assets/data/products.json"
+        format: json
+        description: "Agregá, editá o sacá productos de la Cava. Tocá un producto para editarlo, o usá el botón de abajo para sumar uno nuevo."
+        fields:
+          - name: "products"
+            label: "Productos"
+            label_singular: "Producto"
+            widget: "list"
+            summary: "{{fields.name}} — {{fields.brand}}"
+            fields:
+              - { name: name, label: "Nombre", widget: string }
+              - { name: brand, label: "Bodega / Marca", widget: string }
+              - name: cat
+                label: "Categoría"
+                widget: select
+                options: ["Tintos", "Blancos & Rosados", "Espumantes", "Quesos & Fiambres", "Dulces & Chocolates", "Conservas", "Cajas & Regalos"]
+              - { name: price, label: "Precio ($)", widget: number, value_type: int, min: 0 }
+              - { name: promo, label: "Precio en promo ($) — dejá vacío si no está en oferta", widget: number, value_type: int, required: false, default: null }
+              - { name: img, label: "Foto del producto", widget: image, required: false, choose_url: false }
+              - { name: notes, label: "Descripción corta (se ve en la tarjeta)", widget: string }
+              - { name: desc, label: "Descripción larga (se ve al abrir el producto)", widget: text, required: false }
+              - name: meta
+                label: "Ficha técnica (Región, Cosecha, etc.)"
+                label_singular: "Dato"
+                widget: list
+                required: false
+                summary: "{{fields.k}}: {{fields.v}}"
+                fields:
+                  - { name: k, label: "Dato", widget: string, hint: "ej: Región" }
+                  - { name: v, label: "Valor", widget: string, hint: "ej: Valle de Uco" }
+              - { name: nuevo, label: "¿Es novedad?", widget: boolean, default: false }
+              - { name: stock, label: "¿Hay stock?", widget: boolean, default: true }
+              - { name: id, label: "ID interno (opcional — dejalo vacío y se genera solo)", widget: string, required: false }
+
+      - name: "configuracion"
+        label: "Configuración de la tienda"
+        file: "assets/data/settings.json"
+        format: json
+        description: "Datos de contacto y envío que usa la tienda."
+        fields:
+          - { name: whatsapp, label: "WhatsApp (sin +, sin espacios)", widget: string, hint: "ej: 5493435172449" }
+          - { name: alias, label: "Alias de transferencia", widget: string }
+          - { name: titular, label: "Titular de la cuenta", widget: string }
+          - { name: envioNota, label: "Nota de envío (se ve en el carrito)", widget: string }
+          - name: cats
+            label: "Categorías de la tienda"
+            widget: list
+            field: { name: cat, label: "Categoría", widget: string }
