@@ -241,6 +241,26 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
   .pd-sugg-grid{grid-template-columns:repeat(2,1fr)}
 }
 
+/* ===== SUSCRIPCIÓN (Club We) ===== */
+.sub-overlay{position:fixed;inset:0;z-index:1700;background:rgba(8,6,6,.74);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .4s var(--ease)}
+.sub-overlay.open{opacity:1;pointer-events:auto}
+.sub{position:fixed;z-index:1800;left:50%;top:50%;transform:translate(-50%,-46%);opacity:0;pointer-events:none;width:min(460px,94vw);max-height:90vh;background:var(--bg);border:1px solid var(--border2);border-radius:24px;overflow:hidden;transition:opacity .4s var(--ease),transform .4s var(--ease);box-shadow:0 50px 120px -40px rgba(0,0,0,.85)}
+.sub.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+.sub-close{position:absolute;top:14px;right:14px;z-index:6;width:36px;height:36px;border-radius:50%;border:none;background:rgba(22,16,16,.72);color:#faf6ef;cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center}
+.sub-close:hover{background:var(--red);color:#fff}
+.sub-body{padding:40px 34px 34px;overflow-y:auto;max-height:90vh;text-align:center;position:relative}
+.sub-body::before{content:'';position:absolute;top:0;left:0;right:0;height:130px;background:radial-gradient(120% 100% at 50% 0,rgba(241,44,54,.14),transparent 70%);pointer-events:none}
+.sub-body .eyebrow{justify-content:center;position:relative}
+.sub-name{font-family:'Spectral';font-weight:600;font-size:2rem;color:var(--red);margin:14px 0 2px;position:relative}
+.sub-price{font-family:'Spectral';font-weight:600;font-size:2.6rem;line-height:1;position:relative}
+.sub-price small{font-size:.9rem;color:var(--gray);font-family:'DM Sans';font-weight:400}
+.sub-desc{color:var(--gray);font-size:.92rem;margin:10px auto 18px;max-width:330px;position:relative}
+.sub-feats{list-style:none;text-align:left;display:flex;flex-direction:column;gap:11px;max-width:320px;margin:0 auto 24px;position:relative}
+.sub-feats li{display:flex;gap:11px;align-items:flex-start;color:var(--cream);font-size:.9rem;line-height:1.4}
+.sub-feats li::before{content:'';flex:none;width:18px;height:18px;margin-top:1px;border-radius:50%;background-color:var(--red-soft);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F12C36' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center;background-size:11px}
+.sub-actions{display:flex;flex-direction:column;gap:10px;position:relative}
+.sub-foot{margin-top:16px;font-size:.74rem;color:var(--gray);position:relative}
+
 /* AGE GATE */
 .age-gate{position:fixed;inset:0;z-index:3000;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(8,6,6,.86);backdrop-filter:blur(20px) saturate(1.2);transition:opacity .45s var(--ease)}
 .age-gate.gone{opacity:0;pointer-events:none}
@@ -408,6 +428,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 <div class="pd" id="pd" role="dialog" aria-modal="true" aria-label="Detalle del producto">
   <button class="pd-close" id="pdClose" aria-label="Cerrar">&times;</button>
   <div class="pd-scroll" id="pdScroll"></div>
+</div>
+
+<!-- SUSCRIPCIÓN (Club We) -->
+<div class="sub-overlay" id="subOverlay"></div>
+<div class="sub" id="sub" role="dialog" aria-modal="true" aria-label="Suscripción al Club We">
+  <button class="sub-close" id="subClose" aria-label="Cerrar">&times;</button>
+  <div class="sub-body" id="subBody"></div>
 </div>
 
 <!-- CART -->
@@ -695,7 +722,53 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
   };
   document.getElementById('filtersToggle').onclick=()=>document.getElementById('filters').classList.toggle('open');
 
+  /* ---- suscripción al Club We ---- */
+  const WE_PLANS={
+    iniciado:{name:'Iniciado',price:14900,desc:'Para empezar a explorar sin compromiso.',feats:['2 botellas curadas por mes','Ficha de cata de cada vino','10% off en toda la tienda']},
+    sibarita:{name:'Sibarita',price:24900,desc:'El equilibrio perfecto entre vino y gourmet.',feats:['3 botellas + 1 producto gourmet','15% off en toda la tienda','Acceso a catas presenciales','Envío sin cargo en Crespo']},
+    coleccionista:{name:'Coleccionista',price:44900,desc:'Para el que ya sabe lo que quiere: lo mejor.',feats:['4 botellas premium & ediciones limitadas','20% off + acceso anticipado','Cata privada trimestral','Asesoría personal por WhatsApp']}
+  };
+  const sub=document.getElementById('sub'),subOverlay=document.getElementById('subOverlay'),subBody=document.getElementById('subBody');
+  function closeSub(){subOverlay.classList.remove('open');sub.classList.remove('open');document.documentElement.classList.remove('locked');}
+  function openSub(id){
+    const pl=WE_PLANS[id];if(!pl)return;
+    subBody.innerHTML=`
+      <span class="eyebrow">Club We · Suscripción</span>
+      <h2 class="sub-name">${pl.name}</h2>
+      <div class="sub-price">${fmt(pl.price)}<small>/mes</small></div>
+      <p class="sub-desc">${pl.desc}</p>
+      <ul class="sub-feats">${pl.feats.map(f=>`<li>${f}</li>`).join('')}</ul>
+      <div class="sub-actions">
+        <button class="btn btn-primary" id="subWa">Suscribirme por WhatsApp</button>
+        <button class="btn btn-ghost" id="subTr">Pagar el 1er mes por transferencia</button>
+      </div>
+      <div class="transfer" id="subTrBox"></div>
+      <p class="sub-foot">Sin permanencia: cancelás cuando quieras. Coordinamos todo por WhatsApp.</p>`;
+    subOverlay.classList.add('open');sub.classList.add('open');document.documentElement.classList.add('locked');subBody.scrollTop=0;
+    subBody.querySelector('#subWa').onclick=()=>{
+      const msg=encodeURIComponent(`Hola We! Quiero sumarme al Club We — Plan ${pl.name} (${fmt(pl.price)}/mes).\n\n${pl.feats.map(f=>'• '+f).join('\n')}\n\n(Desde la web)`);
+      window.open(`https://wa.me/${SHOP.whatsapp}?text=${msg}`,'_blank','noopener');
+    };
+    subBody.querySelector('#subTr').onclick=()=>{
+      const box=subBody.querySelector('#subTrBox');
+      box.innerHTML=`Transferí el primer mes <b>${fmt(pl.price)}</b> a:<br>Alias <b>${SHOP.alias}</b> · ${SHOP.titular}<br>Mandanos el comprobante por <b>WhatsApp</b> y activamos tu suscripción.`;
+      box.classList.add('show');
+    };
+  }
+  document.getElementById('subClose').onclick=closeSub;
+  subOverlay.onclick=closeSub;
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSub();});
+
   buildFilters();render();renderCart();
+
+  /* abrir suscripción si viene ?plan= desde el Club de la landing */
+  (function(){
+    const plan=new URLSearchParams(location.search).get('plan');
+    if(plan&&WE_PLANS[plan]){
+      openSub(plan);
+      try{history.replaceState({},'',location.pathname);}catch(e){}
+    }
+  })();
 })();
 </script>
 </body>
