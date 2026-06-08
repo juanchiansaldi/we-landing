@@ -110,7 +110,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 
 /* GRID + CARD */
 .shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(224px,1fr));gap:18px}
-.pcard{position:relative;background:var(--surf);border:1px solid var(--border);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .4s var(--ease),border-color .4s var(--ease)}
+.pcard{position:relative;background:var(--surf);border:1px solid var(--border);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:transform .4s var(--ease),border-color .4s var(--ease)}
 .pcard:hover{transform:translateY(-4px);border-color:var(--border2)}
 .pcard-media{position:relative;height:190px;overflow:hidden;background:linear-gradient(155deg,var(--surf2),var(--surf))}
 .pcard-media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s var(--ease)}
@@ -170,6 +170,70 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 .transfer{font-size:.8rem;color:var(--cream);background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:12px 14px;display:none}
 .transfer.show{display:block}
 .transfer b{color:var(--red)}
+
+/* ===== PROMO MOSAIC ===== */
+.promo-mosaic{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:4px 0 40px}
+.pm-tile{position:relative;overflow:hidden;border:1px solid var(--border2);border-radius:18px;min-height:150px;padding:20px 22px;text-align:left;cursor:pointer;display:flex;flex-direction:column;justify-content:flex-end;gap:3px;font-family:inherit;background-color:#161010;background-size:cover;background-position:center;transition:transform .4s var(--ease),border-color .4s var(--ease)}
+.pm-tile:hover{transform:translateY(-3px);border-color:rgba(241,44,54,.5)}
+.pm-tile::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,10,10,.3),rgba(13,10,10,.9))}
+.pm-tile>*{position:relative;z-index:2}
+.pm-ofertas{background-image:url(./assets/frames/we-0150.webp)}
+.pm-combos{background-image:url(./assets/frames/we-0045.webp)}
+.pm-novedades{background-image:url(./assets/frames/we-0010.webp)}
+.pm-k{font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:#ff6a72;font-weight:600}
+.pm-tile h3{font-family:'Spectral';font-weight:600;font-size:1.5rem;color:#fff;line-height:1.05}
+.pm-go{font-size:.76rem;color:#f1e9dc;opacity:.85;margin-top:4px}
+.pm-tile.pm-active{border-color:var(--red);box-shadow:0 0 0 1px var(--red),0 18px 40px -22px rgba(241,44,54,.6)}
+@media(max-width:760px){.promo-mosaic{grid-template-columns:1fr;gap:12px;margin-bottom:28px}.pm-tile{min-height:104px}}
+
+/* ===== PRODUCT DETAIL ===== */
+.pd-overlay{position:fixed;inset:0;z-index:1700;background:rgba(8,6,6,.74);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .4s var(--ease)}
+.pd-overlay.open{opacity:1;pointer-events:auto}
+.pd{position:fixed;z-index:1800;left:50%;top:50%;transform:translate(-50%,-46%);opacity:0;pointer-events:none;width:min(920px,94vw);max-height:90vh;background:var(--bg);border:1px solid var(--border2);border-radius:24px;overflow:hidden;transition:opacity .4s var(--ease),transform .4s var(--ease);box-shadow:0 50px 120px -40px rgba(0,0,0,.85)}
+.pd.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+.pd-close{position:absolute;top:16px;right:16px;z-index:6;width:38px;height:38px;border-radius:50%;border:none;background:rgba(22,16,16,.72);backdrop-filter:blur(8px);color:#faf6ef;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.pd-close:hover{background:var(--red);color:#fff}
+.pd-scroll{overflow-y:auto;max-height:90vh}
+.pd-top{display:grid;grid-template-columns:.95fr 1.05fr}
+.pd-media{position:relative;min-height:400px;background:linear-gradient(155deg,var(--surf2),var(--surf));display:flex;align-items:center;justify-content:center}
+.pd-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pd-media .logo-iso{width:60px;height:96px;color:var(--red);opacity:.32}
+.pd-info{padding:40px 38px;display:flex;flex-direction:column;gap:10px}
+.pd-brand{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--red);font-weight:600}
+.pd-info h2{font-family:'Spectral';font-weight:600;font-size:2rem;line-height:1.05;margin-bottom:2px}
+.pd-price{display:flex;align-items:baseline;gap:10px;margin:.3rem 0 .2rem}
+.pd-price .now{font-family:'Spectral';font-size:1.85rem;font-weight:600}
+.pd-price .now.sale{color:var(--red)}
+.pd-price .was{text-decoration:line-through;color:var(--gray);font-size:1rem}
+.pd-price .off{font-size:.7rem;background:var(--red);color:#fff;border-radius:9999px;padding:.2rem .55rem;font-weight:600}
+.pd-desc{color:var(--gray);font-size:.93rem;line-height:1.65}
+.pd-meta{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.pd-meta span{font-size:.76rem;color:var(--cream);background:var(--surf);border:1px solid var(--border);border-radius:9999px;padding:.42rem .8rem}
+.pd-meta span b{color:var(--red);font-weight:600;margin-right:5px}
+.pd-actions{display:flex;gap:12px;align-items:center;margin-top:14px}
+.pd-actions .qty{display:flex;align-items:center;border:1px solid var(--border2);border-radius:9999px}
+.pd-actions .qty button{background:none;border:none;color:var(--cream);width:36px;height:42px;cursor:pointer;font-size:1.1rem}
+.pd-actions .qty span{min-width:30px;text-align:center}
+.pd-actions .btn{flex:1}
+.pd-stock-out{margin-top:14px;color:var(--gray);font-size:.85rem;border:1px dashed var(--border2);border-radius:12px;padding:12px 14px}
+.pd-sugg{border-top:1px solid var(--border);padding:28px 38px 34px}
+.pd-sugg h3{font-family:'Spectral';font-weight:500;font-size:1.2rem;margin-bottom:16px}
+.pd-sugg-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.sg-card{cursor:pointer;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surf);transition:border-color .3s var(--ease),transform .3s var(--ease)}
+.sg-card:hover{border-color:rgba(241,44,54,.4);transform:translateY(-3px)}
+.sg-img{height:96px;background:linear-gradient(155deg,var(--surf2),var(--surf));display:flex;align-items:center;justify-content:center;overflow:hidden}
+.sg-img img{width:100%;height:100%;object-fit:cover}
+.sg-img .logo-iso{width:22px;height:35px;color:var(--red);opacity:.4}
+.sg-b{padding:11px 13px}
+.sg-b h4{font-family:'Spectral';font-weight:500;font-size:.86rem;line-height:1.18}
+.sg-b .sg-price{font-size:.8rem;color:var(--red);margin-top:3px;font-weight:600}
+@media(max-width:720px){
+  .pd-top{grid-template-columns:1fr}
+  .pd-media{min-height:240px}
+  .pd-info{padding:26px 22px}
+  .pd-sugg{padding:22px}
+  .pd-sugg-grid{grid-template-columns:repeat(2,1fr)}
+}
 
 /* AGE GATE */
 .age-gate{position:fixed;inset:0;z-index:3000;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(8,6,6,.86);backdrop-filter:blur(20px) saturate(1.2);transition:opacity .45s var(--ease)}
@@ -276,6 +340,27 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
   </div>
 </header>
 
+<!-- PROMO MOSAIC -->
+<div class="wrap">
+  <div class="promo-mosaic">
+    <button class="pm-tile pm-ofertas" data-quick="ofertas" type="button">
+      <span class="pm-k">Hasta 25% OFF</span>
+      <h3>Ofertas</h3>
+      <span class="pm-go">Ver lo que está en promo →</span>
+    </button>
+    <button class="pm-tile pm-combos" data-quick="combos" type="button">
+      <span class="pm-k">Armadas a mano</span>
+      <h3>Combos &amp; Regalos</h3>
+      <span class="pm-go">Ver cajas →</span>
+    </button>
+    <button class="pm-tile pm-novedades" data-quick="novedades" type="button">
+      <span class="pm-k">Recién llegados</span>
+      <h3>Novedades</h3>
+      <span class="pm-go">Ver lo nuevo →</span>
+    </button>
+  </div>
+</div>
+
 <!-- SHOP -->
 <div class="wrap">
   <div class="shop-layout">
@@ -306,6 +391,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
       <div class="shop-grid" id="shopGrid"></div>
     </main>
   </div>
+</div>
+
+<!-- PRODUCT DETAIL -->
+<div class="pd-overlay" id="pdOverlay"></div>
+<div class="pd" id="pd" role="dialog" aria-modal="true" aria-label="Detalle del producto">
+  <button class="pd-close" id="pdClose" aria-label="Cerrar">&times;</button>
+  <div class="pd-scroll" id="pdScroll"></div>
 </div>
 
 <!-- CART -->
@@ -373,7 +465,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
   const maxPrice=Math.max(...P.map(p=>p.price),1);
   const brands=[...new Set(P.map(p=>p.brand))].sort();
 
-  const state={q:'',cats:new Set(),brands:new Set(),max:maxPrice,sort:'rel'};
+  const state={q:'',cats:new Set(),brands:new Set(),max:maxPrice,sort:'rel',quick:null};
   let cart={};
   try{cart=JSON.parse(localStorage.getItem('we-cart')||'{}');}catch(e){cart={};}
   const saveCart=()=>{try{localStorage.setItem('we-cart',JSON.stringify(cart));}catch(e){}};
@@ -401,8 +493,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
     range.addEventListener('input',()=>{state.max=+range.value;document.getElementById('priceLabel').textContent=fmt(state.max);render();});
   }
 
+  function matchQuick(p){
+    if(state.quick==='ofertas')return p.promo&&p.promo<p.price;
+    if(state.quick==='combos')return p.cat==='Cajas & Regalos';
+    if(state.quick==='novedades')return !!p.nuevo;
+    return true;
+  }
   function filtered(){
     let r=P.filter(p=>{
+      if(!matchQuick(p))return false;
       if(state.q){const q=state.q.toLowerCase();if(!(p.name+' '+p.brand+' '+p.cat+' '+(p.notes||'')).toLowerCase().includes(q))return false;}
       if(state.cats.size&&!state.cats.has(p.cat))return false;
       if(state.brands.size&&!state.brands.has(p.brand))return false;
@@ -420,9 +519,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
     const sale=p.promo&&p.promo<p.price;
     const media=p.img?`<div class="pcard-media"><img src="${p.img}" alt="${p.name}" loading="lazy"></div>`
       :`<div class="pcard-media ph">${isoSVG}</div>`;
-    const badge=!p.stock?'<span class="pbadge out">Sin stock</span>':(sale?'<span class="pbadge">Promo</span>':'');
+    const badge=!p.stock?'<span class="pbadge out">Sin stock</span>':(sale?'<span class="pbadge">Promo</span>':(p.nuevo?'<span class="pbadge">Nuevo</span>':''));
     const price=sale?`<span class="was">${fmt(p.price)}</span><span class="now sale">${fmt(p.promo)}</span>`:`<span class="now">${fmt(p.price)}</span>`;
-    return `<article class="pcard">
+    return `<article class="pcard" data-open="${p.id}">
       ${badge}${media}
       <div class="pcard-body">
         <span class="pcard-brand">${p.brand}</span>
@@ -441,8 +540,64 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
     const r=filtered();
     document.getElementById('resultCount').innerHTML=`<b>${r.length}</b> producto${r.length===1?'':'s'}`;
     grid.innerHTML=r.length?r.map(card).join(''):'<div class="shop-empty">No encontramos productos con esos filtros. Probá ampliar la búsqueda.</div>';
-    grid.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>addToCart(b.dataset.add)));
+    grid.querySelectorAll('.pcard').forEach(c=>c.addEventListener('click',e=>{if(e.target.closest('[data-add]'))return;openDetail(c.dataset.open);}));
+    grid.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();addToCart(b.dataset.add);}));
   }
+
+  /* ---- ficha de producto ---- */
+  const pd=document.getElementById('pd'),pdOverlay=document.getElementById('pdOverlay'),pdScroll=document.getElementById('pdScroll');
+  function suggestions(p){
+    let same=P.filter(x=>x.id!==p.id&&x.cat===p.cat&&x.stock);
+    let rest=P.filter(x=>x.id!==p.id&&x.cat!==p.cat&&x.stock);
+    return same.concat(rest).slice(0,4);
+  }
+  function renderDetail(p){
+    const sale=p.promo&&p.promo<p.price;
+    const media=p.img?`<img src="${p.img}" alt="${p.name}">`:isoSVG;
+    const badge=!p.stock?'<span class="pbadge out">Sin stock</span>':(sale?'<span class="pbadge">Promo</span>':(p.nuevo?'<span class="pbadge">Nuevo</span>':''));
+    const off=sale?Math.round((1-p.promo/p.price)*100):0;
+    const price=sale?`<span class="was">${fmt(p.price)}</span><span class="now sale">${fmt(p.promo)}</span><span class="off">-${off}%</span>`:`<span class="now">${fmt(p.price)}</span>`;
+    const meta=(p.meta||[]).map(m=>`<span><b>${m.k}</b>${m.v}</span>`).join('');
+    const actions=p.stock
+      ?`<div class="pd-actions"><div class="qty"><button data-pd-dec>−</button><span id="pdQty">1</span><button data-pd-inc>+</button></div><button class="btn btn-primary" id="pdAdd">Agregar al carrito</button></div>`
+      :`<div class="pd-stock-out">Sin stock por ahora. Escribinos por WhatsApp y te avisamos cuando vuelva.</div>`;
+    const sugg=suggestions(p).map(s=>{
+      const sm=s.img?`<img src="${s.img}" alt="">`:isoSVG;
+      return `<div class="sg-card" data-open="${s.id}"><div class="sg-img">${sm}</div><div class="sg-b"><h4>${s.name}</h4><div class="sg-price">${fmt(eff(s))}</div></div></div>`;
+    }).join('');
+    pdScroll.innerHTML=`<div class="pd-top">
+        <div class="pd-media">${badge}${media}</div>
+        <div class="pd-info">
+          <span class="pd-brand">${p.brand}</span>
+          <h2>${p.name}</h2>
+          <div class="pd-price">${price}</div>
+          <p class="pd-desc">${p.desc||p.notes||''}</p>
+          ${meta?`<div class="pd-meta">${meta}</div>`:''}
+          ${actions}
+        </div>
+      </div>
+      <div class="pd-sugg"><h3>También te puede gustar</h3><div class="pd-sugg-grid">${sugg}</div></div>`;
+    let qty=1;
+    const qEl=pdScroll.querySelector('#pdQty');
+    const dec=pdScroll.querySelector('[data-pd-dec]'),inc=pdScroll.querySelector('[data-pd-inc]'),add=pdScroll.querySelector('#pdAdd');
+    if(dec)dec.onclick=()=>{qty=Math.max(1,qty-1);qEl.textContent=qty;};
+    if(inc)inc.onclick=()=>{qty++;qEl.textContent=qty;};
+    if(add)add.onclick=()=>{cart[p.id]=(cart[p.id]||0)+qty;saveCart();renderCart();closeDetail();openCart();};
+    pdScroll.querySelectorAll('.sg-card').forEach(c=>c.addEventListener('click',()=>openDetail(c.dataset.open)));
+  }
+  function openDetail(id){const p=P.find(x=>x.id===id);if(!p)return;renderDetail(p);pdOverlay.classList.add('open');pd.classList.add('open');document.documentElement.classList.add('locked');pdScroll.scrollTop=0;}
+  function closeDetail(){pdOverlay.classList.remove('open');pd.classList.remove('open');document.documentElement.classList.remove('locked');}
+  document.getElementById('pdClose').onclick=closeDetail;
+  pdOverlay.onclick=closeDetail;
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDetail();}});
+
+  /* ---- mosaico de promos ---- */
+  document.querySelectorAll('.pm-tile').forEach(t=>t.addEventListener('click',()=>{
+    state.quick=state.quick===t.dataset.quick?null:t.dataset.quick;
+    document.querySelectorAll('.pm-tile').forEach(x=>x.classList.toggle('pm-active',x.dataset.quick===state.quick));
+    render();
+    document.querySelector('.shop-layout').scrollIntoView({behavior:'smooth',block:'start'});
+  }));
 
   /* ---- carrito ---- */
   function addToCart(id){cart[id]=(cart[id]||0)+1;saveCart();renderCart();openCart();}
@@ -509,8 +664,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
   document.getElementById('searchInput').addEventListener('input',e=>{state.q=e.target.value;render();});
   document.getElementById('sortSelect').addEventListener('change',e=>{state.sort=e.target.value;render();});
   document.getElementById('clearFilters').onclick=()=>{
-    state.cats.clear();state.brands.clear();state.q='';state.max=maxPrice;state.sort='rel';
+    state.cats.clear();state.brands.clear();state.q='';state.max=maxPrice;state.sort='rel';state.quick=null;
     document.querySelectorAll('.fopt input').forEach(i=>i.checked=false);
+    document.querySelectorAll('.pm-tile').forEach(x=>x.classList.remove('pm-active'));
     document.getElementById('searchInput').value='';document.getElementById('sortSelect').value='rel';
     const r=document.getElementById('priceRange');r.value=maxPrice;document.getElementById('priceLabel').textContent=fmt(maxPrice);
     render();

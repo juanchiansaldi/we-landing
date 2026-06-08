@@ -1,43 +1,111 @@
 /* ============================================================
    We · Cava — Catálogo de productos
    ------------------------------------------------------------
-   Esta es la "fuente de la verdad" de la tienda. Para sumar,
-   editar o sacar productos, modificá este archivo.
+   Fuente de la verdad de la tienda. Editá este archivo para
+   sumar, cambiar o sacar productos.
 
    Campos:
      id     : identificador único (sin espacios)
      name   : nombre del producto
      brand  : marca / bodega
-     cat    : categoría (debe coincidir con las de abajo)
+     cat    : categoría (debe coincidir con WE_CATS)
      price  : precio en pesos (número, sin puntos)
-     promo  : precio promocional (número) o null si no está en promo
-     img    : ruta a la imagen, o null para usar el placeholder
-     notes  : descripción corta
-     stock  : true/false (si está disponible)
-
-   Categorías válidas (CATS): editá esta lista si querés otras.
+     promo  : precio promocional (número) o null
+     img    : ruta a la imagen, o null para el placeholder
+     notes  : descripción corta (se ve en la tarjeta)
+     desc   : descripción larga (se ve al abrir el producto)
+     meta   : ficha técnica -> lista de {k:'Etiqueta', v:'Valor'}
+     nuevo  : true si es novedad (aparece en "Novedades")
+     stock  : true/false
    ============================================================ */
 
 window.WE_CATS = ['Tintos', 'Blancos & Rosados', 'Espumantes', 'Quesos & Fiambres', 'Dulces & Chocolates', 'Conservas', 'Cajas & Regalos'];
 
 window.WE_PRODUCTS = [
-  { id:'malbec-gr',     name:'Malbec Gran Reserva',      brand:'Finca Altura',    cat:'Tintos',              price:11500, promo:9900,  img:'./assets/frames/we-0010.webp', notes:'Valle de Uco · 12 meses de roble. Ciruela y vainilla.', stock:true },
-  { id:'cabfranc',      name:'Cabernet Franc',           brand:'Casa del Valle',  cat:'Tintos',              price:13800, promo:null,  img:'./assets/frames/we-0030.webp', notes:'Pimienta y frutos negros. Para guardar.', stock:true },
-  { id:'bonarda',       name:'Bonarda de Autor',         brand:'Norte Vivo',      cat:'Tintos',              price:8900,  promo:null,  img:'./assets/frames/we-0185.webp', notes:'Jugoso y goloso. El tinto de todos los días.', stock:true },
-  { id:'blend-roble',   name:'Blend Roble',              brand:'Finca Altura',    cat:'Tintos',              price:15600, promo:null,  img:'./assets/frames/we-0120.webp', notes:'Malbec, Cabernet y Petit Verdot. Final largo.', stock:true },
-  { id:'chardonnay',    name:'Chardonnay',               brand:'La Delfina',      cat:'Blancos & Rosados',   price:9200,  promo:null,  img:'./assets/frames/we-0150.webp', notes:'Fresco, con paso por madera. Cítricos y manteca.', stock:true },
-  { id:'torrontes',     name:'Torrontés Salteño',        brand:'Cafayate Alto',   cat:'Blancos & Rosados',   price:7800,  promo:6500,  img:null, notes:'Aromático y floral. De altura, bien fresco.', stock:true },
-  { id:'rosado',        name:'Rosado de Malbec',         brand:'Casa del Valle',  cat:'Blancos & Rosados',   price:7400,  promo:null,  img:null, notes:'Frutillas y un final seco. Para el verano.', stock:true },
-  { id:'brut-nature',   name:'Brut Nature',              brand:'We · Casa',       cat:'Espumantes',          price:9200,  promo:null,  img:'./assets/frames/we-0088.webp', notes:'Método tradicional, burbuja fina y bien seco.', stock:true },
-  { id:'extra-brut',    name:'Extra Brut Rosé',          brand:'La Delfina',      cat:'Espumantes',          price:11200, promo:null,  img:'./assets/frames/we-0097.webp', notes:'Elegante y festivo. Para brindar en serio.', stock:true },
-  { id:'queso-estac',   name:'Queso estacionado 6m',     brand:'Tambo La Rosa',   cat:'Quesos & Fiambres',   price:6800,  promo:null,  img:null, notes:'Intenso, ideal para tabla con tintos.', stock:true },
-  { id:'salame',        name:'Salame de campo',          brand:'Colonia Crespo',  cat:'Quesos & Fiambres',   price:5400,  promo:null,  img:null, notes:'Curado artesanal de la zona.', stock:true },
-  { id:'choco70',       name:'Chocolate 70% cacao',      brand:'Cacao Sur',       cat:'Dulces & Chocolates', price:3900,  promo:2990,  img:null, notes:'Tableta intensa. Marida con tintos dulces.', stock:true },
-  { id:'dulce-membr',   name:'Dulce de membrillo',       brand:'La Abuela',       cat:'Dulces & Chocolates', price:2800,  promo:null,  img:null, notes:'Casero, en pan. Con quesos, una fija.', stock:true },
-  { id:'aceite-oliva',  name:'Aceite de oliva extra',    brand:'Olivares del Sol',cat:'Conservas',           price:5600,  promo:null,  img:null, notes:'Primera prensada en frío. Botella 500ml.', stock:true },
-  { id:'antipasto',     name:'Antipasto de la casa',     brand:'We · Casa',       cat:'Conservas',           price:4200,  promo:null,  img:null, notes:'Vegetales en escabeche, receta propia.', stock:false },
-  { id:'caja-descubr',  name:'Caja Descubrimiento x6',   brand:'We · Casa',       cat:'Cajas & Regalos',     price:42000, promo:37900, img:'./assets/frames/we-0045.webp', notes:'6 botellas elegidas a mano + ficha de cata.', stock:true },
-  { id:'caja-gourmet',  name:'Caja Gourmet',             brand:'We · Casa',       cat:'Cajas & Regalos',     price:28500, promo:null,  img:null, notes:'2 vinos + quesos + dulces. Lista para regalar.', stock:true }
+  { id:'malbec-gr', name:'Malbec Gran Reserva', brand:'Finca Altura', cat:'Tintos', price:11500, promo:9900, img:'./assets/frames/we-0010.webp', stock:true, nuevo:false,
+    notes:'Valle de Uco · 12 meses de roble. Ciruela y vainilla.',
+    desc:'Un Malbec de guarda que pasa 12 meses en barrica de roble francés. En copa, ciruela madura, vainilla y un dejo de chocolate; en boca es amplio, con taninos pulidos y un final largo y goloso. Ideal para carnes rojas, asado y quesos estacionados.',
+    meta:[{k:'Región',v:'Valle de Uco, Mendoza'},{k:'Cosecha',v:'2021'},{k:'Crianza',v:'12 meses en roble'},{k:'Graduación',v:'14,5%'}] },
+
+  { id:'cabfranc', name:'Cabernet Franc', brand:'Casa del Valle', cat:'Tintos', price:13800, promo:null, img:'./assets/frames/we-0030.webp', stock:true, nuevo:true,
+    notes:'Pimienta y frutos negros. Para guardar.',
+    desc:'El Cabernet Franc que enamora a los curiosos: pimienta negra, frutos rojos y un toque herbal muy elegante. Fresco, vertical y con mucha personalidad. Acompaña cordero, hongos y platos especiados.',
+    meta:[{k:'Región',v:'Valle de Uco, Mendoza'},{k:'Cosecha',v:'2022'},{k:'Crianza',v:'10 meses en roble'},{k:'Graduación',v:'13,5%'}] },
+
+  { id:'bonarda', name:'Bonarda de Autor', brand:'Norte Vivo', cat:'Tintos', price:8900, promo:null, img:'./assets/frames/we-0185.webp', stock:true, nuevo:false,
+    notes:'Jugoso y goloso. El tinto de todos los días.',
+    desc:'La Bonarda en su mejor versión: jugosa, frutal y muy fácil de tomar. Frutos rojos frescos, poca madera y mucha bebibilidad. El tinto perfecto para la pizza del viernes o una picada improvisada.',
+    meta:[{k:'Región',v:'San Juan'},{k:'Cosecha',v:'2023'},{k:'Crianza',v:'Sin madera'},{k:'Graduación',v:'13%'}] },
+
+  { id:'blend-roble', name:'Blend Roble', brand:'Finca Altura', cat:'Tintos', price:15600, promo:null, img:'./assets/frames/we-0120.webp', stock:true, nuevo:false,
+    notes:'Malbec, Cabernet y Petit Verdot. Final largo.',
+    desc:'Un corte clásico de alta gama: Malbec por la fruta, Cabernet por la estructura y Petit Verdot por el color y la especia. Profundo, sedoso y con un final que no termina más. Para una ocasión especial.',
+    meta:[{k:'Región',v:'Valle de Uco, Mendoza'},{k:'Cosecha',v:'2020'},{k:'Crianza',v:'14 meses en roble'},{k:'Graduación',v:'14,8%'}] },
+
+  { id:'chardonnay', name:'Chardonnay', brand:'La Delfina', cat:'Blancos & Rosados', price:9200, promo:null, img:'./assets/frames/we-0150.webp', stock:true, nuevo:false,
+    notes:'Fresco, con paso por madera. Cítricos y manteca.',
+    desc:'Chardonnay de clima fresco con un breve paso por madera que le da volumen sin tapar la fruta. Cítricos, durazno blanco y un fondo amanteca-do. Ideal con pastas, pollo o pescados de río.',
+    meta:[{k:'Región',v:'Tupungato, Mendoza'},{k:'Cosecha',v:'2023'},{k:'Crianza',v:'4 meses en roble'},{k:'Graduación',v:'13%'}] },
+
+  { id:'torrontes', name:'Torrontés Salteño', brand:'Cafayate Alto', cat:'Blancos & Rosados', price:7800, promo:6500, img:null, stock:true, nuevo:false,
+    notes:'Aromático y floral. De altura, bien fresco.',
+    desc:'El blanco más argentino: súper aromático, con jazmín, rosas y cáscara de pomelo. En boca es fresco, seco y delicado, sin amargor. Perfecto como aperitivo o con comida asiática y picante.',
+    meta:[{k:'Región',v:'Cafayate, Salta'},{k:'Cosecha',v:'2024'},{k:'Altura',v:'1.700 msnm'},{k:'Graduación',v:'12,5%'}] },
+
+  { id:'rosado', name:'Rosado de Malbec', brand:'Casa del Valle', cat:'Blancos & Rosados', price:7400, promo:null, img:null, stock:true, nuevo:false,
+    notes:'Frutillas y un final seco. Para el verano.',
+    desc:'Rosado de Malbec con color pálido y mucha frescura. Frutillas, cereza y un final seco y filoso. Para tomar bien frío en una tarde de calor o con una tabla liviana.',
+    meta:[{k:'Región',v:'Mendoza'},{k:'Cosecha',v:'2024'},{k:'Estilo',v:'Seco'},{k:'Graduación',v:'12,5%'}] },
+
+  { id:'brut-nature', name:'Brut Nature', brand:'We · Casa', cat:'Espumantes', price:9200, promo:null, img:'./assets/frames/we-0088.webp', stock:true, nuevo:false,
+    notes:'Método tradicional, burbuja fina y bien seco.',
+    desc:'Nuestro espumante de la casa, elaborado por método tradicional. Burbuja fina y persistente, sin azúcar agregada: puro, seco y elegante. El que nunca falla para arrancar la noche o brindar.',
+    meta:[{k:'Método',v:'Tradicional (champenoise)'},{k:'Dosaje',v:'Brut Nature'},{k:'Servir a',v:'6–8 °C'},{k:'Graduación',v:'12%'}] },
+
+  { id:'extra-brut', name:'Extra Brut Rosé', brand:'La Delfina', cat:'Espumantes', price:11200, promo:null, img:'./assets/frames/we-0097.webp', stock:true, nuevo:true,
+    notes:'Elegante y festivo. Para brindar en serio.',
+    desc:'Espumante rosado Extra Brut, fino y festivo. Notas de frutilla y pan tostado, burbuja cremosa y un final seco. Marida de maravilla con jamón crudo, sushi o un postre poco dulce.',
+    meta:[{k:'Método',v:'Tradicional'},{k:'Dosaje',v:'Extra Brut'},{k:'Servir a',v:'6–8 °C'},{k:'Graduación',v:'12,5%'}] },
+
+  { id:'queso-estac', name:'Queso estacionado 6 meses', brand:'Tambo La Rosa', cat:'Quesos & Fiambres', price:6800, promo:null, img:null, stock:true, nuevo:false,
+    notes:'Intenso, ideal para tabla con tintos.',
+    desc:'Queso de pasta dura estacionado 6 meses, de sabor intenso y picante justo. Textura quebradiza y notas a frutos secos. La estrella de cualquier tabla, sobre todo con un buen tinto.',
+    meta:[{k:'Tipo',v:'Pasta dura'},{k:'Estacionamiento',v:'6 meses'},{k:'Leche',v:'Vaca'},{k:'Origen',v:'Entre Ríos'}] },
+
+  { id:'salame', name:'Salame de campo', brand:'Colonia Crespo', cat:'Quesos & Fiambres', price:5400, promo:null, img:null, stock:true, nuevo:false,
+    notes:'Curado artesanal de la zona.',
+    desc:'Salame de campo curado de forma artesanal en la colonia. Punto justo de sal y pimienta, textura firme y sabor profundo. Cortado finito, no hay tabla que se le resista.',
+    meta:[{k:'Tipo',v:'Salame curado'},{k:'Curado',v:'Artesanal'},{k:'Origen',v:'Crespo, Entre Ríos'}] },
+
+  { id:'choco70', name:'Chocolate 70% cacao', brand:'Cacao Sur', cat:'Dulces & Chocolates', price:3900, promo:2990, img:null, stock:true, nuevo:true,
+    notes:'Tableta intensa. Marida con tintos.',
+    desc:'Tableta de chocolate amargo 70% cacao, intensa y poco dulce, con un final largo. Marida increíble con tintos de guarda y espumantes dulces. Para cerrar la noche como corresponde.',
+    meta:[{k:'Cacao',v:'70%'},{k:'Tipo',v:'Amargo'},{k:'Peso',v:'80 g'}] },
+
+  { id:'dulce-membr', name:'Dulce de membrillo', brand:'La Abuela', cat:'Dulces & Chocolates', price:2800, promo:null, img:null, stock:true, nuevo:false,
+    notes:'Casero, en pan. Con quesos, una fija.',
+    desc:'Dulce de membrillo casero, en pan, como el de antes. Justo de dulzor y con esa textura firme ideal para cortar. El compañero clásico del queso estacionado: el famoso "vigilante".',
+    meta:[{k:'Tipo',v:'Casero'},{k:'Formato',v:'Pan 500 g'},{k:'Origen',v:'Entre Ríos'}] },
+
+  { id:'aceite-oliva', name:'Aceite de oliva extra virgen', brand:'Olivares del Sol', cat:'Conservas', price:5600, promo:null, img:null, stock:true, nuevo:false,
+    notes:'Primera prensada en frío. Botella 500 ml.',
+    desc:'Aceite de oliva extra virgen de primera prensada en frío. Frutado, con un amargor y picor equilibrados que delatan su calidad. Para terminar un plato, una bruschetta o una buena ensalada.',
+    meta:[{k:'Tipo',v:'Extra virgen'},{k:'Extracción',v:'Prensado en frío'},{k:'Volumen',v:'500 ml'}] },
+
+  { id:'antipasto', name:'Antipasto de la casa', brand:'We · Casa', cat:'Conservas', price:4200, promo:null, img:null, stock:false, nuevo:false,
+    notes:'Vegetales en escabeche, receta propia.',
+    desc:'Nuestro antipasto de la casa: vegetales en escabeche con receta propia, en su punto justo de acidez. Para picar con pan, sumar a una tabla o acompañar fiambres.',
+    meta:[{k:'Tipo',v:'Escabeche'},{k:'Formato',v:'Frasco 350 g'},{k:'Elaboración',v:'Propia'}] },
+
+  { id:'caja-descubr', name:'Caja Descubrimiento x6', brand:'We · Casa', cat:'Cajas & Regalos', price:42000, promo:37900, img:'./assets/frames/we-0045.webp', stock:true, nuevo:false,
+    notes:'6 botellas elegidas a mano + ficha de cata.',
+    desc:'Seis botellas elegidas a mano por nosotros: tintos, blancos y un espumante para arrancar, de distintas regiones. Viene con la ficha de cata de cada vino. El regalo perfecto (o el mimo para vos).',
+    meta:[{k:'Contenido',v:'6 botellas'},{k:'Incluye',v:'Ficha de cata'},{k:'Regiones',v:'3'}] },
+
+  { id:'caja-gourmet', name:'Caja Gourmet', brand:'We · Casa', cat:'Cajas & Regalos', price:28500, promo:null, img:null, stock:true, nuevo:false,
+    notes:'2 vinos + quesos + dulces. Lista para regalar.',
+    desc:'Una caja para regalar (o regalarte): 2 vinos seleccionados, quesos, dulces y algo rico para picar, todo presentado para sorprender. Le sumamos una tarjeta con tu mensaje si querés.',
+    meta:[{k:'Contenido',v:'2 vinos + gourmet'},{k:'Presentación',v:'Para regalo'},{k:'Tarjeta',v:'Opcional'}] }
 ];
 
 /* Datos para el checkout por transferencia / WhatsApp */
