@@ -9,3 +9,16 @@ node_modules/
 *.log
 .cache/
 .gstack/
+
+# Secretos / entorno (NUNCA commitear) — incluye la app en platform/
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+platform/.env
+
+# Build de la app (platform/)
+platform/.next/
+platform/node_modules/
