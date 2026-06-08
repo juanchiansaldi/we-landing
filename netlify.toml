@@ -1,8 +1,10 @@
 # Deploy de la plataforma Next.js (vive en platform/).
-# Con base="platform", Netlify construye la app aunque no se setee el base dir en la UI.
+# base="platform": Netlify construye la app desde esa subcarpeta.
+# publish=".next": el directorio de salida (distinto del base, lo exige el plugin de Next).
 [build]
   base = "platform"
   command = "npm run build"
+  publish = ".next"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
