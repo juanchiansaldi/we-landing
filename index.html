@@ -86,7 +86,7 @@ section{position:relative;z-index:2}
 .eyebrow{font-size:.7rem;letter-spacing:.34em;text-transform:uppercase;color:var(--red);font-weight:600;display:inline-flex;align-items:center;gap:.7em}
 .eyebrow::before{content:'';width:26px;height:1px;background:var(--red)}
 h1,h2,h3,h4,.serif{font-family:'Fraunces',serif;font-weight:400;letter-spacing:-.012em;line-height:1.05}
-.gold-text,.red-text{color:var(--red);font-style:italic}
+.gold-text,.red-text{color:var(--red);font-style:normal}
 .muted{color:var(--gray)}
 
 /* logo helpers */
@@ -128,7 +128,7 @@ h1.hero-title{font-size:clamp(3rem,7vw,5.6rem);font-weight:300;letter-spacing:-.
 h1.hero-title b{font-weight:600}
 .hero-sub{font-size:1.1rem;color:var(--gray);max-width:480px;margin:1.6rem 0 .3rem;opacity:0;animation:rise .9s var(--ease) .45s forwards}
 .type-line{font-size:1.15rem;color:var(--cream);height:1.6em;margin-bottom:2rem;font-weight:500;opacity:0;animation:rise .9s var(--ease) .6s forwards}
-.type-line .tw{color:var(--red);font-family:'Fraunces';font-style:italic}
+.type-line .tw{color:var(--red);font-family:'Fraunces';font-style:normal}
 .tw-cursor{display:inline-block;width:2px;height:1.05em;background:var(--red);margin-left:3px;vertical-align:-2px;animation:blink 1s step-end infinite}
 @keyframes blink{50%{opacity:0}}
 .hero-ctas{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:rise .9s var(--ease) .75s forwards}
@@ -1046,7 +1046,7 @@ function initSequenceStatic(){
   let lenis=null;
   if(!REDUCE&&typeof Lenis!=='undefined'){
     document.documentElement.style.scrollBehavior='auto';
-    lenis=new Lenis({lerp:0.1,wheelMultiplier:1,smoothWheel:true,syncTouch:true,syncTouchLerp:0.09,touchMultiplier:1.8});
+    lenis=new Lenis({lerp:0.1,wheelMultiplier:1,smoothWheel:true,syncTouch:true,syncTouchLerp:0.075,touchMultiplier:1.1});
     lenis.on('scroll',ScrollTrigger.update);
     gsap.ticker.add(t=>lenis.raf(t*1000));
     gsap.ticker.lagSmoothing(0);
