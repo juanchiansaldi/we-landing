@@ -36,7 +36,7 @@ h1,h2,h3,h4,.serif{font-family:'Spectral',serif;font-weight:400;letter-spacing:-
 .logo-iso,.logo-word{display:inline-block}
 .logo-iso svg,.logo-word svg{display:block;width:100%;height:100%}
 .eyebrow{font-size:.7rem;letter-spacing:.34em;text-transform:uppercase;color:var(--red);font-weight:600;display:inline-flex;align-items:center;gap:.7em}
-.eyebrow::before{content:'';width:26px;height:1px;background:var(--red)}
+.eyebrow{gap:0}
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;padding:1rem clamp(20px,4vw,52px);background:var(--nav-bg);backdrop-filter:blur(40px) saturate(1.6);-webkit-backdrop-filter:blur(40px) saturate(1.6);border-bottom:1px solid var(--border)}
@@ -739,20 +739,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
       <p class="sub-desc">${pl.desc}</p>
       <ul class="sub-feats">${pl.feats.map(f=>`<li>${f}</li>`).join('')}</ul>
       <div class="sub-actions">
-        <button class="btn btn-primary" id="subWa">Suscribirme por WhatsApp</button>
-        <button class="btn btn-ghost" id="subTr">Pagar el 1er mes por transferencia</button>
+        <button class="btn btn-primary" id="subWa">Quiero suscribirme</button>
       </div>
-      <div class="transfer" id="subTrBox"></div>
-      <p class="sub-foot">Sin permanencia: cancelás cuando quieras. Coordinamos todo por WhatsApp.</p>`;
+      <p class="sub-foot">Débito automático con tarjeta de crédito o débito. Sin permanencia: cancelás cuando quieras.</p>`;
     subOverlay.classList.add('open');sub.classList.add('open');document.documentElement.classList.add('locked');subBody.scrollTop=0;
     subBody.querySelector('#subWa').onclick=()=>{
-      const msg=encodeURIComponent(`Hola We! Quiero sumarme al Club We — Plan ${pl.name} (${fmt(pl.price)}/mes).\n\n${pl.feats.map(f=>'• '+f).join('\n')}\n\n(Desde la web)`);
+      const msg=encodeURIComponent(`Hola We! Quiero sumarme al Club We — Plan ${pl.name} (${fmt(pl.price)}/mes) con débito automático.\n\n${pl.feats.map(f=>'• '+f).join('\n')}\n\n(Desde la web)`);
       window.open(`https://wa.me/${SHOP.whatsapp}?text=${msg}`,'_blank','noopener');
-    };
-    subBody.querySelector('#subTr').onclick=()=>{
-      const box=subBody.querySelector('#subTrBox');
-      box.innerHTML=`Transferí el primer mes <b>${fmt(pl.price)}</b> a:<br>Alias <b>${SHOP.alias}</b> · ${SHOP.titular}<br>Mandanos el comprobante por <b>WhatsApp</b> y activamos tu suscripción.`;
-      box.classList.add('show');
     };
   }
   document.getElementById('subClose').onclick=closeSub;
