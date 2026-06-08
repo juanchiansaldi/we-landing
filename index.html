@@ -510,9 +510,16 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
 @media(max-width:900px){
   .es-grid{grid-template-columns:1fr;gap:24px;text-align:center}
   .es-vis svg{height:40vh}
-  .es-beat p,.hz-intro p{margin-inline:auto}
   .es-prog{justify-content:center}
   .es-copy{min-height:320px}
+  /* universo: en mobile las cards se apilan en vertical (scroll normal, sin carrusel) */
+  .hz-sec{padding:64px 0}
+  .hz-pin{overflow:visible}
+  .hz-track{flex-direction:column;overflow:visible;gap:16px;scroll-snap-type:none;padding:0 20px;cursor:default}
+  .hz-panel{width:100%!important;height:auto;scroll-snap-align:none}
+  .hz-intro{padding-right:0;margin-bottom:4px}
+  .hz-card{width:100%;min-height:360px}
+  .hz-hint{display:none}
 }
 
 /* ===== prefers-reduced-motion ===== */
@@ -1033,12 +1040,13 @@ function initSequenceStatic(){
 
   if(!hasGSAP){ revealAllStatic(); initSequenceStatic(); var _wr=document.getElementById('wineRect'); if(_wr)_wr.setAttribute('transform','translate(0 0)'); return; }
   gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ignoreMobileResize:true});
 
   /* ---------- Lenis smooth scroll ---------- */
   let lenis=null;
   if(!REDUCE&&typeof Lenis!=='undefined'){
     document.documentElement.style.scrollBehavior='auto';
-    lenis=new Lenis({lerp:0.1,wheelMultiplier:1,smoothWheel:true,smoothTouch:false});
+    lenis=new Lenis({lerp:0.1,wheelMultiplier:1,smoothWheel:true,syncTouch:true,syncTouchLerp:0.09,touchMultiplier:1.8});
     lenis.on('scroll',ScrollTrigger.update);
     gsap.ticker.add(t=>lenis.raf(t*1000));
     gsap.ticker.lagSmoothing(0);
