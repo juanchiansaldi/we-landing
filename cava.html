@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#0d0a0a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=DM+Sans:opsz,wght@9..40,300..600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300..600&display=swap" rel="stylesheet">
 <link rel="icon" href="./assets/favicon/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png">
 <link rel="apple-touch-icon" href="./assets/favicon/apple-touch-icon.png">
@@ -26,10 +26,10 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;letter-spacing:.1px;transition:background .5s var(--ease),color .5s var(--ease);overflow-x:hidden;font-variation-settings:"WONK" 0,"SOFT" 0;font-variant-ligatures:no-discretionary-ligatures}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;letter-spacing:.1px;transition:background .5s var(--ease),color .5s var(--ease);overflow-x:hidden;font-variant-ligatures:no-discretionary-ligatures}
 html.locked{overflow:hidden}
 a{color:inherit;text-decoration:none}
-h1,h2,h3,h4,.serif{font-family:'Fraunces',serif;font-weight:400;letter-spacing:-.012em;line-height:1.05}
+h1,h2,h3,h4,.serif{font-family:'Spectral',serif;font-weight:400;letter-spacing:-.012em;line-height:1.05}
 .red-text{color:var(--red);font-style:normal}
 .wrap{max-width:1200px;margin:0 auto;padding:0 28px}
 ::selection{background:var(--red);color:#fff}
@@ -104,7 +104,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 /* TOOLBAR */
 .toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:22px;flex-wrap:wrap}
 .toolbar .count{color:var(--gray);font-size:.9rem}
-.toolbar .count b{color:var(--white);font-family:'Fraunces'}
+.toolbar .count b{color:var(--white);font-family:'Spectral'}
 .sort{display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--gray)}
 .sort select{background:var(--surf);border:1px solid var(--border2);color:var(--white);border-radius:9999px;padding:.5rem 1rem;font-family:'DM Sans';font-size:.85rem;cursor:pointer;outline:none}
 
@@ -122,11 +122,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 .pbadge.out{background:var(--gray2);color:var(--cream)}
 .pcard-body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:5px;flex:1}
 .pcard-brand{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--red);font-weight:600}
-.pcard-body h3{font-family:'Fraunces';font-weight:500;font-size:1.18rem;line-height:1.15}
+.pcard-body h3{font-family:'Spectral';font-weight:500;font-size:1.18rem;line-height:1.15}
 .pcard-notes{font-size:.8rem;color:var(--gray);flex:1;margin-bottom:6px}
 .pcard-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-top:8px}
 .pcard-price{display:flex;flex-direction:column;line-height:1.1}
-.pcard-price .now{font-family:'Fraunces';font-size:1.32rem;font-weight:500}
+.pcard-price .now{font-family:'Spectral';font-size:1.32rem;font-weight:500}
 .pcard-price .was{font-size:.78rem;color:var(--gray);text-decoration:line-through}
 .pcard-price .now.sale{color:var(--red)}
 .padd{background:var(--surf2);border:1px solid var(--border2);color:var(--cream);width:40px;height:40px;flex:none;border-radius:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .3s,color .3s,transform .3s}
@@ -141,7 +141,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 .cart{position:fixed;top:0;right:0;bottom:0;z-index:1600;width:min(420px,92vw);background:var(--bg);border-left:1px solid var(--border2);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .45s var(--ease);box-shadow:-30px 0 80px -30px rgba(0,0,0,.8)}
 .cart.open{transform:none}
 .cart-head{display:flex;align-items:center;justify-content:space-between;padding:24px 24px 18px;border-bottom:1px solid var(--border)}
-.cart-head h3{font-family:'Fraunces';font-weight:500;font-size:1.4rem}
+.cart-head h3{font-family:'Spectral';font-weight:500;font-size:1.4rem}
 .cart-close{background:none;border:none;color:var(--gray);cursor:pointer;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .3s,color .3s}
 .cart-close:hover{background:var(--surf2);color:var(--white)}
 .cart-items{flex:1;overflow-y:auto;padding:14px 24px;display:flex;flex-direction:column;gap:14px}
@@ -150,7 +150,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 .citem-img img{width:100%;height:100%;object-fit:cover}
 .citem-img .logo-iso{width:20px;height:32px;color:var(--red);opacity:.5}
 .citem-info{flex:1;min-width:0}
-.citem-info h4{font-family:'Fraunces';font-weight:500;font-size:.98rem;line-height:1.2}
+.citem-info h4{font-family:'Spectral';font-weight:500;font-size:.98rem;line-height:1.2}
 .citem-info .cprice{font-size:.82rem;color:var(--gray);margin-top:2px}
 .qty{display:flex;align-items:center;gap:0;border:1px solid var(--border2);border-radius:9999px;overflow:hidden}
 .qty button{background:none;border:none;color:var(--cream);width:28px;height:28px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:background .2s}
@@ -162,7 +162,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 .cart-foot{border-top:1px solid var(--border);padding:20px 24px 26px;display:flex;flex-direction:column;gap:14px}
 .cart-total{display:flex;align-items:baseline;justify-content:space-between}
 .cart-total span{color:var(--gray);font-size:.9rem}
-.cart-total b{font-family:'Fraunces';font-size:1.7rem;font-weight:500}
+.cart-total b{font-family:'Spectral';font-size:1.7rem;font-weight:500}
 .cart-note{font-size:.74rem;color:var(--gray);line-height:1.5}
 .cart-foot .btn{width:100%}
 .pay-row{display:flex;gap:10px}
@@ -178,7 +178,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 .ag-card::before{content:'';position:absolute;top:-45%;left:50%;transform:translateX(-50%);width:130%;height:65%;background:radial-gradient(ellipse,rgba(241,44,54,.2),transparent 70%);pointer-events:none}
 .ag-iso{width:38px;height:61px;color:var(--red);display:block;margin:0 auto 22px;position:relative}
 .ag-card .eyebrow{justify-content:center;margin-bottom:14px;position:relative}
-.ag-card h2{font-family:'Fraunces';font-weight:300;font-size:clamp(1.8rem,5vw,2.6rem);line-height:1.06;margin-bottom:14px;position:relative}
+.ag-card h2{font-family:'Spectral';font-weight:300;font-size:clamp(1.8rem,5vw,2.6rem);line-height:1.06;margin-bottom:14px;position:relative}
 .ag-card h2 b{font-weight:600}
 .ag-card p{color:var(--gray);font-size:.97rem;max-width:380px;margin:0 auto 28px;line-height:1.6;position:relative}
 .ag-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative}
@@ -187,7 +187,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 /* FOOTER */
 .shop-foot{border-top:1px solid var(--border);padding:34px 0;text-align:center;color:var(--gray);font-size:.82rem}
 .age-strip{display:flex;align-items:center;gap:16px;text-align:left;max-width:760px;margin:0 auto 18px;padding:14px 20px;border:1px solid var(--border2);border-radius:16px;background:linear-gradient(90deg,var(--red-soft),transparent 55%)}
-.age-strip .age-num{flex:none;display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;background:var(--red);color:#fff;font-family:'Fraunces';font-weight:600;font-size:1rem;box-shadow:0 8px 22px -6px rgba(241,44,54,.6)}
+.age-strip .age-num{flex:none;display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;background:var(--red);color:#fff;font-family:'Spectral';font-weight:600;font-size:1rem;box-shadow:0 8px 22px -6px rgba(241,44,54,.6)}
 .age-strip p{color:var(--gray);font-size:.82rem;line-height:1.5;margin:0}
 .age-strip p b{color:var(--cream);font-weight:600}
 @media(max-width:560px){.age-strip{gap:12px;padding:12px 14px}.age-strip .age-num{width:40px;height:40px;font-size:.9rem}.age-strip p{font-size:.76rem}}
