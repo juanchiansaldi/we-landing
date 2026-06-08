@@ -1,0 +1,15 @@
+:root {
+  --bg: #0d0a0a;
+  --surf: #161010;
+  --white: #faf6ef;
+  --gray: #9a8d83;
+  --red: #f12c36;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: system-ui, -apple-system, "DM Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }

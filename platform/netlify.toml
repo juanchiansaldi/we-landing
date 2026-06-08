@@ -1,0 +1,7 @@
+# Deploy de la plataforma (Next.js) en Netlify.
+# Al crear el sitio en Netlify, configurá "Base directory" = platform
+[build]
+  command = "npm run build"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
