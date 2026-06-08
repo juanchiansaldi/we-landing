@@ -67,14 +67,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 .btn svg{width:15px;height:15px}
 
 /* SHOP HEADER */
-.shop{padding:130px 0 70px;position:relative;overflow:hidden}
-.shop::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(120% 70% at 50% -10%,rgba(241,44,54,.12),transparent 60%)}
+.shop{padding:90px 0 20px;position:relative;overflow:hidden}
+.shop::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(120% 55% at 50% -25%,rgba(241,44,54,.13),transparent 56%)}
 .shop>.wrap{position:relative;z-index:2}
-.shop-head{max-width:680px}
-.shop-head h1{font-size:clamp(2.6rem,7vw,4.6rem);font-weight:300}
+.shop-head{max-width:780px}
+.shop-head h1{font-size:clamp(1.9rem,4.2vw,3rem);font-weight:300;line-height:1.04}
 .shop-head h1 b{font-weight:600}
-.shop-head p{color:var(--gray);font-size:1.06rem;margin-top:1rem;max-width:480px}
-.shop-search{margin-top:30px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.shop-head p{color:var(--gray);font-size:.97rem;margin-top:.65rem;max-width:540px}
+.shop-ship{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.shop-ship span{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;color:var(--cream);background:var(--surf);border:1px solid var(--border2);border-radius:9999px;padding:.45rem .85rem}
+.shop-ship span b{color:var(--red);font-weight:600}
+.shop-ship svg{width:15px;height:15px;color:var(--red);flex:none}
+.shop-search{margin-top:18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .search-box{position:relative;flex:1;min-width:240px;max-width:440px}
 .search-box svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--gray)}
 .search-box input{width:100%;background:var(--surf);border:1px solid var(--border2);border-radius:9999px;color:var(--white);font-family:'DM Sans';font-size:.95rem;padding:.85rem 1.1rem .85rem 2.7rem;outline:none;transition:border-color .3s}
@@ -254,7 +258,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
     <div class="shop-head">
       <span class="eyebrow">La Cava · Tienda online</span>
       <h1>Llevate la cava <b class="red-text">a tu mesa.</b></h1>
-      <p>Vinos, espumantes, quesos, chocolates y todo lo que armamos en We. Elegí, sumá al carrito y coordinamos el envío en Crespo.</p>
+      <p>Hacé tu pedido y te lo llevamos. Vinos, espumantes, quesos, chocolates y todo lo de We.</p>
+      <div class="shop-ship">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Crespo: <b>24–48 hs hábiles</b></span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="18.5" cy="18.5" r="2"/></svg>Todo el país: <b>2–4 días</b></span>
+      </div>
       <div class="shop-search">
         <div class="search-box">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
