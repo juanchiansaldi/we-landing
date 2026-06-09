@@ -30,6 +30,7 @@ const ICONS = {
   search: "M21 21l-4.3-4.3M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z",
   check: "M20 6 9 17l-5-5",
   truck: "M3 6h13v9H3V6Zm13 3h4l2 3v3h-6V9ZM7 18a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm11 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z",
+  clock: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 7v5l3 2",
   x: "M18 6 6 18M6 6l12 12",
   wa: "M20 12a8 8 0 0 1-11.9 7L4 20l1.1-4A8 8 0 1 1 20 12Z",
 };
@@ -63,6 +64,7 @@ export default function Storefront({ store, products, cats }: Props) {
   const [couponInput, setCouponInput] = useState("");
   const [coupon, setCoupon] = useState<{ code: string; discount: number; label: string } | null>(null);
   const [couponErr, setCouponErr] = useState<string | null>(null);
+  const [showTransfer, setShowTransfer] = useState(false);
 
   const byId = useMemo(() => {
     const m: Record<string, StoreProduct> = {};
@@ -80,7 +82,21 @@ export default function Storefront({ store, products, cats }: Props) {
     if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("cart") === "1") {
       setCartOpen(true);
     }
+    // tema (compartido con el landing vía localStorage)
+    try {
+      const t = localStorage.getItem("we-theme");
+      if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+    } catch {}
   }, []);
+
+  function toggleTheme() {
+    const cur = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+    const next = cur === "light" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", next);
+    try {
+      localStorage.setItem("we-theme", next);
+    } catch {}
+  }
 
   useEffect(() => {
     try {
@@ -263,6 +279,22 @@ export default function Storefront({ store, products, cats }: Props) {
     window.open(url, "_blank");
   }
 
+  function transferWhatsApp() {
+    const phone = (store.whatsapp || "").replace(/\D/g, "");
+    const lines = cartLines.map((l) => `• ${l.qty}× ${l.p.name} — ${fmt(priceOf(l.p) * l.qty)}`);
+    const msg = [
+      `¡Hola ${store.name}! Hice una transferencia por este pedido:`,
+      "",
+      ...lines,
+      "",
+      `Total: ${fmt(total)}`,
+      `Alias: ${store.alias || ""}`,
+      "",
+      "Te adjunto el comprobante 📎",
+    ].join("\n");
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, "_blank");
+  }
+
   async function checkoutMP() {
     if (!cartLines.length || paying) return;
     setPaying(true);
@@ -299,18 +331,25 @@ export default function Storefront({ store, products, cats }: Props) {
   return (
     <>
       <nav>
-        <a className="nav-logo" href="https://wecavagourmet.com">{store.name}</a>
+        <a href="https://wecavagourmet.com" className="nav-logo" aria-label="We · Cava & Gourmet">
+          <span className="logo-word"><svg viewBox="0 0 520.10 261.99"><use href="#we-word" /></svg></span>
+        </a>
         <div className="nav-right">
           <div className="nav-links">
             <a href="https://wecavagourmet.com">Inicio</a>
-            <a href="#" className="active">Tienda</a>
+            <a href="https://wecavagourmet.com/#seleccion">Selección</a>
             <a href="/club">Club We</a>
+            <a href="#" className="active">Cava · Tienda</a>
             <a href="/cuenta">Mi cuenta</a>
           </div>
           <button className="cart-btn" type="button" onClick={() => setCartOpen(true)}>
             <Icon d={ICONS.cart} />
             Carrito
             {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+          </button>
+          <button className="theme-toggle" type="button" onClick={toggleTheme} aria-label="Cambiar tema">
+            <svg className="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>
+            <svg className="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" /></svg>
           </button>
         </div>
       </nav>
@@ -319,40 +358,39 @@ export default function Storefront({ store, products, cats }: Props) {
         <div className="wrap">
           <div className="shop-head shop-head-top">
             <div className="shop-head-text">
-              <span className="eyebrow">Cava · Tienda online</span>
+              <span className="eyebrow">La Cava · Tienda online</span>
               <h1>
-                Llevá la góndola <b>a casa</b>.
+                Llevate la cava <b className="red-text">a tu mesa.</b>
               </h1>
               <p>
-                Vinos, espumantes, quesos y gourmet seleccionados. Comprá online y lo
-                coordinamos por WhatsApp.
+                Hacé tu pedido y te lo llevamos. Vinos, espumantes, quesos, chocolates y todo lo de We.
               </p>
             </div>
             <div className="shop-ship">
               <span>
-                <Icon d={ICONS.truck} /> <b>24–48 hs</b>&nbsp;en Crespo
+                <Icon d={ICONS.clock} /> Crespo: <b>24–48 hs hábiles</b>
               </span>
               <span>
-                <Icon d={ICONS.truck} /> <b>2–4 días</b>&nbsp;resto del país
+                <Icon d={ICONS.truck} /> Todo el país: <b>2–4 días</b>
               </span>
             </div>
           </div>
 
           <div className="promo-mosaic">
-            <button type="button" className={`pm-tile${quick === "ofertas" ? " pm-active" : ""}`} onClick={() => setQuickFilter("ofertas")}>
-              <span className="pm-k">Precio especial</span>
+            <button type="button" className={`pm-tile pm-ofertas${quick === "ofertas" ? " pm-active" : ""}`} onClick={() => setQuickFilter("ofertas")}>
+              <span className="pm-k">Hasta 25% OFF</span>
               <h3>Ofertas</h3>
-              <span className="pm-go">Ver lo rebajado →</span>
+              <span className="pm-go">Ver lo que está en promo →</span>
             </button>
-            <button type="button" className={`pm-tile${quick === "combos" ? " pm-active" : ""}`} onClick={() => setQuickFilter("combos")}>
-              <span className="pm-k">Armados</span>
-              <h3>Combos</h3>
-              <span className="pm-go">Cajas y maridajes →</span>
+            <button type="button" className={`pm-tile pm-combos${quick === "combos" ? " pm-active" : ""}`} onClick={() => setQuickFilter("combos")}>
+              <span className="pm-k">Armadas a mano</span>
+              <h3>Combos &amp; Regalos</h3>
+              <span className="pm-go">Ver cajas →</span>
             </button>
-            <button type="button" className={`pm-tile${quick === "novedades" ? " pm-active" : ""}`} onClick={() => setQuickFilter("novedades")}>
+            <button type="button" className={`pm-tile pm-novedades${quick === "novedades" ? " pm-active" : ""}`} onClick={() => setQuickFilter("novedades")}>
               <span className="pm-k">Recién llegados</span>
               <h3>Novedades</h3>
-              <span className="pm-go">Lo último que entró →</span>
+              <span className="pm-go">Ver lo nuevo →</span>
             </button>
           </div>
 
@@ -559,10 +597,20 @@ export default function Storefront({ store, products, cats }: Props) {
                   <Icon d={ICONS.wa} /> Coordinar por WhatsApp
                 </button>
                 {store.alias && (
-                  <p className="cart-note">
-                    ¿Preferís transferencia? Alias <b>{store.alias}</b>
-                    {store.titular ? ` · ${store.titular}` : ""}.
-                  </p>
+                  <>
+                    <button className="btn btn-ghost" type="button" onClick={() => setShowTransfer((v) => !v)}>
+                      Pagar por transferencia
+                    </button>
+                    {showTransfer && (
+                      <div className="transfer-box">
+                        Transferí a <b>{store.alias}</b> por el total y mandanos el comprobante.
+                        <br />
+                        <span className="tw" onClick={transferWhatsApp}>
+                          <Icon d={ICONS.wa} /> Enviar comprobante por WhatsApp
+                        </span>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -642,6 +690,22 @@ export default function Storefront({ store, products, cats }: Props) {
           </div>
         )}
       </div>
+
+      <footer className="shop-foot">
+        <div className="wrap">
+          <div className="age-strip">
+            <span className="age-num">+18</span>
+            <p>
+              <b>Beber con moderación.</b> Prohibida la venta de bebidas alcohólicas a menores de 18 años
+              (Ley Nacional 24.788). Si vas a manejar, no tomes.
+            </p>
+          </div>
+          <div>
+            © 2026 We · Cava &amp; Gourmet — Crespo, Entre Ríos ·{" "}
+            <a href="https://wecavagourmet.com">Volver al inicio</a>
+          </div>
+        </div>
+      </footer>
     </>
   );
 }

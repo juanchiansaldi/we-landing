@@ -1,26 +1,12 @@
 import type { Metadata } from "next";
-import { Spectral, DM_Sans } from "next/font/google";
 import "./globals.css";
-
-const spectral = Spectral({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-spectral",
-  display: "swap",
-});
-
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-dmsans",
-  display: "swap",
-});
+import LogoDefs from "../components/LogoDefs";
 
 export const metadata: Metadata = {
-  title: "We · Cava & Gourmet",
+  title: "Cava · Tienda — We · Cava & Gourmet",
   description:
-    "Vinería y tienda gourmet en Crespo. Tienda online: vinos, espumantes, quesos y gourmet.",
+    "Tienda online de We · Cava & Gourmet. Vinos, espumantes, quesos, chocolates y más, con envío en Crespo. +18 · Consumo responsable.",
+  themeColor: "#0d0a0a",
 };
 
 export default function RootLayout({
@@ -29,8 +15,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className={`${spectral.variable} ${dmSans.variable}`}>
-      <body>{children}</body>
+    <html lang="es">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Spectral:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300..600&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body>
+        <LogoDefs />
+        {children}
+      </body>
     </html>
   );
 }
