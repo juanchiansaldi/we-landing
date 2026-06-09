@@ -59,6 +59,7 @@ export default function Storefront({ store, products, cats }: Props) {
   const [added, setAdded] = useState<string | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [detailId, setDetailId] = useState<string | null>(null);
+  const [paying, setPaying] = useState(false);
 
   const byId = useMemo(() => {
     const m: Record<string, StoreProduct> = {};
@@ -206,6 +207,28 @@ export default function Storefront({ store, products, cats }: Props) {
       ? `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`
       : `https://wa.me/?text=${encodeURIComponent(msg)}`;
     window.open(url, "_blank");
+  }
+
+  async function checkoutMP() {
+    if (!cartLines.length || paying) return;
+    setPaying(true);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: cartLines.map((l) => ({ id: l.p.id, qty: l.qty })) }),
+      });
+      const j = await res.json().catch(() => ({}));
+      if (res.ok && j.init_point) {
+        window.location.href = j.init_point;
+      } else {
+        alert(j.error || "No se pudo iniciar el pago. Probá de nuevo o escribinos por WhatsApp.");
+        setPaying(false);
+      }
+    } catch {
+      alert("No se pudo conectar con el pago. Probá de nuevo.");
+      setPaying(false);
+    }
   }
 
   return (
@@ -438,8 +461,11 @@ export default function Storefront({ store, products, cats }: Props) {
                 {store.shipNote ? ` ${store.shipNote}` : ""}
               </p>
               <div className="cart-pay">
-                <button className="btn btn-primary" type="button" onClick={checkoutWhatsApp}>
-                  <Icon d={ICONS.wa} /> Pedir por WhatsApp
+                <button className="btn mp-btn" type="button" onClick={checkoutMP} disabled={paying}>
+                  {paying ? "Abriendo Mercado Pago…" : "Pagar con tarjeta · Mercado Pago"}
+                </button>
+                <button className="btn btn-ghost" type="button" onClick={checkoutWhatsApp}>
+                  <Icon d={ICONS.wa} /> Coordinar por WhatsApp
                 </button>
                 {store.alias && (
                   <p className="cart-note">

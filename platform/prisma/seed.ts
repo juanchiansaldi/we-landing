@@ -66,9 +66,8 @@ async function main() {
     });
   }
 
-  // 4) Productos de PRUEBA (solo unos pocos; los reales vienen del Excel)
-  const TEST_COUNT = 6;
-  for (const p of products.slice(0, TEST_COUNT)) {
+  // 4) Productos (catálogo inicial; después se editan desde el panel /admin)
+  for (const p of products) {
     const slug = p.id || slugify(p.name);
     const product = await prisma.product.upsert({
       where: { storeId_slug: { storeId: store.id, slug } },
@@ -85,13 +84,14 @@ async function main() {
         categoryId: catMap[p.cat] ?? null,
       },
     });
+    // imagen única (order 0): refrescamos para que tome la foto real actual
     if (p.img) {
-      const exists = await prisma.productImage.findFirst({ where: { productId: product.id } });
-      if (!exists) await prisma.productImage.create({ data: { productId: product.id, url: p.img, order: 0 } });
+      await prisma.productImage.deleteMany({ where: { productId: product.id } });
+      await prisma.productImage.create({ data: { productId: product.id, url: p.img, order: 0 } });
     }
   }
 
-  console.log(`Seed OK → tienda "${store.name}", ${cats.length} categorías, ${PLANS.length} planes, ${TEST_COUNT} productos de PRUEBA.`);
+  console.log(`Seed OK → tienda "${store.name}", ${cats.length} categorías, ${PLANS.length} planes, ${products.length} productos.`);
 }
 
 main().catch((e) => { console.error(e); process.exit(1); }).finally(() => prisma.$disconnect());

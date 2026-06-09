@@ -3,15 +3,15 @@
     {
       "id": "malbec-gr",
       "name": "Malbec Gran Reserva",
-      "brand": "Finca Altura",
+      "brand": "Finca We",
       "cat": "Tintos",
-      "price": 11500,
-      "promo": 9900,
-      "img": "./assets/frames/we-0010.webp",
+      "price": 15900,
+      "promo": null,
+      "img": "./assets/img/productos/malbec.webp",
       "stock": true,
       "nuevo": false,
-      "notes": "Valle de Uco · 12 meses de roble. Ciruela y vainilla.",
-      "desc": "Un Malbec de guarda que pasa 12 meses en barrica de roble francés. En copa, ciruela madura, vainilla y un dejo de chocolate; en boca es amplio, con taninos pulidos y un final largo y goloso. Ideal para carnes rojas, asado y quesos estacionados.",
+      "notes": "Valle de Uco, 12 meses de roble. Ciruela, vainilla y final largo.",
+      "desc": "Nuestro Malbec insignia: uvas del Valle de Uco y 12 meses de crianza en roble francés. Ciruela madura, vainilla y chocolate, con taninos pulidos y un final largo y goloso. El que nunca falla en la mesa.",
       "meta": [
         {
           "k": "Región",
@@ -36,13 +36,13 @@
       "name": "Cabernet Franc",
       "brand": "Casa del Valle",
       "cat": "Tintos",
-      "price": 13800,
+      "price": 14800,
       "promo": null,
-      "img": "./assets/frames/we-0030.webp",
+      "img": "./assets/img/productos/vino-tinto.webp",
       "stock": true,
       "nuevo": true,
-      "notes": "Pimienta y frutos negros. Para guardar.",
-      "desc": "El Cabernet Franc que enamora a los curiosos: pimienta negra, frutos rojos y un toque herbal muy elegante. Fresco, vertical y con mucha personalidad. Acompaña cordero, hongos y platos especiados.",
+      "notes": "Pimienta negra y frutos rojos. Elegante y especiado.",
+      "desc": "El Cabernet Franc que enamora a los curiosos: pimienta negra, frutos rojos y un toque herbal muy elegante. Fresco, vertical y con personalidad. Va con cordero, hongos y platos especiados.",
       "meta": [
         {
           "k": "Región",
@@ -65,27 +65,27 @@
     {
       "id": "bonarda",
       "name": "Bonarda de Autor",
-      "brand": "Norte Vivo",
+      "brand": "Viñas del Este",
       "cat": "Tintos",
-      "price": 8900,
-      "promo": null,
-      "img": "./assets/frames/we-0185.webp",
+      "price": 11500,
+      "promo": 9900,
+      "img": "./assets/img/productos/bonarda.webp",
       "stock": true,
       "nuevo": false,
-      "notes": "Jugoso y goloso. El tinto de todos los días.",
-      "desc": "La Bonarda en su mejor versión: jugosa, frutal y muy fácil de tomar. Frutos rojos frescos, poca madera y mucha bebibilidad. El tinto perfecto para la pizza del viernes o una picada improvisada.",
+      "notes": "Jugosa y frutal. La sorpresa simpática de la cava.",
+      "desc": "Bonarda de productor chico: violetas, cereza y mora, con una boca jugosa y amable. Poca madera, mucha fruta. Ideal para todos los días, pizzas y picadas.",
       "meta": [
         {
           "k": "Región",
-          "v": "San Juan"
+          "v": "San Rafael, Mendoza"
         },
         {
           "k": "Cosecha",
-          "v": "2023"
+          "v": "2022"
         },
         {
           "k": "Crianza",
-          "v": "Sin madera"
+          "v": "Sin roble"
         },
         {
           "k": "Graduación",
@@ -95,24 +95,24 @@
     },
     {
       "id": "blend-roble",
-      "name": "Blend Roble",
-      "brand": "Finca Altura",
+      "name": "Blend de Roble",
+      "brand": "Finca We",
       "cat": "Tintos",
-      "price": 15600,
+      "price": 17200,
       "promo": null,
-      "img": "./assets/frames/we-0120.webp",
+      "img": "./assets/img/productos/blend-tinto.webp",
       "stock": true,
       "nuevo": false,
-      "notes": "Malbec, Cabernet y Petit Verdot. Final largo.",
-      "desc": "Un corte clásico de alta gama: Malbec por la fruta, Cabernet por la estructura y Petit Verdot por el color y la especia. Profundo, sedoso y con un final que no termina más. Para una ocasión especial.",
+      "notes": "Corte Malbec–Cabernet. Estructura y elegancia.",
+      "desc": "Un corte clásico Malbec y Cabernet Sauvignon criado en roble. Estructura, frutos negros y especias dulces. Redondo y con cuerpo, para una buena carne.",
       "meta": [
         {
           "k": "Región",
-          "v": "Valle de Uco, Mendoza"
+          "v": "Luján de Cuyo, Mendoza"
         },
         {
           "k": "Cosecha",
-          "v": "2020"
+          "v": "2021"
         },
         {
           "k": "Crianza",
@@ -120,26 +120,26 @@
         },
         {
           "k": "Graduación",
-          "v": "14,8%"
+          "v": "14%"
         }
       ]
     },
     {
-      "id": "chardonnay",
-      "name": "Chardonnay",
-      "brand": "La Delfina",
-      "cat": "Blancos & Rosados",
+      "id": "malbec-joven",
+      "name": "Malbec Joven",
+      "brand": "Casa del Valle",
+      "cat": "Tintos",
       "price": 9200,
       "promo": null,
-      "img": "./assets/frames/we-0150.webp",
+      "img": "./assets/img/productos/vino-tinto.webp",
       "stock": true,
       "nuevo": false,
-      "notes": "Fresco, con paso por madera. Cítricos y manteca.",
-      "desc": "Chardonnay de clima fresco con un breve paso por madera que le da volumen sin tapar la fruta. Cítricos, durazno blanco y un fondo amanteca-do. Ideal con pastas, pollo o pescados de río.",
+      "notes": "Fruta pura, sin madera. Fácil y rico.",
+      "desc": "Malbec de entrada de gama hecho con cariño: pura fruta roja, fresco y sin madera. El tinto de descorche fácil para cualquier momento.",
       "meta": [
         {
           "k": "Región",
-          "v": "Tupungato, Mendoza"
+          "v": "Mendoza"
         },
         {
           "k": "Cosecha",
@@ -147,7 +147,7 @@
         },
         {
           "k": "Crianza",
-          "v": "4 meses en roble"
+          "v": "Sin roble"
         },
         {
           "k": "Graduación",
@@ -156,17 +156,110 @@
       ]
     },
     {
-      "id": "torrontes",
-      "name": "Torrontés Salteño",
-      "brand": "Cafayate Alto",
-      "cat": "Blancos & Rosados",
-      "price": 7800,
-      "promo": 6500,
-      "img": "./assets/img/productos/torrontes.webp",
+      "id": "syrah",
+      "name": "Syrah",
+      "brand": "Bodega del Sol",
+      "cat": "Tintos",
+      "price": 13200,
+      "promo": null,
+      "img": "./assets/img/productos/syrah.webp",
+      "stock": true,
+      "nuevo": true,
+      "notes": "Pimienta, ciruela y un fondo ahumado.",
+      "desc": "Syrah de zona cálida: ciruela, pimienta negra y un fondo ahumado muy seductor. Carnoso y especiado, pide asados y quesos estacionados.",
+      "meta": [
+        {
+          "k": "Región",
+          "v": "San Juan"
+        },
+        {
+          "k": "Cosecha",
+          "v": "2022"
+        },
+        {
+          "k": "Crianza",
+          "v": "8 meses en roble"
+        },
+        {
+          "k": "Graduación",
+          "v": "14%"
+        }
+      ]
+    },
+    {
+      "id": "pinot-noir",
+      "name": "Pinot Noir",
+      "brand": "Patagonia Wines",
+      "cat": "Tintos",
+      "price": 18900,
+      "promo": null,
+      "img": "./assets/img/productos/pinot-noir.webp",
+      "stock": true,
+      "nuevo": true,
+      "notes": "Delicado y sedoso. Frutos rojos frescos.",
+      "desc": "Pinot Noir patagónico: frutilla, cereza y un perfil floral muy fino. Cuerpo liviano, sedoso y elegante. Brilla con salmón, pastas y picadas suaves.",
+      "meta": [
+        {
+          "k": "Región",
+          "v": "Río Negro, Patagonia"
+        },
+        {
+          "k": "Cosecha",
+          "v": "2022"
+        },
+        {
+          "k": "Crianza",
+          "v": "10 meses en roble"
+        },
+        {
+          "k": "Graduación",
+          "v": "13%"
+        }
+      ]
+    },
+    {
+      "id": "cabernet",
+      "name": "Cabernet Sauvignon",
+      "brand": "Finca We",
+      "cat": "Tintos",
+      "price": 14200,
+      "promo": null,
+      "img": "./assets/img/productos/cabernet.webp",
       "stock": true,
       "nuevo": false,
-      "notes": "Aromático y floral. De altura, bien fresco.",
-      "desc": "El blanco más argentino: súper aromático, con jazmín, rosas y cáscara de pomelo. En boca es fresco, seco y delicado, sin amargor. Perfecto como aperitivo o con comida asiática y picante.",
+      "notes": "Frutos negros y mentol. Clásico y firme.",
+      "desc": "Cabernet Sauvignon de manual: cassis, pimiento y mentol, con taninos firmes y final persistente. Un tinto serio para carnes rojas y guisos.",
+      "meta": [
+        {
+          "k": "Región",
+          "v": "Valle de Uco, Mendoza"
+        },
+        {
+          "k": "Cosecha",
+          "v": "2021"
+        },
+        {
+          "k": "Crianza",
+          "v": "12 meses en roble"
+        },
+        {
+          "k": "Graduación",
+          "v": "14%"
+        }
+      ]
+    },
+    {
+      "id": "torrontes",
+      "name": "Torrontés Salteño",
+      "brand": "Altura Norte",
+      "cat": "Blancos & Rosados",
+      "price": 9800,
+      "promo": null,
+      "img": "./assets/img/productos/torrontes.webp",
+      "stock": true,
+      "nuevo": true,
+      "notes": "Aromático y floral. Fresco como pocos.",
+      "desc": "Torrontés de altura: jazmín, durazno y cáscara de naranja. Aromático en nariz y seco y fresco en boca. Perfecto como aperitivo o con comida tailandesa y picante.",
       "meta": [
         {
           "k": "Región",
@@ -174,11 +267,73 @@
         },
         {
           "k": "Cosecha",
-          "v": "2024"
+          "v": "2023"
         },
         {
-          "k": "Altura",
-          "v": "1.700 msnm"
+          "k": "Crianza",
+          "v": "Sin roble"
+        },
+        {
+          "k": "Graduación",
+          "v": "12,5%"
+        }
+      ]
+    },
+    {
+      "id": "chardonnay",
+      "name": "Chardonnay",
+      "brand": "Finca We",
+      "cat": "Blancos & Rosados",
+      "price": 12600,
+      "promo": null,
+      "img": "./assets/img/productos/chardonnay.webp",
+      "stock": true,
+      "nuevo": false,
+      "notes": "Cremoso, con notas de manteca y fruta blanca.",
+      "desc": "Chardonnay con paso por roble: manzana, durazno y un fondo cremoso de manteca y vainilla. Untuoso y equilibrado. Va con pollo, pastas con crema y quesos suaves.",
+      "meta": [
+        {
+          "k": "Región",
+          "v": "Valle de Uco, Mendoza"
+        },
+        {
+          "k": "Cosecha",
+          "v": "2022"
+        },
+        {
+          "k": "Crianza",
+          "v": "6 meses en roble"
+        },
+        {
+          "k": "Graduación",
+          "v": "13,5%"
+        }
+      ]
+    },
+    {
+      "id": "sauvignon",
+      "name": "Sauvignon Blanc",
+      "brand": "Bodega del Sol",
+      "cat": "Blancos & Rosados",
+      "price": 11200,
+      "promo": 9500,
+      "img": "./assets/img/productos/sauvignon.webp",
+      "stock": true,
+      "nuevo": false,
+      "notes": "Cítrico y herbal. Súper refrescante.",
+      "desc": "Sauvignon Blanc bien tenso: pomelo, lima y notas herbales. Acidez vibrante y final limpio. El blanco ideal para mariscos, ensaladas y días de calor.",
+      "meta": [
+        {
+          "k": "Región",
+          "v": "Mendoza"
+        },
+        {
+          "k": "Cosecha",
+          "v": "2023"
+        },
+        {
+          "k": "Crianza",
+          "v": "Sin roble"
         },
         {
           "k": "Graduación",
@@ -191,13 +346,13 @@
       "name": "Rosado de Malbec",
       "brand": "Casa del Valle",
       "cat": "Blancos & Rosados",
-      "price": 7400,
+      "price": 9600,
       "promo": null,
       "img": "./assets/img/productos/rosado.webp",
       "stock": true,
       "nuevo": false,
-      "notes": "Frutillas y un final seco. Para el verano.",
-      "desc": "Rosado de Malbec con color pálido y mucha frescura. Frutillas, cereza y un final seco y filoso. Para tomar bien frío en una tarde de calor o con una tabla liviana.",
+      "notes": "Frutillas y flores. Seco y muy fácil.",
+      "desc": "Rosado de Malbec con color piel de cebolla: frutilla, sandía y un toque floral. Seco, fresco y liviano. El comodín para picar, brindar o acompañar sushi.",
       "meta": [
         {
           "k": "Región",
@@ -205,11 +360,11 @@
         },
         {
           "k": "Cosecha",
-          "v": "2024"
+          "v": "2023"
         },
         {
-          "k": "Estilo",
-          "v": "Seco"
+          "k": "Crianza",
+          "v": "Sin roble"
         },
         {
           "k": "Graduación",
@@ -218,29 +373,60 @@
       ]
     },
     {
+      "id": "vino-natural",
+      "name": "Vino Naranjo Natural",
+      "brand": "Terruño Vivo",
+      "cat": "Blancos & Rosados",
+      "price": 16800,
+      "promo": null,
+      "img": "./assets/img/productos/vino-natural.webp",
+      "stock": true,
+      "nuevo": true,
+      "notes": "Baja intervención. Distinto y vivo.",
+      "desc": "Vino naranjo de elaboración natural, con maceración con hollejos: notas de té, orejones y hierbas. Sin filtrar, baja intervención, biodinámico. Para los que buscan algo diferente.",
+      "meta": [
+        {
+          "k": "Región",
+          "v": "Mendoza"
+        },
+        {
+          "k": "Cosecha",
+          "v": "2023"
+        },
+        {
+          "k": "Crianza",
+          "v": "Ánfora"
+        },
+        {
+          "k": "Graduación",
+          "v": "12%"
+        }
+      ]
+    },
+    {
       "id": "brut-nature",
       "name": "Brut Nature",
-      "brand": "We · Casa",
+      "brand": "Finca We",
       "cat": "Espumantes",
-      "price": 9200,
+      "price": 13900,
       "promo": null,
-      "img": "./assets/frames/we-0088.webp",
+      "img": "./assets/img/productos/brut.webp",
       "stock": true,
       "nuevo": false,
       "notes": "Método tradicional, burbuja fina y bien seco.",
-      "desc": "Nuestro espumante de la casa, elaborado por método tradicional. Burbuja fina y persistente, sin azúcar agregada: puro, seco y elegante. El que nunca falla para arrancar la noche o brindar.",
+      "desc": "Espumante método tradicional, sin azúcar agregado: burbuja fina, cítricos y panificados. Seco, elegante y filoso. El que nunca falla para brindar.",
       "meta": [
         {
+          "k": "Región",
+          "v": "Mendoza"
+        },
+        {
           "k": "Método",
-          "v": "Tradicional (champenoise)"
+          "v": "Tradicional"
         },
         {
           "k": "Dosaje",
-          "v": "Brut Nature"
-        },
-        {
-          "k": "Servir a",
-          "v": "6–8 °C"
+          "v": "Nature"
         },
         {
           "k": "Graduación",
@@ -250,28 +436,28 @@
     },
     {
       "id": "extra-brut",
-      "name": "Extra Brut Rosé",
-      "brand": "La Delfina",
+      "name": "Extra Brut",
+      "brand": "Casa del Valle",
       "cat": "Espumantes",
-      "price": 11200,
+      "price": 11500,
       "promo": null,
-      "img": "./assets/frames/we-0097.webp",
+      "img": "./assets/img/productos/espumante.webp",
       "stock": true,
-      "nuevo": true,
-      "notes": "Elegante y festivo. Para brindar en serio.",
-      "desc": "Espumante rosado Extra Brut, fino y festivo. Notas de frutilla y pan tostado, burbuja cremosa y un final seco. Marida de maravilla con jamón crudo, sushi o un postre poco dulce.",
+      "nuevo": false,
+      "notes": "Equilibrado y frutal. Para cualquier brindis.",
+      "desc": "Extra Brut fresco y frutal: manzana verde, pera y un dulzor justo. Versátil y simpático, va con todo: desde un brindis hasta una picada.",
       "meta": [
         {
+          "k": "Región",
+          "v": "Mendoza"
+        },
+        {
           "k": "Método",
-          "v": "Tradicional"
+          "v": "Charmat"
         },
         {
           "k": "Dosaje",
           "v": "Extra Brut"
-        },
-        {
-          "k": "Servir a",
-          "v": "6–8 °C"
         },
         {
           "k": "Graduación",
@@ -280,222 +466,415 @@
       ]
     },
     {
-      "id": "queso-estac",
-      "name": "Queso estacionado 6 meses",
-      "brand": "Tambo La Rosa",
-      "cat": "Quesos & Fiambres",
-      "price": 6800,
+      "id": "espumante-rose",
+      "name": "Espumante Rosé",
+      "brand": "Bodega del Sol",
+      "cat": "Espumantes",
+      "price": 12900,
       "promo": null,
-      "img": null,
+      "img": "./assets/img/productos/espumante-rosado.webp",
       "stock": true,
-      "nuevo": false,
-      "notes": "Intenso, ideal para tabla con tintos.",
-      "desc": "Queso de pasta dura estacionado 6 meses, de sabor intenso y picante justo. Textura quebradiza y notas a frutos secos. La estrella de cualquier tabla, sobre todo con un buen tinto.",
+      "nuevo": true,
+      "notes": "Rosado y festivo. Frutillas y burbuja.",
+      "desc": "Espumante rosado de Pinot Noir: frutilla, cereza y una burbuja delicada. Festivo y coqueto, perfecto para celebraciones y postres frutales.",
       "meta": [
         {
-          "k": "Tipo",
-          "v": "Pasta dura"
+          "k": "Región",
+          "v": "Mendoza"
         },
         {
-          "k": "Estacionamiento",
-          "v": "6 meses"
+          "k": "Método",
+          "v": "Charmat"
         },
         {
-          "k": "Leche",
-          "v": "Vaca"
+          "k": "Dosaje",
+          "v": "Brut"
+        },
+        {
+          "k": "Graduación",
+          "v": "12,5%"
+        }
+      ]
+    },
+    {
+      "id": "dulce-natural",
+      "name": "Espumante Dulce",
+      "brand": "Casa del Valle",
+      "cat": "Espumantes",
+      "price": 10200,
+      "promo": 8900,
+      "img": "./assets/img/productos/espumante.webp",
+      "stock": true,
+      "nuevo": false,
+      "notes": "Dulce y aromático. Ideal para el postre.",
+      "desc": "Espumante dulce natural: durazno, miel y flores. Bien aromático y goloso. El compañero perfecto de la mesa dulce y los panes navideños.",
+      "meta": [
+        {
+          "k": "Región",
+          "v": "Mendoza"
+        },
+        {
+          "k": "Método",
+          "v": "Charmat"
+        },
+        {
+          "k": "Dosaje",
+          "v": "Dulce"
+        },
+        {
+          "k": "Graduación",
+          "v": "11,5%"
+        }
+      ]
+    },
+    {
+      "id": "queso-estac",
+      "name": "Tabla de Quesos Estacionados",
+      "brand": "La Estancia",
+      "cat": "Quesos & Fiambres",
+      "price": 13500,
+      "promo": null,
+      "img": "./assets/img/productos/queso-estac.webp",
+      "stock": true,
+      "nuevo": false,
+      "notes": "Selección de estacionados y semiduros.",
+      "desc": "Selección de quesos estacionados de campo: un sardo, un gruyere criollo y un azul suave. Cortados y listos para la tabla. Maridan con tintos con cuerpo y dulces.",
+      "meta": [
+        {
+          "k": "Contenido",
+          "v": "3 quesos · 400 g"
         },
         {
           "k": "Origen",
           "v": "Entre Ríos"
+        },
+        {
+          "k": "Conservar",
+          "v": "Frío, 0–5 °C"
         }
       ]
     },
     {
       "id": "salame",
-      "name": "Salame de campo",
-      "brand": "Colonia Crespo",
+      "name": "Salame Colonia",
+      "brand": "Don Aldo",
       "cat": "Quesos & Fiambres",
-      "price": 5400,
+      "price": 7800,
       "promo": null,
-      "img": null,
+      "img": "./assets/img/productos/salame.webp",
       "stock": true,
       "nuevo": false,
-      "notes": "Curado artesanal de la zona.",
-      "desc": "Salame de campo curado de forma artesanal en la colonia. Punto justo de sal y pimienta, textura firme y sabor profundo. Cortado finito, no hay tabla que se le resista.",
+      "notes": "Estacionado, especiado y artesanal.",
+      "desc": "Salame colonia artesanal, estacionado en bodega: grano fino, justo de sal y bien especiado. De productor de la zona. Imprescindible en cualquier picada.",
       "meta": [
         {
-          "k": "Tipo",
-          "v": "Salame curado"
-        },
-        {
-          "k": "Curado",
-          "v": "Artesanal"
+          "k": "Peso",
+          "v": "± 300 g"
         },
         {
           "k": "Origen",
-          "v": "Crespo, Entre Ríos"
+          "v": "Colonia Crespo"
+        },
+        {
+          "k": "Estacionamiento",
+          "v": "60 días"
+        }
+      ]
+    },
+    {
+      "id": "jamon-crudo",
+      "name": "Jamón Crudo",
+      "brand": "Don Aldo",
+      "cat": "Quesos & Fiambres",
+      "price": 11900,
+      "promo": null,
+      "img": "./assets/img/productos/jamon.webp",
+      "stock": true,
+      "nuevo": true,
+      "notes": "Curado lento, fetas finas. Puro sabor.",
+      "desc": "Jamón crudo curado lento y cortado en fetas finas: dulce, salado y profundo. El lujo accesible de la picada. Brilla con un espumante o un tinto frutal.",
+      "meta": [
+        {
+          "k": "Peso",
+          "v": "150 g fileteado"
+        },
+        {
+          "k": "Origen",
+          "v": "Argentina"
+        },
+        {
+          "k": "Curado",
+          "v": "12 meses"
+        }
+      ]
+    },
+    {
+      "id": "antipasto-fiambre",
+      "name": "Bondiola Ahumada",
+      "brand": "Don Aldo",
+      "cat": "Quesos & Fiambres",
+      "price": 9400,
+      "promo": null,
+      "img": "./assets/img/productos/antipasto.webp",
+      "stock": true,
+      "nuevo": false,
+      "notes": "Ahumada y tierna. Para tablas y sándwiches.",
+      "desc": "Bondiola ahumada a leña, tierna y sabrosa. Cortada fina para la tabla o gruesa para un buen sándwich. Ahumado natural, sin apuro.",
+      "meta": [
+        {
+          "k": "Peso",
+          "v": "± 250 g"
+        },
+        {
+          "k": "Origen",
+          "v": "Entre Ríos"
+        },
+        {
+          "k": "Ahumado",
+          "v": "A leña"
         }
       ]
     },
     {
       "id": "choco70",
-      "name": "Chocolate 70% cacao",
+      "name": "Chocolate 70% Cacao",
       "brand": "Cacao Sur",
       "cat": "Dulces & Chocolates",
-      "price": 3900,
-      "promo": 2990,
-      "img": null,
+      "price": 6800,
+      "promo": null,
+      "img": "./assets/img/productos/choco70.webp",
       "stock": true,
-      "nuevo": true,
-      "notes": "Tableta intensa. Marida con tintos.",
-      "desc": "Tableta de chocolate amargo 70% cacao, intensa y poco dulce, con un final largo. Marida increíble con tintos de guarda y espumantes dulces. Para cerrar la noche como corresponde.",
+      "nuevo": false,
+      "notes": "Intenso y amargo. Tableta artesanal.",
+      "desc": "Tableta de chocolate 70% cacao, artesanal y de origen: intenso, apenas amargo y muy aromático. El final dulce que pide un tinto de guarda o un espumante dulce.",
       "meta": [
+        {
+          "k": "Peso",
+          "v": "100 g"
+        },
         {
           "k": "Cacao",
           "v": "70%"
         },
         {
-          "k": "Tipo",
-          "v": "Amargo"
-        },
-        {
-          "k": "Peso",
-          "v": "80 g"
+          "k": "Origen",
+          "v": "Sudamérica"
         }
       ]
     },
     {
       "id": "dulce-membr",
-      "name": "Dulce de membrillo",
-      "brand": "La Abuela",
+      "name": "Dulce de Membrillo",
+      "brand": "La Estancia",
       "cat": "Dulces & Chocolates",
-      "price": 2800,
+      "price": 4900,
       "promo": null,
-      "img": null,
+      "img": "./assets/img/productos/dulce-membr.webp",
       "stock": true,
       "nuevo": false,
-      "notes": "Casero, en pan. Con quesos, una fija.",
-      "desc": "Dulce de membrillo casero, en pan, como el de antes. Justo de dulzor y con esa textura firme ideal para cortar. El compañero clásico del queso estacionado: el famoso \"vigilante\".",
+      "notes": "Casero, firme y bien frutado.",
+      "desc": "Dulce de membrillo casero, firme y de color rubí: el clásico del postre criollo. Cortalo con un queso estacionado y listo: vigilante perfecto.",
       "meta": [
         {
-          "k": "Tipo",
-          "v": "Casero"
-        },
-        {
-          "k": "Formato",
-          "v": "Pan 500 g"
+          "k": "Peso",
+          "v": "500 g"
         },
         {
           "k": "Origen",
           "v": "Entre Ríos"
+        },
+        {
+          "k": "Sin",
+          "v": "Conservantes"
+        }
+      ]
+    },
+    {
+      "id": "alfajores",
+      "name": "Alfajores de Maicena",
+      "brand": "Doña Marta",
+      "cat": "Dulces & Chocolates",
+      "price": 5600,
+      "promo": 4800,
+      "img": "./assets/img/productos/alfajores.webp",
+      "stock": true,
+      "nuevo": true,
+      "notes": "Rellenos de dulce de leche y coco.",
+      "desc": "Caja de alfajores de maicena artesanales: tapa que se deshace, dulce de leche repostero y coco en el borde. Hechos a mano, como los de la abuela.",
+      "meta": [
+        {
+          "k": "Contenido",
+          "v": "6 unidades"
+        },
+        {
+          "k": "Origen",
+          "v": "Crespo"
+        },
+        {
+          "k": "Sin",
+          "v": "Conservantes"
+        }
+      ]
+    },
+    {
+      "id": "mermelada",
+      "name": "Mermelada Artesanal",
+      "brand": "La Estancia",
+      "cat": "Dulces & Chocolates",
+      "price": 4200,
+      "promo": null,
+      "img": "./assets/img/productos/mermelada.webp",
+      "stock": true,
+      "nuevo": false,
+      "notes": "Frutos rojos. Sin conservantes.",
+      "desc": "Mermelada artesanal de frutos rojos, con fruta de verdad y poca azúcar. Pedacitos enteros y mucho sabor. Para el desayuno o para acompañar quesos.",
+      "meta": [
+        {
+          "k": "Peso",
+          "v": "350 g"
+        },
+        {
+          "k": "Sabor",
+          "v": "Frutos rojos"
+        },
+        {
+          "k": "Sin",
+          "v": "Conservantes"
         }
       ]
     },
     {
       "id": "aceite-oliva",
-      "name": "Aceite de oliva extra virgen",
-      "brand": "Olivares del Sol",
+      "name": "Aceite de Oliva Extra Virgen",
+      "brand": "Olivares del Sur",
       "cat": "Conservas",
-      "price": 5600,
+      "price": 12500,
       "promo": null,
-      "img": null,
+      "img": "./assets/img/productos/aceite-oliva.webp",
       "stock": true,
       "nuevo": false,
-      "notes": "Primera prensada en frío. Botella 500 ml.",
-      "desc": "Aceite de oliva extra virgen de primera prensada en frío. Frutado, con un amargor y picor equilibrados que delatan su calidad. Para terminar un plato, una bruschetta o una buena ensalada.",
+      "notes": "Primera prensada en frío. Frutado intenso.",
+      "desc": "Aceite de oliva extra virgen, primera prensada en frío: frutado, con un picor noble y un amargor justo. Botella oscura para cuidarlo. Para terminar platos y ensaladas.",
       "meta": [
-        {
-          "k": "Tipo",
-          "v": "Extra virgen"
-        },
-        {
-          "k": "Extracción",
-          "v": "Prensado en frío"
-        },
         {
           "k": "Volumen",
           "v": "500 ml"
+        },
+        {
+          "k": "Variedad",
+          "v": "Arbequina"
+        },
+        {
+          "k": "Acidez",
+          "v": "0,3%"
+        }
+      ]
+    },
+    {
+      "id": "aceitunas",
+      "name": "Aceitunas & Picada",
+      "brand": "Olivares del Sur",
+      "cat": "Conservas",
+      "price": 5200,
+      "promo": null,
+      "img": "./assets/img/productos/aceitunas.webp",
+      "stock": true,
+      "nuevo": false,
+      "notes": "Verdes y negras en conserva, listas.",
+      "desc": "Aceitunas verdes y negras en salmuera de hierbas, listas para la picada. Carnosas y bien condimentadas. Abrís el frasco y ya tenés mesa.",
+      "meta": [
+        {
+          "k": "Peso",
+          "v": "330 g escurrido"
+        },
+        {
+          "k": "Origen",
+          "v": "Mendoza"
+        },
+        {
+          "k": "Tipo",
+          "v": "Verdes y negras"
         }
       ]
     },
     {
       "id": "antipasto",
-      "name": "Antipasto de la casa",
-      "brand": "We · Casa",
+      "name": "Antipasto de la Casa",
+      "brand": "Olivares del Sur",
       "cat": "Conservas",
-      "price": 4200,
-      "promo": null,
-      "img": null,
-      "stock": false,
-      "nuevo": false,
-      "notes": "Vegetales en escabeche, receta propia.",
-      "desc": "Nuestro antipasto de la casa: vegetales en escabeche con receta propia, en su punto justo de acidez. Para picar con pan, sumar a una tabla o acompañar fiambres.",
+      "price": 6900,
+      "promo": 5900,
+      "img": "./assets/img/productos/antipasto.webp",
+      "stock": true,
+      "nuevo": true,
+      "notes": "Vegetales en aceite, agridulce.",
+      "desc": "Antipasto casero de vegetales en aceite de oliva: berenjenas, morrón, zanahoria y hierbas. Agridulce y sabroso. Sobre pan tostado es un golazo.",
       "meta": [
         {
-          "k": "Tipo",
-          "v": "Escabeche"
+          "k": "Peso",
+          "v": "350 g"
         },
         {
-          "k": "Formato",
-          "v": "Frasco 350 g"
+          "k": "Origen",
+          "v": "Entre Ríos"
         },
         {
-          "k": "Elaboración",
-          "v": "Propia"
+          "k": "Conservar",
+          "v": "Frío tras abrir"
         }
       ]
     },
     {
-      "id": "caja-descubr",
-      "name": "Caja Descubrimiento x6",
-      "brand": "We · Casa",
+      "id": "caja-gourmet",
+      "name": "Caja Descubrimiento",
+      "brand": "We · Cava",
       "cat": "Cajas & Regalos",
       "price": 42000,
-      "promo": 37900,
-      "img": "./assets/frames/we-0045.webp",
+      "promo": 38000,
+      "img": "./assets/img/productos/caja-gourmet.webp",
       "stock": true,
       "nuevo": false,
-      "notes": "6 botellas elegidas a mano + ficha de cata.",
-      "desc": "Seis botellas elegidas a mano por nosotros: tintos, blancos y un espumante para arrancar, de distintas regiones. Viene con la ficha de cata de cada vino. El regalo perfecto (o el mimo para vos).",
+      "notes": "6 botellas elegidas a mano. El regalo perfecto.",
+      "desc": "Caja curada de 6 botellas elegidas a mano: tintos, un blanco y un espumante para arrancar. Viene con ficha de cata y presentación de regalo. Para descubrir o para regalar.",
       "meta": [
         {
           "k": "Contenido",
           "v": "6 botellas"
         },
         {
-          "k": "Incluye",
-          "v": "Ficha de cata"
-        },
-        {
           "k": "Regiones",
           "v": "3"
+        },
+        {
+          "k": "Incluye",
+          "v": "Ficha de cata"
         }
       ]
     },
     {
-      "id": "caja-gourmet",
-      "name": "Caja Gourmet",
-      "brand": "We · Casa",
+      "id": "caja-vinos",
+      "name": "Caja Picada We",
+      "brand": "We · Cava",
       "cat": "Cajas & Regalos",
-      "price": 28500,
+      "price": 36500,
       "promo": null,
-      "img": null,
+      "img": "./assets/img/productos/caja-vinos.webp",
       "stock": true,
-      "nuevo": false,
-      "notes": "2 vinos + quesos + dulces. Lista para regalar.",
-      "desc": "Una caja para regalar (o regalarte): 2 vinos seleccionados, quesos, dulces y algo rico para picar, todo presentado para sorprender. Le sumamos una tarjeta con tu mensaje si querés.",
+      "nuevo": true,
+      "notes": "Vino, queso y fiambre. Mesa lista.",
+      "desc": "La caja para armar la mesa sin pensar: 2 botellas, una tabla de quesos, un salame y aceitunas. Todo listo para descorchar y picar. Ideal para una noche con amigos.",
       "meta": [
         {
           "k": "Contenido",
-          "v": "2 vinos + gourmet"
+          "v": "2 vinos + tabla"
         },
         {
-          "k": "Presentación",
-          "v": "Para regalo"
+          "k": "Sirve",
+          "v": "4–6 personas"
         },
         {
-          "k": "Tarjeta",
-          "v": "Opcional"
+          "k": "Incluye",
+          "v": "Quesos y fiambres"
         }
       ]
     }
