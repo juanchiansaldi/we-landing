@@ -211,11 +211,13 @@ export default function Storefront({ store, products, cats }: Props) {
   return (
     <>
       <nav>
-        <span className="nav-logo">{store.name}</span>
+        <a className="nav-logo" href="https://wecavagourmet.com">{store.name}</a>
         <div className="nav-right">
           <div className="nav-links">
+            <a href="https://wecavagourmet.com">Inicio</a>
             <a href="#" className="active">Tienda</a>
-            <a href="/#club">Club We</a>
+            <a href="https://wecavagourmet.com/#universo">El universo We</a>
+            <a href="https://wecavagourmet.com/#club">Club We</a>
           </div>
           <button className="cart-btn" type="button" onClick={() => setCartOpen(true)}>
             <Icon d={ICONS.cart} />
