@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { fmt } from "../lib/format";
 import type { StoreProduct } from "../lib/store";
 
@@ -26,9 +26,12 @@ const CART_KEY = "we-cart";
 const ICONS = {
   cart: "M6 6h15l-1.5 9h-12L6 6Zm0 0L5 3H2m6 18a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm11 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z",
   plus: "M12 5v14M5 12h14",
+  minus: "M5 12h14",
   search: "M21 21l-4.3-4.3M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z",
   check: "M20 6 9 17l-5-5",
   truck: "M3 6h13v9H3V6Zm13 3h4l2 3v3h-6V9ZM7 18a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm11 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z",
+  x: "M18 6 6 18M6 6l12 12",
+  wa: "M20 12a8 8 0 0 1-11.9 7L4 20l1.1-4A8 8 0 1 1 20 12Z",
 };
 
 function Icon({ d, ...rest }: { d: string } & React.SVGProps<SVGSVGElement>) {
@@ -43,6 +46,8 @@ function isCombo(p: StoreProduct) {
   return /combo|caja|box/i.test(p.cat) || /combo|caja/i.test(p.name);
 }
 
+const priceOf = (p: StoreProduct) => p.promo ?? p.price;
+
 export default function Storefront({ store, products, cats }: Props) {
   const [search, setSearch] = useState("");
   const [activeCats, setActiveCats] = useState<string[]>([]);
@@ -52,6 +57,14 @@ export default function Storefront({ store, products, cats }: Props) {
   const [sort, setSort] = useState<SortKey>("rel");
   const [cart, setCart] = useState<Record<string, number>>({});
   const [added, setAdded] = useState<string | null>(null);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [detailId, setDetailId] = useState<string | null>(null);
+
+  const byId = useMemo(() => {
+    const m: Record<string, StoreProduct> = {};
+    for (const p of products) m[p.id] = p;
+    return m;
+  }, [products]);
 
   // cargar carrito de localStorage
   useEffect(() => {
@@ -67,17 +80,59 @@ export default function Storefront({ store, products, cats }: Props) {
     } catch {}
   }, [cart]);
 
+  // bloquear scroll del body con drawer/modal abierto
+  useEffect(() => {
+    const open = cartOpen || detailId !== null;
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [cartOpen, detailId]);
+
+  // cerrar con ESC
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      if (detailId) setDetailId(null);
+      else if (cartOpen) setCartOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [cartOpen, detailId]);
+
   const cartCount = useMemo(
     () => Object.values(cart).reduce((a, b) => a + b, 0),
     [cart]
   );
 
-  function addToCart(p: StoreProduct) {
+  const cartLines = useMemo(
+    () =>
+      Object.entries(cart)
+        .map(([id, qty]) => ({ p: byId[id], qty }))
+        .filter((l) => l.p),
+    [cart, byId]
+  );
+
+  const subtotal = useMemo(
+    () => cartLines.reduce((s, l) => s + priceOf(l.p) * l.qty, 0),
+    [cartLines]
+  );
+
+  const addToCart = useCallback((p: StoreProduct) => {
     if (!p.stock) return;
     setCart((c) => ({ ...c, [p.id]: (c[p.id] || 0) + 1 }));
     setAdded(p.id);
     setTimeout(() => setAdded((cur) => (cur === p.id ? null : cur)), 1100);
-  }
+  }, []);
+
+  const setQty = useCallback((id: string, qty: number) => {
+    setCart((c) => {
+      const next = { ...c };
+      if (qty <= 0) delete next[id];
+      else next[id] = qty;
+      return next;
+    });
+  }, []);
 
   function toggleCat(c: string) {
     setActiveCats((prev) =>
@@ -115,7 +170,6 @@ export default function Storefront({ store, products, cats }: Props) {
       return true;
     });
 
-    const priceOf = (p: StoreProduct) => p.promo ?? p.price;
     if (sort === "price-asc") list = [...list].sort((a, b) => priceOf(a) - priceOf(b));
     else if (sort === "price-desc") list = [...list].sort((a, b) => priceOf(b) - priceOf(a));
     else if (sort === "name") list = [...list].sort((a, b) => a.name.localeCompare(b.name, "es"));
@@ -124,6 +178,34 @@ export default function Storefront({ store, products, cats }: Props) {
 
   function setQuickFilter(q: Quick) {
     setQuick((cur) => (cur === q ? "" : q));
+  }
+
+  const detail = detailId ? byId[detailId] : null;
+  const suggestions = useMemo(() => {
+    if (!detail) return [];
+    return products
+      .filter((p) => p.id !== detail.id && p.cat === detail.cat)
+      .slice(0, 3);
+  }, [detail, products]);
+
+  function checkoutWhatsApp() {
+    const phone = (store.whatsapp || "").replace(/\D/g, "");
+    const lines = cartLines.map(
+      (l) => `• ${l.qty}× ${l.p.name} — ${fmt(priceOf(l.p) * l.qty)}`
+    );
+    const msg = [
+      `¡Hola ${store.name}! Quiero hacer este pedido:`,
+      "",
+      ...lines,
+      "",
+      `Total: ${fmt(subtotal)}`,
+      "",
+      "¿Cómo seguimos con el pago y el envío?",
+    ].join("\n");
+    const url = phone
+      ? `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`
+      : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+    window.open(url, "_blank");
   }
 
   return (
@@ -135,7 +217,7 @@ export default function Storefront({ store, products, cats }: Props) {
             <a href="#" className="active">Tienda</a>
             <a href="/#club">Club We</a>
           </div>
-          <button className="cart-btn" type="button">
+          <button className="cart-btn" type="button" onClick={() => setCartOpen(true)}>
             <Icon d={ICONS.cart} />
             Carrito
             {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
@@ -167,29 +249,17 @@ export default function Storefront({ store, products, cats }: Props) {
           </div>
 
           <div className="promo-mosaic">
-            <button
-              type="button"
-              className={`pm-tile${quick === "ofertas" ? " pm-active" : ""}`}
-              onClick={() => setQuickFilter("ofertas")}
-            >
+            <button type="button" className={`pm-tile${quick === "ofertas" ? " pm-active" : ""}`} onClick={() => setQuickFilter("ofertas")}>
               <span className="pm-k">Precio especial</span>
               <h3>Ofertas</h3>
               <span className="pm-go">Ver lo rebajado →</span>
             </button>
-            <button
-              type="button"
-              className={`pm-tile${quick === "combos" ? " pm-active" : ""}`}
-              onClick={() => setQuickFilter("combos")}
-            >
+            <button type="button" className={`pm-tile${quick === "combos" ? " pm-active" : ""}`} onClick={() => setQuickFilter("combos")}>
               <span className="pm-k">Armados</span>
               <h3>Combos</h3>
               <span className="pm-go">Cajas y maridajes →</span>
             </button>
-            <button
-              type="button"
-              className={`pm-tile${quick === "novedades" ? " pm-active" : ""}`}
-              onClick={() => setQuickFilter("novedades")}
-            >
+            <button type="button" className={`pm-tile${quick === "novedades" ? " pm-active" : ""}`} onClick={() => setQuickFilter("novedades")}>
               <span className="pm-k">Recién llegados</span>
               <h3>Novedades</h3>
               <span className="pm-go">Lo último que entró →</span>
@@ -202,14 +272,8 @@ export default function Storefront({ store, products, cats }: Props) {
                 <h4>Categorías</h4>
                 {cats.map((c) => (
                   <label className="fopt" key={c}>
-                    <input
-                      type="checkbox"
-                      checked={activeCats.includes(c)}
-                      onChange={() => toggleCat(c)}
-                    />
-                    <span className="fbox">
-                      <Icon d={ICONS.check} />
-                    </span>
+                    <input type="checkbox" checked={activeCats.includes(c)} onChange={() => toggleCat(c)} />
+                    <span className="fbox"><Icon d={ICONS.check} /></span>
                     {c}
                     <span className="fcount">{catCounts[c] || 0}</span>
                   </label>
@@ -228,9 +292,7 @@ export default function Storefront({ store, products, cats }: Props) {
                   Novedades
                 </label>
               </div>
-              <button className="fclear" type="button" onClick={clearFilters}>
-                Limpiar filtros
-              </button>
+              <button className="fclear" type="button" onClick={clearFilters}>Limpiar filtros</button>
             </aside>
 
             <div className="shop-main">
@@ -240,12 +302,7 @@ export default function Storefront({ store, products, cats }: Props) {
                 </span>
                 <div className="search-box">
                   <Icon d={ICONS.search} />
-                  <input
-                    type="search"
-                    placeholder="Buscar vino, bodega, queso…"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
+                  <input type="search" placeholder="Buscar vino, bodega, queso…" value={search} onChange={(e) => setSearch(e.target.value)} />
                 </div>
                 <div className="sort">
                   Ordenar
@@ -265,7 +322,7 @@ export default function Storefront({ store, products, cats }: Props) {
                 {filtered.map((p) => {
                   const sale = p.promo != null;
                   return (
-                    <article className="pcard" key={p.id}>
+                    <article className="pcard" key={p.id} onClick={() => setDetailId(p.id)}>
                       <div className={`pcard-media${p.img ? "" : " ph"}`}>
                         {!p.stock && <span className="pbadge out">Sin stock</span>}
                         {p.stock && p.nuevo && <span className="pbadge">Nuevo</span>}
@@ -284,15 +341,16 @@ export default function Storefront({ store, products, cats }: Props) {
                         <div className="pcard-foot">
                           <div className="pcard-price">
                             {sale && <span className="was">{fmt(p.price)}</span>}
-                            <span className={`now${sale ? " sale" : ""}`}>
-                              {fmt(p.promo ?? p.price)}
-                            </span>
+                            <span className={`now${sale ? " sale" : ""}`}>{fmt(priceOf(p))}</span>
                           </div>
                           <button
                             className="padd"
                             type="button"
                             disabled={!p.stock}
-                            onClick={() => addToCart(p)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              addToCart(p);
+                            }}
                             aria-label={`Agregar ${p.name}`}
                           >
                             <Icon d={added === p.id ? ICONS.check : ICONS.plus} />
@@ -307,6 +365,164 @@ export default function Storefront({ store, products, cats }: Props) {
           </div>
         </div>
       </header>
+
+      {/* OVERLAY compartido */}
+      <div
+        className={`overlay${cartOpen || detailId ? " open" : ""}`}
+        onClick={() => {
+          if (detailId) setDetailId(null);
+          else setCartOpen(false);
+        }}
+      />
+
+      {/* CART DRAWER */}
+      <aside className={`cart${cartOpen ? " open" : ""}`} aria-hidden={!cartOpen}>
+        <div className="cart-head">
+          <h2 className="serif">Tu carrito</h2>
+          <button className="cart-close" type="button" onClick={() => setCartOpen(false)} aria-label="Cerrar">
+            <Icon d={ICONS.x} />
+          </button>
+        </div>
+
+        {cartLines.length === 0 ? (
+          <div className="cart-items">
+            <div className="cart-empty">
+              <Icon d={ICONS.cart} />
+              <div>
+                Tu carrito está vacío.
+                <br />
+                Sumá algo rico de la cava.
+              </div>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="cart-items">
+              {cartLines.map(({ p, qty }) => (
+                <div className="citem" key={p.id}>
+                  <div className="citem-img">
+                    {p.img ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={p.img} alt={p.name} />
+                    ) : null}
+                  </div>
+                  <div className="citem-info">
+                    <h4>{p.name}</h4>
+                    <div className="cprice">{fmt(priceOf(p))}</div>
+                    <div className="qty">
+                      <button type="button" onClick={() => setQty(p.id, qty - 1)} aria-label="Restar">
+                        <Icon d={ICONS.minus} />
+                      </button>
+                      <span>{qty}</span>
+                      <button type="button" onClick={() => setQty(p.id, qty + 1)} aria-label="Sumar">
+                        <Icon d={ICONS.plus} />
+                      </button>
+                    </div>
+                  </div>
+                  <button className="citem-rm" type="button" onClick={() => setQty(p.id, 0)}>
+                    Quitar
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div className="cart-foot">
+              <div className="cart-sub">
+                <span>Subtotal</span>
+                <b>{fmt(subtotal)}</b>
+              </div>
+              <p className="cart-note">
+                El envío y el pago los coordinamos por WhatsApp.
+                {store.shipNote ? ` ${store.shipNote}` : ""}
+              </p>
+              <div className="cart-pay">
+                <button className="btn btn-primary" type="button" onClick={checkoutWhatsApp}>
+                  <Icon d={ICONS.wa} /> Pedir por WhatsApp
+                </button>
+                {store.alias && (
+                  <p className="cart-note">
+                    ¿Preferís transferencia? Alias <b>{store.alias}</b>
+                    {store.titular ? ` · ${store.titular}` : ""}.
+                  </p>
+                )}
+              </div>
+            </div>
+          </>
+        )}
+      </aside>
+
+      {/* PRODUCT DETAIL */}
+      <div className={`pd${detail ? " open" : ""}`} onClick={() => setDetailId(null)}>
+        {detail && (
+          <div className="pd-card" onClick={(e) => e.stopPropagation()}>
+            <button className="pd-close" type="button" onClick={() => setDetailId(null)} aria-label="Cerrar">
+              <Icon d={ICONS.x} />
+            </button>
+            <div className={`pd-media${detail.img ? "" : " ph"}`}>
+              {detail.img ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={detail.img} alt={detail.name} />
+              ) : (
+                "We"
+              )}
+            </div>
+            <div className="pd-body">
+              {detail.brand && <span className="pd-brand">{detail.brand}</span>}
+              <h2 className="serif">{detail.name}</h2>
+              {(detail.desc || detail.notes) && (
+                <p className="pd-desc">{detail.desc || detail.notes}</p>
+              )}
+              {detail.meta.length > 0 && (
+                <div className="pd-meta">
+                  {detail.meta.map((m, i) => (
+                    <span key={i}>
+                      <b>{m.v}</b> {m.k}
+                    </span>
+                  ))}
+                </div>
+              )}
+              <div className="pd-foot">
+                <div className="pd-price">
+                  {detail.promo != null && <span className="was">{fmt(detail.price)}</span>}
+                  <span className={`now${detail.promo != null ? " sale" : ""}`}>{fmt(priceOf(detail))}</span>
+                </div>
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  disabled={!detail.stock}
+                  onClick={() => {
+                    addToCart(detail);
+                    setDetailId(null);
+                    setCartOpen(true);
+                  }}
+                >
+                  {detail.stock ? "Agregar al carrito" : "Sin stock"}
+                </button>
+              </div>
+            </div>
+
+            {suggestions.length > 0 && (
+              <div className="pd-sug">
+                <h4>También te puede gustar</h4>
+                <div className="pd-sug-grid">
+                  {suggestions.map((s) => (
+                    <button key={s.id} className="pd-sug-card" type="button" onClick={() => setDetailId(s.id)}>
+                      <div className="sug-img">
+                        {s.img ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={s.img} alt={s.name} />
+                        ) : null}
+                      </div>
+                      <h5>{s.name}</h5>
+                      <span className="sug-price">{fmt(priceOf(s))}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </>
   );
 }
