@@ -459,24 +459,21 @@ nav.scrolled .nav-logo .logo-word{width:52px}
 .vc-phone{font-family:'Spectral';font-size:1.4rem;color:var(--cream);border-bottom:1px solid rgba(241,44,54,.5);transition:color .3s var(--ease)}
 .vc-phone:hover{color:var(--red)}
 .visit-ctas{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
-.map-frame{position:relative;border-radius:22px;overflow:hidden;border:1px solid var(--border2);min-height:430px;background:linear-gradient(168deg,#16202b,#0f1620 60%,#11161d);box-shadow:0 36px 90px -44px rgba(0,0,0,.8),inset 0 0 0 1px rgba(241,44,54,.06)}
-[data-theme="light"] .map-frame{background:linear-gradient(168deg,#e9eef2,#dfe6ec 60%,#e6ebef)}
+.map-frame{position:relative;border-radius:22px;overflow:hidden;border:1px solid var(--border2);min-height:430px;background:#e7e0d2;box-shadow:0 36px 90px -44px rgba(0,0,0,.8),inset 0 0 0 1px rgba(241,44,54,.06)}
 .map-svg{position:absolute;inset:0;width:100%;height:100%;display:block}
-.map-lines path{fill:none;stroke:rgba(241,233,220,.07);stroke-width:1.2}
-[data-theme="light"] .map-lines path{stroke:rgba(20,30,40,.08)}
-.map-dash{fill:none;stroke:rgba(241,44,54,.32);stroke-width:1.4;stroke-dasharray:5 7;stroke-linecap:round}
-.map-area{fill:rgba(241,233,220,.14);font-family:'Spectral',serif;font-weight:500;font-size:26px;letter-spacing:.16em}
-[data-theme="light"] .map-area{fill:rgba(20,30,40,.16)}
-.map-area-faint{fill:rgba(241,233,220,.07);font-size:20px}
-[data-theme="light"] .map-area-faint{fill:rgba(20,30,40,.09)}
+.map-campo{fill:#c7d3ac}     /* verde campo */
+.map-ciudad{fill:#d6cfc1}    /* gris ciudad */
+.map-lines path{fill:none;stroke:rgba(70,60,44,.13);stroke-width:1.2}
+.map-dash{fill:none;stroke:rgba(241,44,54,.5);stroke-width:1.6;stroke-dasharray:5 7;stroke-linecap:round}
+.map-area{fill:rgba(56,46,36,.42);font-family:'Spectral',serif;font-weight:500;font-size:26px;letter-spacing:.16em}
+.map-area-faint{fill:rgba(56,46,36,.22);font-size:20px}
 /* pin centrado, estilo etiqueta */
 .map-pin{position:absolute;left:50%;top:50%;transform:translate(-50%,-100%);z-index:3;display:flex;flex-direction:column;align-items:center;pointer-events:none}
 .map-pin-label{background:var(--red);color:#fff;font-family:'Spectral',serif;font-weight:600;font-size:.92rem;letter-spacing:.04em;padding:.42rem .95rem;border-radius:9999px;box-shadow:0 10px 26px -8px rgba(241,44,54,.7);white-space:nowrap}
 .map-pin-stem{width:1.5px;height:24px;background:linear-gradient(var(--red),rgba(241,44,54,.3))}
 .map-pin-dot{width:14px;height:14px;border-radius:50%;background:var(--red);box-shadow:0 0 0 5px rgba(241,44,54,.18),0 0 0 10px rgba(241,44,54,.08),0 0 22px 2px rgba(241,44,54,.6);animation:pinpulse 2.6s var(--ease) infinite}
 @keyframes pinpulse{0%,100%{box-shadow:0 0 0 5px rgba(241,44,54,.18),0 0 0 10px rgba(241,44,54,.06),0 0 22px 2px rgba(241,44,54,.55)}50%{box-shadow:0 0 0 7px rgba(241,44,54,.22),0 0 0 15px rgba(241,44,54,.1),0 0 28px 4px rgba(241,44,54,.7)}}
-.map-open-btn{position:absolute;bottom:18px;left:18px;z-index:4;display:inline-flex;align-items:center;gap:.5rem;font-size:.82rem;font-weight:600;color:var(--red);padding:.6rem 1.05rem;border-radius:9999px;background:rgba(13,10,10,.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1.5px solid rgba(241,44,54,.55);transition:background .3s var(--ease),transform .3s var(--ease),color .3s var(--ease)}
-[data-theme="light"] .map-open-btn{background:rgba(255,253,248,.82);border-color:rgba(241,44,54,.6)}
+.map-open-btn{position:absolute;bottom:18px;left:18px;z-index:4;display:inline-flex;align-items:center;gap:.5rem;font-size:.82rem;font-weight:600;color:var(--red);padding:.6rem 1.05rem;border-radius:9999px;background:rgba(255,253,248,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1.5px solid rgba(241,44,54,.6);box-shadow:0 8px 22px -10px rgba(0,0,0,.5);transition:background .3s var(--ease),transform .3s var(--ease),color .3s var(--ease)}
 .map-open-btn:hover{background:var(--red);color:#fff;transform:translateY(-1px)}
 .map-open-btn svg{width:15px;height:15px}
 .map-open-btn .moa{width:13px;height:13px;opacity:.8}
@@ -654,41 +651,6 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
   </div>
 </section>
 
-<!-- CLUB -->
-<section class="sec" id="club">
-  <div class="wrap">
-    <div class="sec-head center reveal">
-      <span class="eyebrow">Club We</span>
-      <h2>Recibí lo bueno <b>todos los meses</b></h2>
-      <p>Una suscripción para los que quieren descubrir sin pensarlo. Cancelás cuando quieras, sin permanencia.</p>
-    </div>
-    <div class="price-grid" id="priceGrid">
-      <div class="pc">
-        <div class="pc-name">Iniciado</div>
-        <div class="pc-cost">$ 14.900<small>/mes</small></div>
-        <div class="pc-desc">Para empezar a explorar sin compromiso.</div>
-        <ul class="pc-feats"><li>2 botellas curadas por mes</li><li>Ficha de cata de cada vino</li><li>10% off en toda la tienda</li></ul>
-        <a href="./cava.html?plan=iniciado" class="btn btn-ghost">Empezar</a>
-      </div>
-      <div class="pc rec">
-        <div class="pc-tag">Recomendado</div>
-        <div class="pc-name">Sibarita</div>
-        <div class="pc-cost">$ 24.900<small>/mes</small></div>
-        <div class="pc-desc">El equilibrio perfecto entre vino y gourmet.</div>
-        <ul class="pc-feats"><li>3 botellas + 1 producto gourmet</li><li>15% off en toda la tienda</li><li>Acceso a catas presenciales</li><li>Envío sin cargo en Crespo</li></ul>
-        <a href="./cava.html?plan=sibarita" class="btn btn-primary">Sumarme ahora</a>
-      </div>
-      <div class="pc">
-        <div class="pc-name">Coleccionista</div>
-        <div class="pc-cost">$ 44.900<small>/mes</small></div>
-        <div class="pc-desc">Para el que ya sabe lo que quiere: lo mejor.</div>
-        <ul class="pc-feats"><li>4 botellas premium &amp; ediciones limitadas</li><li>20% off + acceso anticipado</li><li>Cata privada trimestral</li><li>Asesoría personal por WhatsApp</li></ul>
-        <a href="./cava.html?plan=coleccionista" class="btn btn-ghost">Quiero esto</a>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- SELECCIÓN -->
 <section class="sec" id="seleccion">
   <div class="wrap">
@@ -837,6 +799,41 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
   <div class="filo-by">— Filosofía We</div>
 </section>
 
+<!-- CLUB -->
+<section class="sec" id="club">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Club We</span>
+      <h2>Recibí lo bueno <b>todos los meses</b></h2>
+      <p>Una suscripción para los que quieren descubrir sin pensarlo. Cancelás cuando quieras, sin permanencia.</p>
+    </div>
+    <div class="price-grid" id="priceGrid">
+      <div class="pc">
+        <div class="pc-name">Iniciado</div>
+        <div class="pc-cost">$ 14.900<small>/mes</small></div>
+        <div class="pc-desc">Para empezar a explorar sin compromiso.</div>
+        <ul class="pc-feats"><li>2 botellas curadas por mes</li><li>Ficha de cata de cada vino</li><li>10% off en toda la tienda</li></ul>
+        <a href="./cava.html?plan=iniciado" class="btn btn-ghost">Empezar</a>
+      </div>
+      <div class="pc rec">
+        <div class="pc-tag">Recomendado</div>
+        <div class="pc-name">Sibarita</div>
+        <div class="pc-cost">$ 24.900<small>/mes</small></div>
+        <div class="pc-desc">El equilibrio perfecto entre vino y gourmet.</div>
+        <ul class="pc-feats"><li>3 botellas + 1 producto gourmet</li><li>15% off en toda la tienda</li><li>Acceso a catas presenciales</li><li>Envío sin cargo en Crespo</li></ul>
+        <a href="./cava.html?plan=sibarita" class="btn btn-primary">Sumarme ahora</a>
+      </div>
+      <div class="pc">
+        <div class="pc-name">Coleccionista</div>
+        <div class="pc-cost">$ 44.900<small>/mes</small></div>
+        <div class="pc-desc">Para el que ya sabe lo que quiere: lo mejor.</div>
+        <ul class="pc-feats"><li>4 botellas premium &amp; ediciones limitadas</li><li>20% off + acceso anticipado</li><li>Cata privada trimestral</li><li>Asesoría personal por WhatsApp</li></ul>
+        <a href="./cava.html?plan=coleccionista" class="btn btn-ghost">Quiero esto</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- FAQ -->
 <section class="sec" id="faq">
   <div class="wrap">
@@ -919,6 +916,10 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
       </div>
       <div class="map-frame" role="img" aria-label="Mapa de ubicación de We · Cava & Gourmet — Entre Ríos 1347, Crespo">
         <svg class="map-svg" viewBox="0 0 600 480" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <!-- campo (verde) de base -->
+          <rect class="map-campo" x="-10" y="-10" width="620" height="500"/>
+          <!-- ciudad (gris) debajo de la divisoria -->
+          <path class="map-ciudad" d="M-10 250 C 140 214 300 276 460 234 S 600 250 610 244 L 610 490 L -10 490 Z"/>
           <g class="map-lines">
             <path d="M-10 80 C 120 55 260 100 400 74 S 590 70 610 86"/>
             <path d="M-10 150 C 130 124 280 166 420 140 S 600 150 610 150"/>
@@ -927,9 +928,9 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
             <path d="M-10 452 C 140 430 300 466 460 440 S 600 450 610 456"/>
           </g>
           <path class="map-dash" d="M-10 250 C 140 214 300 276 460 234 S 600 250 610 244"/>
-          <text class="map-area" x="46" y="172">ENTRE RÍOS</text>
+          <text class="map-area map-area-faint" x="58" y="150">ZONA RURAL</text>
           <text class="map-area" x="372" y="372">CRESPO</text>
-          <text class="map-area map-area-faint" x="320" y="96">RÍO PARANÁ</text>
+          <text class="map-area map-area-faint" x="46" y="452">RUTA 12</text>
         </svg>
         <div class="map-pin">
           <span class="map-pin-label">We · Cava</span>
