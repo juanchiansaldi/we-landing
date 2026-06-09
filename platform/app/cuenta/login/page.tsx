@@ -9,7 +9,9 @@ type Mode = "magic" | "password";
 function LoginInner() {
   const router = useRouter();
   const params = useSearchParams();
-  const next = params.get("next") || "/cuenta";
+  const rawNext = params.get("next") || "/cuenta";
+  // solo paths internos (evita open-redirect)
+  const next = rawNext.startsWith("/") && !rawNext.startsWith("//") && !rawNext.startsWith("/\\") ? rawNext : "/cuenta";
   const supabase = supabaseBrowser();
 
   const [mode, setMode] = useState<Mode>("magic");
