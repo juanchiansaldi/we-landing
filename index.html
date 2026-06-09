@@ -459,14 +459,27 @@ nav.scrolled .nav-logo .logo-word{width:52px}
 .vc-phone{font-family:'Spectral';font-size:1.4rem;color:var(--cream);border-bottom:1px solid rgba(241,44,54,.5);transition:color .3s var(--ease)}
 .vc-phone:hover{color:var(--red)}
 .visit-ctas{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
-.map-frame{position:relative;border-radius:22px;overflow:hidden;border:1px solid var(--border2);min-height:430px;background:var(--surf2);box-shadow:0 36px 90px -44px rgba(0,0,0,.8),inset 0 0 0 1px rgba(241,44,54,.06)}
-.map-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;filter:grayscale(.35) invert(.9) hue-rotate(185deg) brightness(.92) contrast(.92) saturate(.7)}
-[data-theme="light"] .map-frame iframe{filter:grayscale(.3) contrast(1.02) saturate(.92)}
-.map-veil{position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 50%,transparent 55%,rgba(13,10,10,.5)),linear-gradient(180deg,rgba(13,10,10,.25),transparent 18%,transparent 80%,rgba(13,10,10,.4))}
-[data-theme="light"] .map-veil{background:radial-gradient(120% 90% at 50% 50%,transparent 60%,rgba(246,241,232,.4))}
-.map-open{position:absolute;bottom:16px;right:16px;z-index:3;display:inline-flex;align-items:center;gap:.4rem;font-size:.72rem;font-weight:500;color:#fff;padding:.5rem .85rem;border-radius:9999px;background:rgba(13,10,10,.7);backdrop-filter:blur(10px);border:1px solid rgba(241,44,54,.4);transition:background .3s var(--ease),transform .3s var(--ease)}
-.map-open:hover{background:var(--red);transform:translateY(-1px)}
-.map-open svg{width:13px;height:13px}
+.map-frame{position:relative;border-radius:22px;overflow:hidden;border:1px solid var(--border2);min-height:430px;background:linear-gradient(168deg,#16202b,#0f1620 60%,#11161d);box-shadow:0 36px 90px -44px rgba(0,0,0,.8),inset 0 0 0 1px rgba(241,44,54,.06)}
+[data-theme="light"] .map-frame{background:linear-gradient(168deg,#e9eef2,#dfe6ec 60%,#e6ebef)}
+.map-svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.map-lines path{fill:none;stroke:rgba(241,233,220,.07);stroke-width:1.2}
+[data-theme="light"] .map-lines path{stroke:rgba(20,30,40,.08)}
+.map-dash{fill:none;stroke:rgba(241,44,54,.32);stroke-width:1.4;stroke-dasharray:5 7;stroke-linecap:round}
+.map-area{fill:rgba(241,233,220,.14);font-family:'Spectral',serif;font-weight:500;font-size:26px;letter-spacing:.16em}
+[data-theme="light"] .map-area{fill:rgba(20,30,40,.16)}
+.map-area-faint{fill:rgba(241,233,220,.07);font-size:20px}
+[data-theme="light"] .map-area-faint{fill:rgba(20,30,40,.09)}
+/* pin centrado, estilo etiqueta */
+.map-pin{position:absolute;left:50%;top:50%;transform:translate(-50%,-100%);z-index:3;display:flex;flex-direction:column;align-items:center;pointer-events:none}
+.map-pin-label{background:var(--red);color:#fff;font-family:'Spectral',serif;font-weight:600;font-size:.92rem;letter-spacing:.04em;padding:.42rem .95rem;border-radius:9999px;box-shadow:0 10px 26px -8px rgba(241,44,54,.7);white-space:nowrap}
+.map-pin-stem{width:1.5px;height:24px;background:linear-gradient(var(--red),rgba(241,44,54,.3))}
+.map-pin-dot{width:14px;height:14px;border-radius:50%;background:var(--red);box-shadow:0 0 0 5px rgba(241,44,54,.18),0 0 0 10px rgba(241,44,54,.08),0 0 22px 2px rgba(241,44,54,.6);animation:pinpulse 2.6s var(--ease) infinite}
+@keyframes pinpulse{0%,100%{box-shadow:0 0 0 5px rgba(241,44,54,.18),0 0 0 10px rgba(241,44,54,.06),0 0 22px 2px rgba(241,44,54,.55)}50%{box-shadow:0 0 0 7px rgba(241,44,54,.22),0 0 0 15px rgba(241,44,54,.1),0 0 28px 4px rgba(241,44,54,.7)}}
+.map-open-btn{position:absolute;bottom:18px;left:18px;z-index:4;display:inline-flex;align-items:center;gap:.5rem;font-size:.82rem;font-weight:600;color:var(--red);padding:.6rem 1.05rem;border-radius:9999px;background:rgba(13,10,10,.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1.5px solid rgba(241,44,54,.55);transition:background .3s var(--ease),transform .3s var(--ease),color .3s var(--ease)}
+[data-theme="light"] .map-open-btn{background:rgba(255,253,248,.82);border-color:rgba(241,44,54,.6)}
+.map-open-btn:hover{background:var(--red);color:#fff;transform:translateY(-1px)}
+.map-open-btn svg{width:15px;height:15px}
+.map-open-btn .moa{width:13px;height:13px;opacity:.8}
 @media(max-width:860px){
   .visit-grid{grid-template-columns:1fr;gap:18px}
   .map-frame{min-height:320px;order:-1}
@@ -904,12 +917,29 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
           <a href="https://wa.me/5493435172449" target="_blank" rel="noopener" class="btn btn-ghost">WhatsApp</a>
         </div>
       </div>
-      <div class="map-frame">
-        <iframe title="Ubicación de We · Cava & Gourmet — Entre Ríos 1347, Crespo" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-          src="https://maps.google.com/maps?q=-32.0259874,-60.3031153&z=16&hl=es&output=embed"></iframe>
-        <div class="map-veil"></div>
-        <a class="map-open" href="https://maps.google.com/?q=-32.0259874,-60.3031153" target="_blank" rel="noopener" aria-label="Abrir en Google Maps">Ver en Maps
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+      <div class="map-frame" role="img" aria-label="Mapa de ubicación de We · Cava & Gourmet — Entre Ríos 1347, Crespo">
+        <svg class="map-svg" viewBox="0 0 600 480" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <g class="map-lines">
+            <path d="M-10 80 C 120 55 260 100 400 74 S 590 70 610 86"/>
+            <path d="M-10 150 C 130 124 280 166 420 140 S 600 150 610 150"/>
+            <path d="M-10 322 C 130 300 290 342 440 314 S 600 322 610 326"/>
+            <path d="M-10 392 C 150 364 300 406 450 380 S 600 390 610 396"/>
+            <path d="M-10 452 C 140 430 300 466 460 440 S 600 450 610 456"/>
+          </g>
+          <path class="map-dash" d="M-10 250 C 140 214 300 276 460 234 S 600 250 610 244"/>
+          <text class="map-area" x="46" y="172">ENTRE RÍOS</text>
+          <text class="map-area" x="372" y="372">CRESPO</text>
+          <text class="map-area map-area-faint" x="320" y="96">RÍO PARANÁ</text>
+        </svg>
+        <div class="map-pin">
+          <span class="map-pin-label">We · Cava</span>
+          <span class="map-pin-stem"></span>
+          <span class="map-pin-dot"></span>
+        </div>
+        <a class="map-open-btn" href="https://maps.google.com/?q=-32.0259874,-60.3031153" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+          Abrir en Google Maps
+          <svg class="moa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
         </a>
       </div>
     </div>
