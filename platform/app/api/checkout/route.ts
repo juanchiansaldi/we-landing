@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../../lib/prisma";
 import { mpPreference, mpReady } from "../../../lib/mp";
+import { currentCustomer } from "../../../lib/customer";
 
 const STORE_SLUG = process.env.DEFAULT_STORE_SLUG || "we";
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -12,9 +13,27 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Mercado Pago no está configurado" }, { status: 500 });
   }
 
+  // 1) tiene que estar logueado
+  const customer = await currentCustomer();
+  if (!customer) {
+    return NextResponse.json({ error: "auth", message: "Iniciá sesión para comprar" }, { status: 401 });
+  }
+
   const body = await req.json().catch(() => ({}));
   const cart: CartItem[] = Array.isArray(body?.items) ? body.items : [];
   if (!cart.length) return NextResponse.json({ error: "Carrito vacío" }, { status: 400 });
+
+  // 2) tiene que tener una dirección de envío (la elegida o la predeterminada)
+  const addressId = String(body?.addressId || "");
+  const address =
+    (addressId
+      ? await prisma.address.findFirst({ where: { id: addressId, customerId: customer.id } })
+      : null) ||
+    (await prisma.address.findFirst({ where: { customerId: customer.id, isDefault: true } })) ||
+    (await prisma.address.findFirst({ where: { customerId: customer.id }, orderBy: { createdAt: "asc" } }));
+  if (!address) {
+    return NextResponse.json({ error: "address", message: "Agregá una dirección de envío" }, { status: 400 });
+  }
 
   const store = await prisma.store.findUnique({ where: { slug: STORE_SLUG } });
   if (!store) return NextResponse.json({ error: "Tienda no encontrada" }, { status: 500 });
@@ -39,12 +58,25 @@ export async function POST(req: Request) {
 
   const subtotal = lines.reduce((s, l) => s + l.price * l.qty, 0);
 
+  const shipSnapshot = {
+    recipient: address.recipient,
+    phone: address.phone,
+    street: address.street,
+    number: address.number,
+    city: address.city,
+    province: address.province,
+    zip: address.zip,
+    notes: address.notes,
+  };
+
   const order = await prisma.order.create({
     data: {
       storeId: store.id,
+      customerId: customer.id,
       subtotal,
       total: subtotal,
       paymentMethod: "mercadopago",
+      shipAddress: shipSnapshot,
       items: {
         create: lines.map((l) => ({
           productId: l.product.id,
@@ -66,6 +98,11 @@ export async function POST(req: Request) {
           unit_price: l.price,
           currency_id: "ARS",
         })),
+        payer: {
+          email: customer.email,
+          name: address.recipient || customer.name || undefined,
+          phone: address.phone ? { number: address.phone } : undefined,
+        },
         back_urls: {
           success: `${SITE}/checkout/success`,
           failure: `${SITE}/checkout/failure`,

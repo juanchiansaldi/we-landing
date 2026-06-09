@@ -51,6 +51,29 @@ export default function AdminProducts({
   const router = useRouter();
   const [editing, setEditing] = useState<Row | null>(null);
   const [pending, start] = useTransition();
+  const [imgVal, setImgVal] = useState("");
+  const [uploading, setUploading] = useState(false);
+
+  function openEditor(row: Row) {
+    setImgVal(row.img || "");
+    setEditing(row);
+  }
+
+  async function uploadImage(file: File) {
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.set("file", file);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const j = await res.json().catch(() => ({}));
+      if (res.ok && j.url) setImgVal(j.url);
+      else alert(j.error || "No se pudo subir la imagen");
+    } catch {
+      alert("No se pudo subir la imagen");
+    } finally {
+      setUploading(false);
+    }
+  }
 
   async function logout() {
     await fetch("/api/admin/logout", { method: "POST" });
@@ -96,9 +119,10 @@ export default function AdminProducts({
           <h1 className="serif">Productos</h1>
         </div>
         <div className="admin-top-actions">
+          <a className="btn btn-ghost" href="/admin/orders">Pedidos</a>
           <a className="btn btn-ghost" href="/" target="_blank">Ver tienda ↗</a>
           <button className="btn btn-ghost" type="button" onClick={logout}>Salir</button>
-          <button className="btn btn-primary" type="button" onClick={() => setEditing({ ...EMPTY })}>
+          <button className="btn btn-primary" type="button" onClick={() => openEditor({ ...EMPTY })}>
             + Nuevo producto
           </button>
         </div>
@@ -157,7 +181,7 @@ export default function AdminProducts({
               </button>
             </span>
             <span className="admin-row-actions">
-              <button type="button" onClick={() => setEditing(p)}>Editar</button>
+              <button type="button" onClick={() => openEditor(p)}>Editar</button>
               <button type="button" className="admin-del" onClick={() => onDelete(p)}>Borrar</button>
             </span>
           </div>
@@ -208,8 +232,38 @@ export default function AdminProducts({
                 <input name="stock" type="number" min="0" defaultValue={editing.stock} />
               </label>
               <label>
-                Imagen (URL o /assets/…)
-                <input name="img" defaultValue={editing.img} placeholder="/assets/img/productos/..." />
+                Imagen
+                <div className="img-upload">
+                  <div className="img-prev">
+                    {imgVal ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={imgVal} alt="" />
+                    ) : (
+                      <i>We</i>
+                    )}
+                  </div>
+                  <div className="img-upload-ctrl">
+                    <label className="img-file-btn">
+                      {uploading ? "Subiendo…" : "Subir foto"}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        disabled={uploading}
+                        onChange={(e) => {
+                          const f = e.target.files?.[0];
+                          if (f) uploadImage(f);
+                          e.target.value = "";
+                        }}
+                      />
+                    </label>
+                    <input
+                      name="img"
+                      value={imgVal}
+                      onChange={(e) => setImgVal(e.target.value)}
+                      placeholder="o pegá una URL / ruta"
+                    />
+                  </div>
+                </div>
               </label>
             </div>
 

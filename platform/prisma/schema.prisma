@@ -33,6 +33,7 @@ model Store {
   plans         Plan[]
   subscriptions Subscription[]
   coupons       Coupon[]
+  addresses     Address[]
 }
 
 enum Role {
@@ -112,12 +113,37 @@ model Customer {
   email     String
   name      String?
   phone     String?
+  authId    String? // id del usuario en Supabase Auth (link de la cuenta)
   createdAt DateTime @default(now())
 
   orders        Order[]
   subscriptions Subscription[]
+  addresses     Address[]
 
   @@unique([storeId, email])
+  @@index([authId])
+}
+
+// Direcciones de envío del cliente
+model Address {
+  id         String   @id @default(cuid())
+  storeId    String
+  store      Store    @relation(fields: [storeId], references: [id])
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  label      String? // "Casa", "Trabajo"
+  recipient  String // quién recibe
+  phone      String?
+  street     String
+  number     String?
+  city       String
+  province   String
+  zip        String?
+  notes      String? // entre calles, depto, referencia
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([customerId])
 }
 
 enum OrderStatus {
@@ -150,6 +176,7 @@ model Order {
   shipping      Int           @default(0)
   total         Int
   notes         String?
+  shipAddress   Json? // snapshot de la dirección de envío al momento de la compra
   items         OrderItem[]
   createdAt     DateTime      @default(now())
 

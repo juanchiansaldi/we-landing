@@ -221,10 +221,18 @@ export default function Storefront({ store, products, cats }: Props) {
       const j = await res.json().catch(() => ({}));
       if (res.ok && j.init_point) {
         window.location.href = j.init_point;
-      } else {
-        alert(j.error || "No se pudo iniciar el pago. Probá de nuevo o escribinos por WhatsApp.");
-        setPaying(false);
+        return;
       }
+      if (res.status === 401 || j.error === "auth") {
+        window.location.href = "/cuenta/login?next=" + encodeURIComponent("/");
+        return;
+      }
+      if (j.error === "address") {
+        window.location.href = "/cuenta?add=1";
+        return;
+      }
+      alert(j.message || j.error || "No se pudo iniciar el pago. Probá de nuevo o escribinos por WhatsApp.");
+      setPaying(false);
     } catch {
       alert("No se pudo conectar con el pago. Probá de nuevo.");
       setPaying(false);
@@ -239,8 +247,8 @@ export default function Storefront({ store, products, cats }: Props) {
           <div className="nav-links">
             <a href="https://wecavagourmet.com">Inicio</a>
             <a href="#" className="active">Tienda</a>
-            <a href="https://wecavagourmet.com/#universo">El universo We</a>
             <a href="https://wecavagourmet.com/#club">Club We</a>
+            <a href="/cuenta">Mi cuenta</a>
           </div>
           <button className="cart-btn" type="button" onClick={() => setCartOpen(true)}>
             <Icon d={ICONS.cart} />
@@ -521,7 +529,7 @@ export default function Storefront({ store, products, cats }: Props) {
                   onClick={() => {
                     addToCart(detail);
                     setDetailId(null);
-                    setCartOpen(true);
+                    // no abrimos el carrito: que sigan comprando
                   }}
                 >
                   {detail.stock ? "Agregar al carrito" : "Sin stock"}

@@ -101,3 +101,14 @@ export async function toggleActive(data: FormData) {
   revalidatePath("/admin");
   revalidatePath("/");
 }
+
+const ORDER_STATUSES = ["PENDING", "CONFIRMED", "PREPARING", "SHIPPED", "DELIVERED", "CANCELLED"];
+
+export async function updateOrderStatus(data: FormData) {
+  guard();
+  const id = String(data.get("id") || "");
+  const status = String(data.get("status") || "");
+  if (!id || !ORDER_STATUSES.includes(status)) return;
+  await prisma.order.update({ where: { id }, data: { status: status as any } });
+  revalidatePath("/admin/orders");
+}
