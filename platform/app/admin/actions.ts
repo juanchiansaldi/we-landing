@@ -112,3 +112,37 @@ export async function updateOrderStatus(data: FormData) {
   await prisma.order.update({ where: { id }, data: { status: status as any } });
   revalidatePath("/admin/orders");
 }
+
+// ───────── Cupones ─────────
+export async function saveCoupon(data: FormData) {
+  guard();
+  const store = await getStore();
+  const id = String(data.get("id") || "");
+  const code = String(data.get("code") || "").trim().toUpperCase();
+  if (!code) return;
+  const type = String(data.get("type") || "PERCENT") === "FIXED" ? "FIXED" : "PERCENT";
+  const value = num(data.get("value")) ?? 0;
+  const active = data.get("active") === "on";
+  const expRaw = String(data.get("expiresAt") || "").trim();
+  const expiresAt = expRaw ? new Date(expRaw) : null;
+
+  const fields = { code, type: type as any, value, active, expiresAt };
+  if (id) {
+    await prisma.coupon.update({ where: { id }, data: fields });
+  } else {
+    await prisma.coupon.upsert({
+      where: { storeId_code: { storeId: store.id, code } },
+      update: fields,
+      create: { ...fields, storeId: store.id },
+    });
+  }
+  revalidatePath("/admin/coupons");
+}
+
+export async function deleteCoupon(data: FormData) {
+  guard();
+  const id = String(data.get("id") || "");
+  if (!id) return;
+  await prisma.coupon.delete({ where: { id } });
+  revalidatePath("/admin/coupons");
+}

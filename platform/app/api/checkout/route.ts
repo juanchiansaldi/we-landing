@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "../../../lib/prisma";
 import { mpPreference, mpReady } from "../../../lib/mp";
 import { currentCustomer } from "../../../lib/customer";
+import { validateCoupon, discountFor, couponLabel } from "../../../lib/coupon";
 
 const STORE_SLUG = process.env.DEFAULT_STORE_SLUG || "we";
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -58,6 +59,12 @@ export async function POST(req: Request) {
 
   const subtotal = lines.reduce((s, l) => s + l.price * l.qty, 0);
 
+  // cupón (revalidado en el server)
+  const couponCode = String(body?.coupon || "");
+  const coupon = couponCode ? await validateCoupon(store.id, couponCode) : null;
+  const discount = discountFor(coupon, subtotal);
+  const total = subtotal - discount;
+
   const shipSnapshot = {
     recipient: address.recipient,
     phone: address.phone,
@@ -74,9 +81,10 @@ export async function POST(req: Request) {
       storeId: store.id,
       customerId: customer.id,
       subtotal,
-      total: subtotal,
+      total,
       paymentMethod: "mercadopago",
       shipAddress: shipSnapshot,
+      notes: coupon ? `Cupón ${couponLabel(coupon)} (-$${discount})` : null,
       items: {
         create: lines.map((l) => ({
           productId: l.product.id,
@@ -88,16 +96,22 @@ export async function POST(req: Request) {
     },
   });
 
-  try {
-    const pref = await mpPreference.create({
-      body: {
-        items: lines.map((l) => ({
+  // si hay descuento, mandamos a MP un único ítem por el total (MP no acepta importes negativos)
+  const mpItems =
+    discount > 0
+      ? [{ id: order.id, title: `Pedido We (cupón ${coupon!.code})`, quantity: 1, unit_price: total, currency_id: "ARS" }]
+      : lines.map((l) => ({
           id: l.product.id,
           title: l.product.name,
           quantity: l.qty,
           unit_price: l.price,
           currency_id: "ARS",
-        })),
+        }));
+
+  try {
+    const pref = await mpPreference.create({
+      body: {
+        items: mpItems,
         payer: {
           email: customer.email,
           name: address.recipient || customer.name || undefined,

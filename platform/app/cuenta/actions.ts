@@ -67,6 +67,15 @@ export async function deleteAddress(data: FormData) {
   revalidatePath("/cuenta");
 }
 
+export async function updateProfile(data: FormData) {
+  const customer = await currentCustomer();
+  if (!customer) return;
+  const name = str(data, "name") || null;
+  const phone = str(data, "phone") || null;
+  await prisma.customer.update({ where: { id: customer.id }, data: { name, phone } });
+  revalidatePath("/cuenta");
+}
+
 export async function setDefaultAddress(data: FormData) {
   const customer = await currentCustomer();
   if (!customer) return;

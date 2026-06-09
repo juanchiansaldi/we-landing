@@ -1,16 +1,24 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../../../lib/prisma";
 import { mpPayment } from "../../../../lib/mp";
+import { syncByPreapproval } from "../../../../lib/subscriptions";
 
-// Mercado Pago manda notificaciones de pago. Confirmamos el estado real
-// consultando la API y actualizamos la orden por external_reference.
+// Mercado Pago manda notificaciones de pago y de suscripción. Confirmamos el
+// estado real consultando la API y actualizamos la orden / suscripción.
 export async function POST(req: Request) {
   try {
     const url = new URL(req.url);
     const body = await req.json().catch(() => ({} as any));
     const type = body?.type || body?.topic || url.searchParams.get("type") || url.searchParams.get("topic");
-    const paymentId =
+    const dataId =
       body?.data?.id || url.searchParams.get("data.id") || url.searchParams.get("id");
+    const paymentId = dataId;
+
+    // suscripciones (débito automático)
+    if ((type === "subscription_preapproval" || type === "preapproval") && dataId) {
+      await syncByPreapproval(String(dataId));
+      return NextResponse.json({ ok: true });
+    }
 
     if ((type === "payment" || type === "merchant_order") && paymentId) {
       const pay = await mpPayment.get({ id: String(paymentId) });

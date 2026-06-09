@@ -4,6 +4,10 @@ import { currentCustomer } from "../../lib/customer";
 import { fmt } from "../../lib/format";
 import AddressManager, { type Addr } from "../../components/AddressManager";
 import LogoutButton from "../../components/LogoutButton";
+import RepeatOrderButton from "../../components/RepeatOrderButton";
+import CancelSubButton from "../../components/CancelSubButton";
+import ProfileEditor from "../../components/ProfileEditor";
+import { syncPendingForCustomer } from "../../lib/subscriptions";
 
 export const dynamic = "force-dynamic";
 
@@ -14,15 +18,27 @@ const PAY_LABEL: Record<string, string> = {
   REFUNDED: "Reintegrado",
 };
 
+const SUB_LABEL: Record<string, string> = {
+  ACTIVE: "Activa",
+  PENDING: "Pendiente de pago",
+  PAUSED: "Pausada",
+  CANCELLED: "Cancelada",
+};
+
 export default async function CuentaPage({
   searchParams,
 }: {
-  searchParams: { add?: string };
+  searchParams: { add?: string; sub?: string };
 }) {
   const customer = await currentCustomer();
   if (!customer) redirect("/cuenta/login?next=/cuenta");
 
-  const [addresses, orders] = await Promise.all([
+  // si vuelve del checkout de suscripción, sincronizamos el estado con MP
+  if (searchParams.sub === "ok") {
+    await syncPendingForCustomer(customer.id);
+  }
+
+  const [addresses, orders, subs] = await Promise.all([
     prisma.address.findMany({
       where: { customerId: customer.id },
       orderBy: [{ isDefault: "desc" }, { createdAt: "desc" }],
@@ -32,6 +48,11 @@ export default async function CuentaPage({
       include: { items: true },
       orderBy: { createdAt: "desc" },
       take: 20,
+    }),
+    prisma.subscription.findMany({
+      where: { customerId: customer.id, status: { in: ["ACTIVE", "PENDING", "PAUSED"] } },
+      include: { plan: true },
+      orderBy: { createdAt: "desc" },
     }),
   ]);
 
@@ -51,10 +72,41 @@ export default async function CuentaPage({
         </div>
         <div className="admin-top-actions">
           <a className="btn btn-ghost" href="/">Seguir comprando</a>
-          <a className="btn btn-ghost" href="https://wecavagourmet.com/#club" target="_blank">Club We</a>
+          <a className="btn btn-ghost" href="/club">Club We</a>
+          <ProfileEditor name={customer.name || ""} phone={customer.phone || ""} />
           <LogoutButton />
         </div>
       </header>
+
+      <section className="acc-section">
+        <div className="acc-section-head">
+          <h2 className="serif">Mi Club We</h2>
+          <a className="btn btn-ghost" href="/club">Ver planes</a>
+        </div>
+        {subs.length === 0 ? (
+          <p className="admin-muted">
+            No tenés una suscripción activa. <a href="/club" style={{ color: "var(--red)" }}>Sumate al Club We</a> y recibí vino todos los meses.
+          </p>
+        ) : (
+          <div className="orders-list">
+            {subs.map((s) => (
+              <div className="order-row" key={s.id}>
+                <div className="order-meta">
+                  <b>{s.plan.name}</b>
+                  <span className="admin-muted">Débito automático mensual</span>
+                </div>
+                <div className="order-items-mini">{fmt(s.plan.price)} / mes</div>
+                <div className="order-right">
+                  <span className={`pay-badge pay-${s.status === "ACTIVE" ? "paid" : s.status === "PENDING" ? "pending" : "refunded"}`}>
+                    {SUB_LABEL[s.status] || s.status}
+                  </span>
+                  <CancelSubButton subId={s.id} />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
 
       <AddressManager addresses={addr} openNew={searchParams.add === "1"} />
 
@@ -82,6 +134,11 @@ export default async function CuentaPage({
                     {PAY_LABEL[o.paymentStatus] || o.paymentStatus}
                   </span>
                   <b>{fmt(o.total)}</b>
+                  <RepeatOrderButton
+                    cart={Object.fromEntries(
+                      o.items.filter((i) => i.productId).map((i) => [i.productId as string, i.qty])
+                    )}
+                  />
                 </div>
               </div>
             ))}

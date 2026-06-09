@@ -60,6 +60,9 @@ export default function Storefront({ store, products, cats }: Props) {
   const [cartOpen, setCartOpen] = useState(false);
   const [detailId, setDetailId] = useState<string | null>(null);
   const [paying, setPaying] = useState(false);
+  const [couponInput, setCouponInput] = useState("");
+  const [coupon, setCoupon] = useState<{ code: string; discount: number; label: string } | null>(null);
+  const [couponErr, setCouponErr] = useState<string | null>(null);
 
   const byId = useMemo(() => {
     const m: Record<string, StoreProduct> = {};
@@ -73,6 +76,10 @@ export default function Storefront({ store, products, cats }: Props) {
       const raw = localStorage.getItem(CART_KEY);
       if (raw) setCart(JSON.parse(raw));
     } catch {}
+    // abrir el carrito si vienen de "repetir pedido"
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("cart") === "1") {
+      setCartOpen(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -118,6 +125,53 @@ export default function Storefront({ store, products, cats }: Props) {
     () => cartLines.reduce((s, l) => s + priceOf(l.p) * l.qty, 0),
     [cartLines]
   );
+
+  const discount = coupon ? Math.min(coupon.discount, subtotal) : 0;
+  const total = subtotal - discount;
+
+  async function applyCoupon() {
+    const code = couponInput.trim();
+    if (!code) return;
+    setCouponErr(null);
+    const res = await fetch("/api/coupon", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code, subtotal }),
+    });
+    const j = await res.json().catch(() => ({}));
+    if (j.valid) {
+      setCoupon({ code: j.code, discount: j.discount, label: j.label });
+      setCouponInput("");
+    } else {
+      setCoupon(null);
+      setCouponErr(j.error || "Código inválido");
+    }
+  }
+
+  // si cambia el subtotal con un cupón aplicado, recalculamos el descuento
+  useEffect(() => {
+    if (!coupon) return;
+    if (subtotal <= 0) {
+      setCoupon(null);
+      return;
+    }
+    let cancel = false;
+    fetch("/api/coupon", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code: coupon.code, subtotal }),
+    })
+      .then((r) => r.json())
+      .then((j) => {
+        if (cancel) return;
+        if (j.valid) setCoupon({ code: j.code, discount: j.discount, label: j.label });
+      })
+      .catch(() => {});
+    return () => {
+      cancel = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subtotal]);
 
   const addToCart = useCallback((p: StoreProduct) => {
     if (!p.stock) return;
@@ -216,7 +270,10 @@ export default function Storefront({ store, products, cats }: Props) {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cartLines.map((l) => ({ id: l.p.id, qty: l.qty })) }),
+        body: JSON.stringify({
+          items: cartLines.map((l) => ({ id: l.p.id, qty: l.qty })),
+          coupon: coupon?.code || undefined,
+        }),
       });
       const j = await res.json().catch(() => ({}));
       if (res.ok && j.init_point) {
@@ -247,7 +304,7 @@ export default function Storefront({ store, products, cats }: Props) {
           <div className="nav-links">
             <a href="https://wecavagourmet.com">Inicio</a>
             <a href="#" className="active">Tienda</a>
-            <a href="https://wecavagourmet.com/#club">Club We</a>
+            <a href="/club">Club We</a>
             <a href="/cuenta">Mi cuenta</a>
           </div>
           <button className="cart-btn" type="button" onClick={() => setCartOpen(true)}>
@@ -460,9 +517,35 @@ export default function Storefront({ store, products, cats }: Props) {
             </div>
 
             <div className="cart-foot">
+              <div className="coupon">
+                {coupon ? (
+                  <div className="coupon-on">
+                    <span>🎟 {coupon.label}</span>
+                    <button type="button" onClick={() => { setCoupon(null); setCouponErr(null); }}>Quitar</button>
+                  </div>
+                ) : (
+                  <div className="coupon-row">
+                    <input
+                      type="text"
+                      placeholder="Código de descuento"
+                      value={couponInput}
+                      onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                      onKeyDown={(e) => e.key === "Enter" && applyCoupon()}
+                    />
+                    <button type="button" onClick={applyCoupon} disabled={!couponInput.trim()}>Aplicar</button>
+                  </div>
+                )}
+                {couponErr && <span className="coupon-err">{couponErr}</span>}
+              </div>
+              {discount > 0 && (
+                <div className="cart-sub cart-sub-disc">
+                  <span>Descuento</span>
+                  <b>− {fmt(discount)}</b>
+                </div>
+              )}
               <div className="cart-sub">
-                <span>Subtotal</span>
-                <b>{fmt(subtotal)}</b>
+                <span>{discount > 0 ? "Total" : "Subtotal"}</span>
+                <b>{fmt(total)}</b>
               </div>
               <p className="cart-note">
                 El envío y el pago los coordinamos por WhatsApp.

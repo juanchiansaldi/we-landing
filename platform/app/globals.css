@@ -154,6 +154,17 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .cart-note{font-size:.74rem;color:var(--gray);line-height:1.4}
 .cart-foot .btn{width:100%}
 .cart-pay{display:flex;flex-direction:column;gap:9px}
+.coupon{display:flex;flex-direction:column;gap:6px}
+.coupon-row{display:flex;gap:8px}
+.coupon-row input{flex:1;background:var(--surf2);border:1px solid var(--border2);border-radius:9px;color:var(--white);font-family:inherit;font-size:.86rem;padding:.55rem .75rem;outline:none;text-transform:uppercase;letter-spacing:.05em}
+.coupon-row input:focus{border-color:var(--red)}
+.coupon-row button,.coupon-on button{background:var(--surf2);border:1px solid var(--border2);color:var(--cream);border-radius:9px;padding:.55rem .9rem;font-size:.82rem;cursor:pointer;font-family:inherit}
+.coupon-row button:hover,.coupon-on button:hover{border-color:var(--red)}
+.coupon-row button:disabled{opacity:.5;cursor:not-allowed}
+.coupon-on{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--red-soft);border:1px solid rgba(241,44,54,.35);border-radius:9px;padding:.5rem .8rem;font-size:.85rem;color:var(--cream)}
+.coupon-on button{background:transparent;border:none;color:var(--red);padding:.2rem .4rem}
+.coupon-err{color:var(--red);font-size:.78rem}
+.cart-sub-disc b{color:var(--red);font-size:1rem!important}
 
 /* ===== PRODUCT DETAIL MODAL ===== */
 .pd{position:fixed;inset:0;z-index:1300;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s var(--ease)}
@@ -295,6 +306,8 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .pay-pending{background:rgba(241,180,44,.16);color:#f1b42c}
 .pay-failed{background:var(--red-soft);color:var(--red)}
 .pay-refunded{background:var(--surf2);color:var(--gray)}
+.order-repeat{background:var(--surf2);border:1px solid var(--border2);color:var(--cream);border-radius:9px;padding:.4rem .75rem;font-size:.78rem;cursor:pointer;font-family:inherit;white-space:nowrap}
+.order-repeat:hover{border-color:var(--red);color:var(--white)}
 @media(max-width:600px){.order-row{grid-template-columns:1fr;gap:8px}.order-items-mini{white-space:normal}}
 
 /* ===== ADMIN: subida de imagen ===== */
@@ -322,3 +335,19 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .order-status-row{display:flex;align-items:center;gap:12px;border-top:1px solid var(--border);padding-top:14px}
 .order-status-row select{background:var(--surf2);border:1px solid var(--border2);color:var(--white);border-radius:9px;padding:.5rem .8rem;font-family:inherit;font-size:.88rem;cursor:pointer;outline:none}
 @media(max-width:600px){.order-head{grid-template-columns:1fr auto;gap:8px}.order-cust{display:none}.order-cols{grid-template-columns:1fr;gap:16px}}
+
+/* ===== CLUB / PLANES ===== */
+.club-active-note{text-align:center;color:var(--cream);background:var(--surf);border:1px solid var(--border2);border-radius:12px;padding:.8rem 1rem;margin:0 auto 24px;max-width:520px;font-size:.9rem}
+.club-active-note a{color:var(--red)}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px;align-items:stretch}
+.plan{position:relative;background:var(--surf);border:1px solid var(--border);border-radius:18px;padding:28px 24px;display:flex;flex-direction:column;gap:8px}
+.plan.rec{border-color:var(--red);box-shadow:0 0 0 1px var(--red),0 30px 70px -44px rgba(241,44,54,.5)}
+.plan-tag{position:absolute;top:-11px;left:24px;background:var(--red);color:#fff;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;padding:.3rem .7rem;border-radius:9999px}
+.plan-name{font-family:var(--font-spectral);font-weight:500;font-size:1.4rem}
+.plan-price{font-family:var(--font-spectral);font-size:2rem;font-weight:600}
+.plan-price small{font-size:.85rem;color:var(--gray);font-weight:400}
+.plan-feats{list-style:none;display:flex;flex-direction:column;gap:9px;margin:10px 0 18px;flex:1}
+.plan-feats li{position:relative;padding-left:24px;font-size:.9rem;color:var(--cream)}
+.plan-feats li::before{content:'';position:absolute;left:0;top:2px;width:16px;height:16px;border-radius:50%;background:var(--red-soft);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F12C36' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center;background-size:10px}
+.plan .btn{width:100%}
+@media(max-width:760px){.plans{grid-template-columns:1fr;max-width:420px;margin-inline:auto}}
