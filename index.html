@@ -686,7 +686,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
     </div>
     <div class="prod-grid" id="prodGrid">
       <div class="prod-card">
-        <div class="pc-media"><img src="./assets/frames/we-0010.webp" alt="Botella de vino tinto" loading="lazy" width="1280" height="720"></div>
+        <div class="pc-media"><img src="./assets/img/productos/caja-gourmet.webp" alt="Caja gourmet curada" loading="lazy" width="1280" height="720"></div>
         <span class="pc-badge">Caja curada</span>
         <h3>Caja Descubrimiento</h3>
         <p class="pc-notes">6 botellas elegidas a mano. Tintos, blancos y un espumante para arrancar.</p>
@@ -740,7 +740,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
         <span class="hz-tag">Para celebrar</span>
       </article>
       <article class="hz-panel hz-card">
-        <img class="hz-img" src="./assets/frames/we-0120.webp" alt="" loading="lazy" width="1280" height="720">
+        <img class="hz-img" src="./assets/img/productos/queso-estac.webp" alt="Tabla de quesos estacionados" loading="lazy" width="1280" height="720">
         <span class="hz-glyph logo-iso"><svg><use href="#we-iso"/></svg></span>
         <div class="hz-idx">03</div>
         <h3>Quesos &amp; fiambres</h3>
@@ -748,7 +748,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
         <span class="hz-tag">Tabla lista</span>
       </article>
       <article class="hz-panel hz-card">
-        <img class="hz-img" src="./assets/frames/we-0150.webp" alt="" loading="lazy" width="1280" height="720">
+        <img class="hz-img" src="./assets/img/productos/aceite-oliva.webp" alt="Aceite de oliva y conservas" loading="lazy" width="1280" height="720">
         <span class="hz-glyph logo-iso"><svg><use href="#we-iso"/></svg></span>
         <div class="hz-idx">04</div>
         <h3>Olivas &amp; conservas</h3>
@@ -764,7 +764,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
         <span class="hz-tag">Baja intervención</span>
       </article>
       <article class="hz-panel hz-card">
-        <img class="hz-img" src="./assets/frames/we-0185.webp" alt="" loading="lazy" width="1280" height="720">
+        <img class="hz-img" src="./assets/img/productos/choco70.webp" alt="Chocolate y dulces de postre" loading="lazy" width="1280" height="720">
         <span class="hz-glyph logo-iso"><svg><use href="#we-iso"/></svg></span>
         <div class="hz-idx">06</div>
         <h3>El final dulce</h3>
@@ -1055,7 +1055,7 @@ function initSequenceStatic(){
   let lenis=null;
   if(!REDUCE&&typeof Lenis!=='undefined'){
     document.documentElement.style.scrollBehavior='auto';
-    lenis=new Lenis({lerp:0.1,wheelMultiplier:1,smoothWheel:true,syncTouch:true,syncTouchLerp:0.075,touchMultiplier:1.1});
+    lenis=new Lenis({lerp:0.085,wheelMultiplier:0.8,smoothWheel:true,syncTouch:true,syncTouchLerp:0.08,touchMultiplier:0.88});
     lenis.on('scroll',ScrollTrigger.update);
     gsap.ticker.add(t=>lenis.raf(t*1000));
     gsap.ticker.lagSmoothing(0);
