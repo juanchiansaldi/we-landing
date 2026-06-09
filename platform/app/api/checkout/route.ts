@@ -84,6 +84,7 @@ export async function POST(req: Request) {
       total,
       paymentMethod: "mercadopago",
       shipAddress: shipSnapshot,
+      giftNote: String(body?.giftNote || "").trim().slice(0, 300) || null,
       notes: coupon ? `Cupón ${couponLabel(coupon)} (-$${discount})` : null,
       items: {
         create: lines.map((l) => ({

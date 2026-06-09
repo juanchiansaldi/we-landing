@@ -28,6 +28,7 @@ export async function POST(req: Request) {
       if (orderId) {
         const paymentStatus =
           status === "approved" ? "PAID" : status === "rejected" || status === "cancelled" ? "FAILED" : "PENDING";
+        const before = await prisma.order.findUnique({ where: { id: orderId }, select: { paymentStatus: true } });
         await prisma.order
           .update({
             where: { id: orderId },
@@ -38,6 +39,18 @@ export async function POST(req: Request) {
             },
           })
           .catch(() => {});
+        // descontar stock una sola vez, al pasar a pagado
+        if (status === "approved" && before?.paymentStatus !== "PAID") {
+          const items = await prisma.orderItem.findMany({ where: { orderId } });
+          for (const it of items) {
+            if (it.productId) {
+              await prisma.product
+                .update({ where: { id: it.productId }, data: { stock: { decrement: it.qty } } })
+                .catch(() => {});
+            }
+          }
+          await prisma.product.updateMany({ where: { stock: { lt: 0 } }, data: { stock: 0 } }).catch(() => {});
+        }
       }
     }
   } catch {

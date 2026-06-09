@@ -21,6 +21,8 @@ type Order = {
   paymentMethod: string | null;
   status: string;
   ship: Ship;
+  giftNote: string | null;
+  notes: string | null;
 };
 
 const STATUSES = [
@@ -118,6 +120,8 @@ export default function AdminOrders({ orders }: { orders: Order[] }) {
                       <p className="admin-muted">Sin dirección.</p>
                     )}
                     {o.customer && <p className="admin-muted" style={{ marginTop: 8 }}>{o.customer.email}</p>}
+                    {o.giftNote && <p style={{ marginTop: 8, color: "var(--red)" }}>🎁 {o.giftNote}</p>}
+                    {o.notes && <p className="admin-muted" style={{ marginTop: 6 }}>{o.notes}</p>}
                   </div>
                 </div>
                 <div className="order-status-row">

@@ -31,6 +31,8 @@ export default async function AdminOrdersPage() {
     paymentMethod: o.paymentMethod,
     status: o.status,
     ship: (o.shipAddress as any) || null,
+    giftNote: o.giftNote || null,
+    notes: o.notes || null,
   }));
 
   return <AdminOrders orders={rows} />;

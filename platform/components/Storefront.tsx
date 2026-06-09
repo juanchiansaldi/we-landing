@@ -65,6 +65,15 @@ export default function Storefront({ store, products, cats }: Props) {
   const [coupon, setCoupon] = useState<{ code: string; discount: number; label: string } | null>(null);
   const [couponErr, setCouponErr] = useState<string | null>(null);
   const [showTransfer, setShowTransfer] = useState(false);
+  const [favs, setFavs] = useState<Set<string>>(new Set());
+  const [onlyFav, setOnlyFav] = useState(false);
+  const [isGift, setIsGift] = useState(false);
+  const [giftMsg, setGiftMsg] = useState("");
+  const [toast, setToast] = useState<string | null>(null);
+  const [news, setNews] = useState("");
+  const [newsOk, setNewsOk] = useState(false);
+
+  const FREE_SHIP = 25000;
 
   const byId = useMemo(() => {
     const m: Record<string, StoreProduct> = {};
@@ -87,7 +96,41 @@ export default function Storefront({ store, products, cats }: Props) {
       const t = localStorage.getItem("we-theme");
       if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
     } catch {}
+    // favoritos
+    try {
+      const f = localStorage.getItem("we-fav");
+      if (f) setFavs(new Set(JSON.parse(f)));
+    } catch {}
   }, []);
+
+  function toggleFav(id: string) {
+    setFavs((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      try {
+        localStorage.setItem("we-fav", JSON.stringify([...next]));
+      } catch {}
+      return next;
+    });
+  }
+
+  function showToast(msg: string) {
+    setToast(msg);
+    setTimeout(() => setToast((t) => (t === msg ? null : t)), 1800);
+  }
+
+  async function subscribeNews(e: React.FormEvent) {
+    e.preventDefault();
+    const email = news.trim();
+    if (!email) return;
+    await fetch("/api/newsletter", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    }).catch(() => {});
+    setNewsOk(true);
+    setNews("");
+  }
 
   function toggleTheme() {
     const cur = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
@@ -194,6 +237,8 @@ export default function Storefront({ store, products, cats }: Props) {
     setCart((c) => ({ ...c, [p.id]: (c[p.id] || 0) + 1 }));
     setAdded(p.id);
     setTimeout(() => setAdded((cur) => (cur === p.id ? null : cur)), 1100);
+    setToast(`${p.name} agregado ✓`);
+    setTimeout(() => setToast((t) => (t === `${p.name} agregado ✓` ? null : t)), 1800);
   }, []);
 
   const setQty = useCallback((id: string, qty: number) => {
@@ -235,6 +280,7 @@ export default function Storefront({ store, products, cats }: Props) {
       if (activeCats.length && !activeCats.includes(p.cat)) return false;
       if (onlyOffer && p.promo == null) return false;
       if (onlyNew && !p.nuevo) return false;
+      if (onlyFav && !favs.has(p.id)) return false;
       if (quick === "ofertas" && p.promo == null) return false;
       if (quick === "novedades" && !p.nuevo) return false;
       if (quick === "combos" && !isCombo(p)) return false;
@@ -245,7 +291,7 @@ export default function Storefront({ store, products, cats }: Props) {
     else if (sort === "price-desc") list = [...list].sort((a, b) => priceOf(b) - priceOf(a));
     else if (sort === "name") list = [...list].sort((a, b) => a.name.localeCompare(b.name, "es"));
     return list;
-  }, [products, search, activeCats, onlyOffer, onlyNew, quick, sort]);
+  }, [products, search, activeCats, onlyOffer, onlyNew, onlyFav, favs, quick, sort]);
 
   function setQuickFilter(q: Quick) {
     setQuick((cur) => (cur === q ? "" : q));
@@ -305,6 +351,7 @@ export default function Storefront({ store, products, cats }: Props) {
         body: JSON.stringify({
           items: cartLines.map((l) => ({ id: l.p.id, qty: l.qty })),
           coupon: coupon?.code || undefined,
+          giftNote: isGift ? giftMsg.trim() : undefined,
         }),
       });
       const j = await res.json().catch(() => ({}));
@@ -419,8 +466,14 @@ export default function Storefront({ store, products, cats }: Props) {
                   <span className="fbox"><Icon d={ICONS.check} /></span>
                   Novedades
                 </label>
+                <label className="fopt">
+                  <input type="checkbox" checked={onlyFav} onChange={(e) => setOnlyFav(e.target.checked)} />
+                  <span className="fbox"><Icon d={ICONS.check} /></span>
+                  Favoritos
+                  {favs.size > 0 && <span className="fcount">{favs.size}</span>}
+                </label>
               </div>
-              <button className="fclear" type="button" onClick={clearFilters}>Limpiar filtros</button>
+              <button className="fclear" type="button" onClick={() => { clearFilters(); setOnlyFav(false); }}>Limpiar filtros</button>
             </aside>
 
             <div className="shop-main">
@@ -455,6 +508,17 @@ export default function Storefront({ store, products, cats }: Props) {
                         {!p.stock && <span className="pbadge out">Sin stock</span>}
                         {p.stock && p.nuevo && <span className="pbadge">Nuevo</span>}
                         {p.stock && !p.nuevo && sale && <span className="pbadge">Oferta</span>}
+                        {p.stock && !p.nuevo && !sale && p.stockQty > 0 && p.stockQty <= 5 && (
+                          <span className="pbadge low">¡Últimas {p.stockQty}!</span>
+                        )}
+                        <button
+                          className={`pfav${favs.has(p.id) ? " on" : ""}`}
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); toggleFav(p.id); }}
+                          aria-label="Favorito"
+                        >
+                          <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+                        </button>
                         {p.img ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img src={p.img} alt={p.name} loading="lazy" />
@@ -555,6 +619,16 @@ export default function Storefront({ store, products, cats }: Props) {
             </div>
 
             <div className="cart-foot">
+              <div className="freeship">
+                {total >= FREE_SHIP ? (
+                  <span className="freeship-on">🎉 ¡Tenés envío sin cargo en Crespo!</span>
+                ) : (
+                  <span>Te faltan <b>{fmt(FREE_SHIP - total)}</b> para envío sin cargo en Crespo</span>
+                )}
+                <div className="freeship-bar">
+                  <i style={{ width: `${Math.min(100, (total / FREE_SHIP) * 100)}%` }} />
+                </div>
+              </div>
               <div className="coupon">
                 {coupon ? (
                   <div className="coupon-on">
@@ -585,10 +659,21 @@ export default function Storefront({ store, products, cats }: Props) {
                 <span>{discount > 0 ? "Total" : "Subtotal"}</span>
                 <b>{fmt(total)}</b>
               </div>
-              <p className="cart-note">
-                El envío y el pago los coordinamos por WhatsApp.
-                {store.shipNote ? ` ${store.shipNote}` : ""}
-              </p>
+              <label className="gift-check">
+                <input type="checkbox" checked={isGift} onChange={(e) => setIsGift(e.target.checked)} />
+                <span className="fbox"><Icon d={ICONS.check} /></span>
+                Es un regalo 🎁
+              </label>
+              {isGift && (
+                <textarea
+                  className="gift-msg"
+                  placeholder="Mensaje para la tarjeta (opcional)"
+                  rows={2}
+                  maxLength={300}
+                  value={giftMsg}
+                  onChange={(e) => setGiftMsg(e.target.value)}
+                />
+              )}
               <div className="cart-pay">
                 <button className="btn mp-btn" type="button" onClick={checkoutMP} disabled={paying}>
                   {paying ? "Abriendo Mercado Pago…" : "Pagar con tarjeta · Mercado Pago"}
@@ -648,6 +733,21 @@ export default function Storefront({ store, products, cats }: Props) {
                   ))}
                 </div>
               )}
+              <div className="pd-secondary">
+                <button className="pd-link" type="button" onClick={() => { toggleFav(detail.id); }}>
+                  {favs.has(detail.id) ? "♥ En favoritos" : "♡ Guardar en favoritos"}
+                </button>
+                <button
+                  className="pd-link"
+                  type="button"
+                  onClick={() => {
+                    const txt = `Mirá este producto de We · Cava: ${detail.name} — ${fmt(priceOf(detail))}`;
+                    window.open(`https://wa.me/?text=${encodeURIComponent(txt + " " + (typeof window !== "undefined" ? window.location.origin : ""))}`, "_blank");
+                  }}
+                >
+                  <Icon d={ICONS.wa} /> Compartir
+                </button>
+              </div>
               <div className="pd-foot">
                 <div className="pd-price">
                   {detail.promo != null && <span className="was">{fmt(detail.price)}</span>}
@@ -693,6 +793,20 @@ export default function Storefront({ store, products, cats }: Props) {
 
       <footer className="shop-foot">
         <div className="wrap">
+          <div className="news">
+            <div className="news-txt">
+              <b>Sumate al newsletter</b>
+              <span>Ofertas, novedades y catas. Sin spam.</span>
+            </div>
+            {newsOk ? (
+              <span className="news-ok">¡Listo! Te vamos a escribir. 🍷</span>
+            ) : (
+              <form className="news-form" onSubmit={subscribeNews}>
+                <input type="email" placeholder="tu@email.com" value={news} onChange={(e) => setNews(e.target.value)} required />
+                <button className="btn btn-primary" type="submit">Suscribirme</button>
+              </form>
+            )}
+          </div>
           <div className="age-strip">
             <span className="age-num">+18</span>
             <p>
@@ -706,6 +820,8 @@ export default function Storefront({ store, products, cats }: Props) {
           </div>
         </div>
       </footer>
+
+      {toast && <div className="toast">{toast}</div>}
     </>
   );
 }

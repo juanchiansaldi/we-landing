@@ -177,6 +177,7 @@ model Order {
   total         Int
   notes         String?
   shipAddress   Json? // snapshot de la dirección de envío al momento de la compra
+  giftNote      String? // mensaje de regalo opcional
   items         OrderItem[]
   createdAt     DateTime      @default(now())
 
@@ -252,4 +253,13 @@ model Coupon {
   expiresAt DateTime?
 
   @@unique([storeId, code])
+}
+
+model Newsletter {
+  id        String   @id @default(cuid())
+  storeId   String
+  email     String
+  createdAt DateTime @default(now())
+
+  @@unique([storeId, email])
 }

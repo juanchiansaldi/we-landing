@@ -119,6 +119,7 @@ export default function AdminProducts({
           <h1 className="serif">Productos</h1>
         </div>
         <div className="admin-top-actions">
+          <a className="btn btn-ghost" href="/admin/dashboard">Resumen</a>
           <a className="btn btn-ghost" href="/admin/orders">Pedidos</a>
           <a className="btn btn-ghost" href="/admin/coupons">Cupones</a>
           <a className="btn btn-ghost" href="/" target="_blank">Ver tienda ↗</a>

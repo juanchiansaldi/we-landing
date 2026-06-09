@@ -13,6 +13,7 @@ export type StoreProduct = {
   notes: string | null;
   desc: string | null;
   stock: boolean;
+  stockQty: number;
   nuevo: boolean;
   meta: { k: string; v: string }[];
 };
@@ -46,6 +47,7 @@ export async function getStorefront() {
     notes: p.shortDesc,
     desc: p.description,
     stock: p.stock > 0,
+    stockQty: p.stock,
     nuevo: p.isNew,
     meta: Array.isArray(p.meta) ? (p.meta as { k: string; v: string }[]) : [],
   }));
