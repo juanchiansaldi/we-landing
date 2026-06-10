@@ -29,6 +29,7 @@ export default async function PedidosPage() {
     ship: (o.shipAddress as any) || null,
     giftNote: o.giftNote || null,
     notes: o.notes || null,
+    receiptUrl: o.receiptUrl || null,
   }));
 
   return <AdminOrders orders={rows} />;

@@ -64,7 +64,7 @@ export default function Storefront({ store, products, cats }: Props) {
   const [couponInput, setCouponInput] = useState("");
   const [coupon, setCoupon] = useState<{ code: string; discount: number; label: string } | null>(null);
   const [couponErr, setCouponErr] = useState<string | null>(null);
-  const [showTransfer, setShowTransfer] = useState(false);
+  const [transferDone, setTransferDone] = useState<{ code: string; alias: string } | null>(null);
   const [favs, setFavs] = useState<Set<string>>(new Set());
   const [onlyFav, setOnlyFav] = useState(false);
   const [isGift, setIsGift] = useState(false);
@@ -325,11 +325,11 @@ export default function Storefront({ store, products, cats }: Props) {
     window.open(url, "_blank");
   }
 
-  function transferWhatsApp() {
+  function transferWhatsApp(code?: string) {
     const phone = (store.whatsapp || "").replace(/\D/g, "");
     const lines = cartLines.map((l) => `• ${l.qty}× ${l.p.name} — ${fmt(priceOf(l.p) * l.qty)}`);
     const msg = [
-      `¡Hola ${store.name}! Hice una transferencia por este pedido:`,
+      `¡Hola ${store.name}! Hice una transferencia por mi pedido${code ? ` #${code}` : ""}:`,
       "",
       ...lines,
       "",
@@ -339,6 +339,35 @@ export default function Storefront({ store, products, cats }: Props) {
       "Te adjunto el comprobante 📎",
     ].join("\n");
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, "_blank");
+  }
+
+  async function checkoutTransfer() {
+    if (!cartLines.length || paying) return;
+    setPaying(true);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: cartLines.map((l) => ({ id: l.p.id, qty: l.qty })),
+          coupon: coupon?.code || undefined,
+          giftNote: isGift ? giftMsg.trim() : undefined,
+          method: "transferencia",
+        }),
+      });
+      const j = await res.json().catch(() => ({}));
+      if (res.status === 401 || j.error === "auth") { window.location.href = "/cuenta/login?next=" + encodeURIComponent("/"); return; }
+      if (j.error === "address") { window.location.href = "/cuenta?add=1"; return; }
+      if (res.ok && j.transfer) {
+        setTransferDone({ code: j.code, alias: j.alias || store.alias || "" });
+        return;
+      }
+      alert(j.message || j.error || "No se pudo generar el pedido.");
+    } catch {
+      alert("No se pudo conectar. Probá de nuevo.");
+    } finally {
+      setPaying(false);
+    }
   }
 
   async function checkoutMP() {
@@ -681,21 +710,19 @@ export default function Storefront({ store, products, cats }: Props) {
                 <button className="btn btn-ghost" type="button" onClick={checkoutWhatsApp}>
                   <Icon d={ICONS.wa} /> Coordinar por WhatsApp
                 </button>
-                {store.alias && (
-                  <>
-                    <button className="btn btn-ghost" type="button" onClick={() => setShowTransfer((v) => !v)}>
-                      Pagar por transferencia
-                    </button>
-                    {showTransfer && (
-                      <div className="transfer-box">
-                        Transferí a <b>{store.alias}</b> por el total y mandanos el comprobante.
-                        <br />
-                        <span className="tw" onClick={transferWhatsApp}>
-                          <Icon d={ICONS.wa} /> Enviar comprobante por WhatsApp
-                        </span>
-                      </div>
-                    )}
-                  </>
+                {store.alias && !transferDone && (
+                  <button className="btn btn-ghost" type="button" onClick={checkoutTransfer} disabled={paying}>
+                    {paying ? "Generando pedido…" : "Pagar por transferencia"}
+                  </button>
+                )}
+                {transferDone && (
+                  <div className="transfer-box">
+                    ✓ Pedido <b>#{transferDone.code}</b> generado. Transferí <b>{fmt(total)}</b> a <b>{transferDone.alias}</b> y mandanos el comprobante:
+                    <br />
+                    <span className="tw" onClick={() => transferWhatsApp(transferDone.code)}>
+                      <Icon d={ICONS.wa} /> Enviar comprobante por WhatsApp
+                    </span>
+                  </div>
                 )}
               </div>
             </div>

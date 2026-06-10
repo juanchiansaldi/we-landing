@@ -440,3 +440,22 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .pos-card-soon{opacity:.6}
 .admin-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 @media(max-width:600px){.admin-grid3{grid-template-columns:1fr 1fr}}
+
+/* ===== Reportes / pagos en pedidos ===== */
+.ord-filter{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.ord-filter button,.ord-filter a{background:var(--surf);border:1px solid var(--border2);color:var(--gray);border-radius:9999px;padding:.4rem .9rem;font-size:.82rem;cursor:pointer;font-family:inherit}
+.ord-filter button.on,.ord-filter a.on{background:var(--red);border-color:var(--red);color:#fff}
+.ord-filter .rep-export{margin-left:auto;border-color:rgba(46,160,67,.4);color:#3fb950}
+.order-pay-row{border-top:1px solid var(--border);padding-top:14px;margin-top:4px}
+.order-pay-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.op-paid,.op-undo,.op-receipt{border-radius:9px;padding:.5rem .85rem;font-size:.82rem;cursor:pointer;font-family:inherit;border:1px solid var(--border2)}
+.op-paid{background:#3fb950;border-color:#3fb950;color:#06210f;font-weight:600}
+.op-undo{background:var(--surf2);color:#3fb950}
+.op-receipt{background:var(--surf2);color:var(--cream)}
+.op-receipt:hover,.op-undo:hover{border-color:var(--red)}
+.op-view{color:var(--red);font-size:.82rem;align-self:center}
+.rep-chart{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:16px}
+.rep-svg{width:100%;height:200px;display:block}
+.rep-x{fill:var(--gray);font-size:9px;font-family:'DM Sans'}
+.rep-foot{margin-top:8px;color:var(--cream);font-size:.85rem;text-align:center}
+.rep-foot b{color:var(--white)}

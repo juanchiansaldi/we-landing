@@ -113,6 +113,31 @@ export async function updateOrderStatus(data: FormData) {
   revalidatePath("/admin/pedidos");
 }
 
+/** Marca un pedido como pagado/pendiente a mano (ej. transferencia confirmada). */
+export async function setOrderPaid(data: FormData) {
+  guard();
+  const id = String(data.get("id") || "");
+  const paid = data.get("paid") === "true";
+  if (!id) return;
+  await prisma.order.update({
+    where: { id },
+    data: paid
+      ? { paymentStatus: "PAID", paidAt: new Date(), status: "CONFIRMED" }
+      : { paymentStatus: "PENDING", paidAt: null },
+  });
+  revalidatePath("/admin/pedidos");
+}
+
+/** Guarda la URL del comprobante de transferencia en el pedido. */
+export async function setOrderReceipt(data: FormData) {
+  guard();
+  const id = String(data.get("id") || "");
+  const url = String(data.get("url") || "").trim() || null;
+  if (!id) return;
+  await prisma.order.update({ where: { id }, data: { receiptUrl: url } });
+  revalidatePath("/admin/pedidos");
+}
+
 // ───────── Cupones ─────────
 export async function saveCoupon(data: FormData) {
   guard();

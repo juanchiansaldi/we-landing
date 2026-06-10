@@ -76,13 +76,15 @@ export async function POST(req: Request) {
     notes: address.notes,
   };
 
+  const isTransfer = String(body?.method || "") === "transferencia";
+
   const order = await prisma.order.create({
     data: {
       storeId: store.id,
       customerId: customer.id,
       subtotal,
       total,
-      paymentMethod: "mercadopago",
+      paymentMethod: isTransfer ? "transferencia" : "mercadopago",
       shipAddress: shipSnapshot,
       giftNote: String(body?.giftNote || "").trim().slice(0, 300) || null,
       notes: coupon ? `Cupón ${couponLabel(coupon)} (-$${discount})` : null,
@@ -96,6 +98,17 @@ export async function POST(req: Request) {
       },
     },
   });
+
+  // Transferencia: el pedido queda PENDIENTE; el admin sube el comprobante y lo marca pagado.
+  if (isTransfer) {
+    return NextResponse.json({
+      transfer: true,
+      orderId: order.id,
+      code: order.id.slice(-6).toUpperCase(),
+      alias: store.alias,
+      total,
+    });
+  }
 
   // si hay descuento, mandamos a MP un único ítem por el total (MP no acepta importes negativos)
   const mpItems =

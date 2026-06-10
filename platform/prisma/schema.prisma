@@ -214,10 +214,13 @@ model Order {
   notes         String?
   shipAddress   Json? // snapshot de la dirección de envío al momento de la compra
   giftNote      String? // mensaje de regalo opcional
+  receiptUrl    String? // comprobante de transferencia subido por el admin
+  paidAt        DateTime? // cuándo se marcó como pagado
   items         OrderItem[]
   createdAt     DateTime      @default(now())
 
   @@index([storeId, status])
+  @@index([storeId, paymentStatus])
 }
 
 model OrderItem {

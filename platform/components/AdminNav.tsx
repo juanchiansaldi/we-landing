@@ -9,9 +9,10 @@ const LINKS = [
   { href: "/admin/proveedores", label: "Proveedores" },
   { href: "/admin/pedidos", label: "Pedidos" },
   { href: "/admin/cupones", label: "Cupones" },
+  { href: "/admin/reportes", label: "Reportes" },
 ];
 
-const SOON = ["Vender", "Stock", "Reportes", "Caja"];
+const SOON = ["Vender", "Stock", "Caja"];
 
 export default function AdminNav() {
   const path = usePathname();
