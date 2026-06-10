@@ -106,6 +106,7 @@ model Product {
   abv          Float? // % alcohol
   volumeMl     Int?    @default(750)
   isKit        Boolean @default(false)
+  margin       Int? // % de margen para combos (precio = costo combinado * (1 + margin/100))
   supplierId   String?
   supplier     Supplier? @relation(fields: [supplierId], references: [id])
 

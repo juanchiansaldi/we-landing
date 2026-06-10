@@ -525,3 +525,26 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
   .ticket-print, .ticket-print * { visibility: visible !important; }
   .ticket-print { position: fixed; left: 0; top: 0; width: 80mm; padding: 4mm; background: #fff; }
 }
+
+/* badges de estado del pedido (pago + envío) */
+.ord-badges{display:flex;flex-direction:column;gap:5px;align-items:flex-end}
+.ord-st{font-weight:600}
+.ord-st-pending{background:var(--surf2);color:var(--gray)}
+.ord-st-confirmed{background:rgba(46,160,67,.16);color:#3fb950}
+.ord-st-preparing,.ord-st-shipped{background:rgba(241,180,44,.16);color:#f1b42c}
+.ord-st-delivered{background:rgba(46,160,67,.2);color:#3fb950}
+.ord-st-cancelled{background:var(--red-soft);color:var(--red)}
+@media(max-width:600px){.ord-badges{flex-direction:row;flex-wrap:wrap}}
+
+/* ===== Editor de combos ===== */
+.combo-pick{display:flex;gap:8px;margin-top:4px}
+.combo-pick select{flex:1;background:var(--surf2);border:1px solid var(--border2);border-radius:9px;color:var(--white);font-family:inherit;font-size:.9rem;padding:.6rem .7rem;outline:none}
+.combo-pick .btn{white-space:nowrap;font-size:.82rem;padding:.5rem .9rem}
+.combo-comps{display:flex;flex-direction:column;gap:6px;margin:4px 0}
+.combo-comp{display:flex;align-items:center;gap:12px;background:var(--surf2);border:1px solid var(--border);border-radius:10px;padding:.5rem .75rem;font-size:.88rem}
+.combo-comp>span:first-child{font-family:'Spectral';font-weight:500}
+.combo-comp .pos-muted{margin-left:auto}
+.combo-calc{background:var(--surf2);border:1px solid var(--border2);border-radius:10px;padding:.6rem .8rem;display:flex;flex-direction:column;gap:6px;justify-content:center}
+.combo-calc>div{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.85rem;color:var(--gray)}
+.combo-calc b{color:var(--white);font-family:'Spectral'}
+.combo-calc input{width:110px;background:var(--bg);border:1px solid var(--border2);border-radius:8px;color:var(--white);font-family:inherit;padding:.35rem .5rem;text-align:right}

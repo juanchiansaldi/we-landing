@@ -81,7 +81,11 @@ export async function posSaveProduct(data: FormData) {
   await prisma.productImage.deleteMany({ where: { productId } });
   if (img) await prisma.productImage.create({ data: { productId, url: img, order: 0 } });
 
+  // si cambió el costo, recalculo los combos que usan este producto
+  await recomputeCombosForProduct(store.id, productId);
+
   revalidatePath("/admin/productos");
+  revalidatePath("/admin/combos");
   revalidatePath("/");
 }
 
@@ -108,7 +112,10 @@ export async function createSale(input: SaleInput) {
   if (!items.length) return { ok: false, error: "Carrito vacío" };
 
   const ids = items.map((i) => i.productId);
-  const prods = await prisma.product.findMany({ where: { storeId: store.id, id: { in: ids } } });
+  const prods = await prisma.product.findMany({
+    where: { storeId: store.id, id: { in: ids } },
+    include: { kitOf: { include: { component: true } } },
+  });
   const byId = new Map(prods.map((p) => [p.id, p]));
 
   const lines = items
@@ -155,24 +162,22 @@ export async function createSale(input: SaleInput) {
         },
       },
     });
-    // descontar stock (en botellas) + ledger
+    // descontar stock + ledger. Si es combo, descuenta cada componente.
     for (const l of lines) {
-      const updated = await tx.product.update({
-        where: { id: l.p.id },
-        data: { stock: { decrement: l.bottles } },
-      });
-      await tx.stockMovement.create({
-        data: {
-          storeId: store.id,
-          productId: l.p.id,
-          type: "EGRESO",
-          qty: -l.bottles,
-          reason: "venta",
-          refType: "sale",
-          refId: created.id,
-          resultingStock: updated.stock,
-        },
-      });
+      if (l.p.isKit && l.p.kitOf?.length) {
+        for (const ki of l.p.kitOf) {
+          const dec = l.qty * ki.qty;
+          const updated = await tx.product.update({ where: { id: ki.componentId }, data: { stock: { decrement: dec } } });
+          await tx.stockMovement.create({
+            data: { storeId: store.id, productId: ki.componentId, type: "EGRESO", qty: -dec, reason: "venta combo", refType: "sale", refId: created.id, resultingStock: updated.stock },
+          });
+        }
+      } else {
+        const updated = await tx.product.update({ where: { id: l.p.id }, data: { stock: { decrement: l.bottles } } });
+        await tx.stockMovement.create({
+          data: { storeId: store.id, productId: l.p.id, type: "EGRESO", qty: -l.bottles, reason: "venta", refType: "sale", refId: created.id, resultingStock: updated.stock },
+        });
+      }
     }
     return created;
   });
@@ -193,6 +198,100 @@ export async function createSale(input: SaleInput) {
       payMethod: pm,
     },
   };
+}
+
+// ───────── Combos / Kits ─────────
+type ComboInput = {
+  id?: string;
+  name: string;
+  barcode?: string;
+  components: { productId: string; qty: number }[];
+  margin: number | null; // %
+  manualPrice: number | null;
+  active: boolean;
+};
+
+async function comboCategoryId(storeId: string): Promise<string | null> {
+  const c = await prisma.category.findFirst({ where: { storeId, name: { contains: "Combo", mode: "insensitive" } } });
+  if (c) return c.id;
+  const created = await prisma.category.upsert({
+    where: { storeId_slug: { storeId, slug: "combos" } },
+    update: {},
+    create: { storeId, name: "Combos", slug: "combos", order: 99 },
+  });
+  return created.id;
+}
+
+export async function saveCombo(input: ComboInput) {
+  posGuard();
+  const store = await getStore();
+  const name = (input.name || "").trim();
+  const comps = (input.components || []).filter((c) => c.productId && c.qty > 0);
+  if (!name || !comps.length) return { ok: false, error: "Poné nombre y al menos un producto" };
+
+  // costo combinado a partir del costo actual de cada componente
+  const prods = await prisma.product.findMany({ where: { storeId: store.id, id: { in: comps.map((c) => c.productId) } } });
+  const byId = new Map(prods.map((p) => [p.id, p]));
+  let cost = 0;
+  for (const c of comps) { const p = byId.get(c.productId); if (p) cost += (p.cost ?? 0) * Math.max(1, Math.floor(c.qty)); }
+
+  const margin = input.margin != null && input.margin >= 0 ? Math.floor(input.margin) : null;
+  const price = margin != null ? Math.round(cost * (1 + margin / 100)) : (input.manualPrice ?? 0);
+
+  const fields = {
+    name,
+    isKit: true,
+    cost,
+    price,
+    margin,
+    barcode: (input.barcode || "").trim() || null,
+    active: input.active,
+    categoryId: await comboCategoryId(store.id),
+  };
+
+  let comboId = input.id;
+  if (input.id) {
+    await prisma.product.update({ where: { id: input.id }, data: fields });
+  } else {
+    let sku = await nextSku(store.id);
+    const slug = await uniqueSlug(store.id, slugify(name));
+    const created = await prisma.product.create({ data: { ...fields, sku, slug, storeId: store.id } });
+    comboId = created.id;
+  }
+
+  // reemplazar componentes
+  await prisma.kitItem.deleteMany({ where: { kitId: comboId! } });
+  for (const c of comps) {
+    await prisma.kitItem.create({ data: { kitId: comboId!, componentId: c.productId, qty: Math.max(1, Math.floor(c.qty)) } });
+  }
+
+  revalidatePath("/admin/combos");
+  revalidatePath("/admin/productos");
+  revalidatePath("/");
+  return { ok: true };
+}
+
+export async function deleteCombo(data: FormData) {
+  posGuard();
+  const id = s(data, "id");
+  if (!id) return;
+  await prisma.kitItem.deleteMany({ where: { kitId: id } });
+  await prisma.productImage.deleteMany({ where: { productId: id } });
+  await prisma.product.delete({ where: { id } }).catch(() => {});
+  revalidatePath("/admin/combos");
+}
+
+/** Si cambia el costo de un producto, recalculamos los combos que lo usan (los que tienen margen). */
+async function recomputeCombosForProduct(storeId: string, productId: string) {
+  const kitItems = await prisma.kitItem.findMany({ where: { componentId: productId }, select: { kitId: true } });
+  const comboIds = [...new Set(kitItems.map((k) => k.kitId))];
+  for (const cid of comboIds) {
+    const combo = await prisma.product.findUnique({ where: { id: cid } });
+    if (!combo || combo.margin == null) continue;
+    const items = await prisma.kitItem.findMany({ where: { kitId: cid }, include: { component: true } });
+    const cost = items.reduce((sum, it) => sum + (it.component.cost ?? 0) * it.qty, 0);
+    await prisma.product.update({ where: { id: cid }, data: { cost, price: Math.round(cost * (1 + combo.margin / 100)) } });
+  }
 }
 
 // ───────── Categorías ─────────

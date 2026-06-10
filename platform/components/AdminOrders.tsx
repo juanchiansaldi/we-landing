@@ -36,7 +36,11 @@ const STATUSES = [
 ] as const;
 
 const PAY_LABEL: Record<string, string> = {
-  PAID: "Pagado", PENDING: "Pendiente", FAILED: "Rechazado", REFUNDED: "Reintegrado",
+  PAID: "Pagado", PENDING: "Pago pendiente", FAILED: "Pago rechazado", REFUNDED: "Reintegrado",
+};
+const STATUS_LABEL: Record<string, string> = {
+  PENDING: "A confirmar", CONFIRMED: "Confirmado", PREPARING: "Preparando",
+  SHIPPED: "Enviado", DELIVERED: "Entregado", CANCELLED: "Cancelado",
 };
 
 export default function AdminOrders({ orders }: { orders: Order[] }) {
@@ -124,8 +128,13 @@ export default function AdminOrders({ orders }: { orders: Order[] }) {
               <div className="order-cust">
                 {o.customer ? (o.customer.name || o.customer.email) : "Sin cuenta"}
               </div>
-              <span className={`pay-badge pay-${o.paymentStatus.toLowerCase()}`}>
-                {PAY_LABEL[o.paymentStatus] || o.paymentStatus}
+              <span className="ord-badges">
+                <span className={`pay-badge pay-${o.paymentStatus.toLowerCase()}`}>
+                  {PAY_LABEL[o.paymentStatus] || o.paymentStatus}
+                </span>
+                <span className={`pay-badge ord-st ord-st-${o.status.toLowerCase()}`}>
+                  {STATUS_LABEL[o.status] || o.status}
+                </span>
               </span>
               <b className="order-total">{fmt(o.total)}</b>
             </button>
