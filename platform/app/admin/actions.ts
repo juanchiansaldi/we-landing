@@ -110,7 +110,7 @@ export async function updateOrderStatus(data: FormData) {
   const status = String(data.get("status") || "");
   if (!id || !ORDER_STATUSES.includes(status)) return;
   await prisma.order.update({ where: { id }, data: { status: status as any } });
-  revalidatePath("/admin/orders");
+  revalidatePath("/admin/pedidos");
 }
 
 // ───────── Cupones ─────────
@@ -136,7 +136,7 @@ export async function saveCoupon(data: FormData) {
       create: { ...fields, storeId: store.id },
     });
   }
-  revalidatePath("/admin/coupons");
+  revalidatePath("/admin/cupones");
 }
 
 export async function deleteCoupon(data: FormData) {
@@ -144,5 +144,5 @@ export async function deleteCoupon(data: FormData) {
   const id = String(data.get("id") || "");
   if (!id) return;
   await prisma.coupon.delete({ where: { id } });
-  revalidatePath("/admin/coupons");
+  revalidatePath("/admin/cupones");
 }
