@@ -122,6 +122,7 @@ export default function AdminProducts({
           <a className="btn btn-ghost" href="/admin/dashboard">Resumen</a>
           <a className="btn btn-ghost" href="/admin/orders">Pedidos</a>
           <a className="btn btn-ghost" href="/admin/coupons">Cupones</a>
+          <a className="btn btn-primary" href="/pos">Gestión / POS</a>
           <a className="btn btn-ghost" href="/" target="_blank">Ver tienda ↗</a>
           <button className="btn btn-ghost" type="button" onClick={logout}>Salir</button>
           <button className="btn btn-primary" type="button" onClick={() => openEditor({ ...EMPTY })}>

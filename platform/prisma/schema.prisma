@@ -34,6 +34,13 @@ model Store {
   subscriptions Subscription[]
   coupons       Coupon[]
   addresses     Address[]
+  suppliers     Supplier[]
+  sales         Sale[]
+  stockMoves    StockMovement[]
+  purchases     Purchase[]
+  cashSessions  CashSession[]
+  auditLogs     AuditLog[]
+  posUsers      PosUser[]
 }
 
 enum Role {
@@ -86,14 +93,37 @@ model Product {
   active     Boolean   @default(true)
   meta       Json? // ficha técnica: [{ k, v }]
 
-  images     ProductImage[]
-  orderItems OrderItem[]
+  // ───── Campos POS (gestión del local). Todo opcional para no romper la tienda. ─────
+  sku          String? // código interno (ej. WE-000123)
+  barcode      String? // código de barras de fábrica (EAN-13), si tiene
+  cost         Int? // costo en pesos (para ganancia real)
+  priceCase    Int? // precio por caja cerrada
+  unitsPerCase Int     @default(6)
+  stockMin     Int     @default(0)
+  highValue    Boolean @default(false) // alto valor (guarda, destilados importados)
+  varietal     String?
+  vintage      Int? // añada (año)
+  abv          Float? // % alcohol
+  volumeMl     Int?    @default(750)
+  isKit        Boolean @default(false)
+  supplierId   String?
+  supplier     Supplier? @relation(fields: [supplierId], references: [id])
+
+  images        ProductImage[]
+  orderItems    OrderItem[]
+  saleItems     SaleItem[]
+  stockMoves    StockMovement[]
+  purchaseItems PurchaseItem[]
+  kitOf         KitItem[] @relation("kitParent")
+  kitInside     KitItem[] @relation("kitComponent")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([storeId, slug])
+  @@unique([storeId, sku])
   @@index([storeId, categoryId])
+  @@index([storeId, barcode])
 }
 
 model ProductImage {
@@ -114,11 +144,17 @@ model Customer {
   name      String?
   phone     String?
   authId    String? // id del usuario en Supabase Auth (link de la cuenta)
+  // ───── POS / cuenta corriente ─────
+  vip       Boolean  @default(false)
+  cuit      String?
+  ccBalance Int      @default(0) // saldo cuenta corriente en pesos (+ = debe)
   createdAt DateTime @default(now())
 
   orders        Order[]
   subscriptions Subscription[]
   addresses     Address[]
+  sales         Sale[]
+  ledger        CustomerLedger[]
 
   @@unique([storeId, email])
   @@index([authId])
@@ -262,4 +298,217 @@ model Newsletter {
   createdAt DateTime @default(now())
 
   @@unique([storeId, email])
+}
+
+// ═══════════════ POS · Gestión del local ═══════════════
+
+enum SaleUnit {
+  BOTELLA
+  CAJA
+}
+
+enum PayMethod {
+  EFECTIVO
+  TARJETA
+  TRANSFERENCIA
+  CUENTA_CORRIENTE
+  MIXTO
+}
+
+enum MoveType {
+  INGRESO
+  EGRESO
+  AJUSTE
+}
+
+enum CashStatus {
+  ABIERTA
+  CERRADA
+}
+
+enum LedgerType {
+  CARGO
+  PAGO
+}
+
+enum PosRole {
+  ADMIN
+  VENDEDOR
+}
+
+model Supplier {
+  id        String   @id @default(cuid())
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id])
+  nombre    String
+  cuit      String?
+  contacto  String?
+  telefono  String?
+  email     String?
+  notas     String?
+  activo    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  productos Product[]
+  purchases Purchase[]
+
+  @@index([storeId])
+}
+
+model PosUser {
+  id           String   @id @default(cuid())
+  storeId      String
+  store        Store    @relation(fields: [storeId], references: [id])
+  username     String
+  nombre       String
+  passwordHash String
+  role         PosRole  @default(VENDEDOR)
+  activo       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  sales Sale[]
+
+  @@unique([storeId, username])
+}
+
+model Sale {
+  id            String       @id @default(cuid())
+  storeId       String
+  store         Store        @relation(fields: [storeId], references: [id])
+  posUserId     String?
+  posUser       PosUser?     @relation(fields: [posUserId], references: [id])
+  customerId    String?
+  customer      Customer?    @relation(fields: [customerId], references: [id])
+  cashSessionId String?
+  cashSession   CashSession? @relation(fields: [cashSessionId], references: [id])
+  subtotal      Int
+  discount      Int          @default(0)
+  total         Int
+  payMethod     PayMethod    @default(EFECTIVO)
+  payCash       Int          @default(0)
+  payCard       Int          @default(0)
+  payTransfer   Int          @default(0)
+  payAccount    Int          @default(0)
+  note          String?
+  voided        Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+
+  items SaleItem[]
+
+  @@index([storeId, createdAt])
+}
+
+model SaleItem {
+  id        String   @id @default(cuid())
+  saleId    String
+  sale      Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id])
+  name      String
+  unit      SaleUnit @default(BOTELLA)
+  qty       Int
+  unitPrice Int
+  unitCost  Int      @default(0)
+  subtotal  Int
+}
+
+model StockMovement {
+  id             String   @id @default(cuid())
+  storeId        String
+  store          Store    @relation(fields: [storeId], references: [id])
+  productId      String
+  product        Product  @relation(fields: [productId], references: [id])
+  type           MoveType
+  qty            Int // con signo (botellas)
+  reason         String // venta|compra|ajuste|anulacion|merma|kit
+  refType        String?
+  refId          String?
+  posUserId      String?
+  resultingStock Int
+  createdAt      DateTime @default(now())
+
+  @@index([storeId, productId])
+}
+
+model Purchase {
+  id            String   @id @default(cuid())
+  storeId       String
+  store         Store    @relation(fields: [storeId], references: [id])
+  supplierId    String?
+  supplier      Supplier? @relation(fields: [supplierId], references: [id])
+  invoiceNumber String?
+  total         Int      @default(0)
+  note          String?
+  createdAt     DateTime @default(now())
+
+  items PurchaseItem[]
+
+  @@index([storeId, createdAt])
+}
+
+model PurchaseItem {
+  id         String   @id @default(cuid())
+  purchaseId String
+  purchase   Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  productId  String?
+  product    Product? @relation(fields: [productId], references: [id])
+  qty        Int
+  unitCost   Int
+  subtotal   Int
+}
+
+model CashSession {
+  id            String     @id @default(cuid())
+  storeId       String
+  store         Store      @relation(fields: [storeId], references: [id])
+  openedById    String?
+  openingAmount Int        @default(0)
+  openedAt      DateTime   @default(now())
+  closedAt      DateTime?
+  declaredAmount Int?
+  countedAmount Int?
+  difference    Int?
+  status        CashStatus @default(ABIERTA)
+  note          String?
+
+  sales Sale[]
+
+  @@index([storeId, status])
+}
+
+model KitItem {
+  id          String  @id @default(cuid())
+  kitId       String
+  kit         Product @relation("kitParent", fields: [kitId], references: [id], onDelete: Cascade)
+  componentId String
+  component   Product @relation("kitComponent", fields: [componentId], references: [id])
+  qty         Int     @default(1)
+}
+
+model CustomerLedger {
+  id               String     @id @default(cuid())
+  customerId       String
+  customer         Customer   @relation(fields: [customerId], references: [id])
+  type             LedgerType
+  amount           Int
+  refSaleId        String?
+  resultingBalance Int
+  note             String?
+  createdAt        DateTime   @default(now())
+
+  @@index([customerId])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id])
+  posUserId String?
+  action    String
+  entity    String?
+  entityId  String?
+  detail    String?
+  createdAt DateTime @default(now())
+
+  @@index([storeId, createdAt])
 }
