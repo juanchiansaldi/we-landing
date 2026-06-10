@@ -464,7 +464,7 @@ nav.scrolled .nav-logo .logo-word{width:52px}
 .hz-hint svg{width:22px;height:7px;color:var(--red)}
 
 /* ===== SECUENCIA 193 FRAMES ===== */
-.seq-sec{position:relative;height:320vh;background:var(--bg)}
+.seq-sec{position:relative;height:400vh;background:var(--bg)}
 .seq-sticky{position:sticky;top:0;height:100vh;overflow:hidden}
 #seqCanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .seq-veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,10,10,.55),transparent 30%,transparent 64%,rgba(13,10,10,.85));pointer-events:none}
@@ -1242,23 +1242,30 @@ function initSequenceStatic(){
     const canvas=document.getElementById('seqCanvas');if(!canvas)return;
     const FRAMES=193,ctx=canvas.getContext('2d');
     const path=i=>'./assets/frames/we-'+String(i).padStart(4,'0')+'.webp';
-    const imgs=new Array(FRAMES);let loaded=0,cur=-1;
+    /* en mobile cargamos 1 de cada 2 frames: ~la mitad del peso (2.9MB -> ~1.5MB) */
+    const mobile=window.matchMedia('(max-width:760px)').matches;
+    const STEP=mobile?2:1;
+    const nums=[];for(let i=1;i<=FRAMES;i+=STEP)nums.push(i);if(nums[nums.length-1]!==FRAMES)nums.push(FRAMES);
+    const N=nums.length;
+    const imgs=new Array(N);let loaded=0,cur=-1;
     const loadEl=document.getElementById('seqLoad'),bar=document.getElementById('slBar');
     function draw(i){const img=imgs[i];if(!img||!img.complete||!img.naturalWidth)return;cur=i;
       const cw=canvas.clientWidth,ch=canvas.clientHeight,ir=img.naturalWidth/img.naturalHeight,cr=cw/ch;let w,h;
       if(cr>ir){w=cw;h=cw/ir;}else{h=ch;w=ch*ir;}ctx.clearRect(0,0,cw,ch);ctx.drawImage(img,(cw-w)/2,(ch-h)/2,w,h);}
     function resize(){const dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.round(canvas.clientWidth*dpr);canvas.height=Math.round(canvas.clientHeight*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);if(cur>=0)draw(cur);}
     window.addEventListener('resize',resize);
-    for(let i=1;i<=FRAMES;i++){const img=new Image();img.decoding='async';
-      img.onload=()=>{loaded++;if(bar)bar.style.width=(loaded/FRAMES*100)+'%';
-        if(i===1){resize();draw(0);}
-        if(loaded>=FRAMES&&loadEl){loadEl.classList.add('done');ScrollTrigger.refresh();}};
-      img.src=path(i);imgs[i-1]=img;}
+    nums.forEach((num,idx)=>{const img=new Image();img.decoding='async';
+      img.onload=()=>{loaded++;if(bar)bar.style.width=(loaded/N*100)+'%';
+        if(idx===0){resize();draw(0);}
+        if(loaded>=N&&loadEl){loadEl.classList.add('done');ScrollTrigger.refresh();}};
+      img.src=path(num);imgs[idx]=img;});
     if(!REDUCE){
       const o={f:0};
-      gsap.to(o,{f:FRAMES-1,ease:'none',scrollTrigger:{trigger:'#seq',start:'top top',end:'bottom bottom',scrub:0.35},onUpdate:()=>{const i=Math.round(o.f);if(i!==cur)requestAnimationFrame(()=>draw(i));}});
+      /* scrub alto = glide suave y pausado (sin jank); la altura 400vh lo hace deliberado */
+      gsap.to(o,{f:N-1,ease:'none',scrollTrigger:{trigger:'#seq',start:'top top',end:'bottom bottom',scrub:0.7},onUpdate:()=>{const i=Math.round(o.f);if(i!==cur)requestAnimationFrame(()=>draw(i));}});
     }else{
-      const tryDraw=()=>{if(imgs[96]&&imgs[96].complete)draw(96);else setTimeout(tryDraw,120);};
+      const mid=Math.floor(N/2);
+      const tryDraw=()=>{if(imgs[mid]&&imgs[mid].complete)draw(mid);else setTimeout(tryDraw,120);};
       setTimeout(()=>{if(loadEl)loadEl.classList.add('done');},700);tryDraw();
     }
   })();
