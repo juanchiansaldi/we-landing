@@ -9,14 +9,14 @@ type Sup = { id: string; name: string };
 type Row = {
   id: string; sku: string; barcode: string; name: string; brand: string;
   categoryId: string; categoryName: string; supplierId: string; supplierName: string;
-  price: number; priceCase: number | null; cost: number | null; unitsPerCase: number;
+  price: number; promo: number | null; priceCase: number | null; cost: number | null; unitsPerCase: number;
   stock: number; stockMin: number; varietal: string; vintage: number | null;
   abv: number | null; volumeMl: number; highValue: boolean; active: boolean; shortDesc: string; img: string;
 };
 
 const EMPTY: Row = {
   id: "", sku: "", barcode: "", name: "", brand: "", categoryId: "", categoryName: "",
-  supplierId: "", supplierName: "", price: 0, priceCase: null, cost: null, unitsPerCase: 6,
+  supplierId: "", supplierName: "", price: 0, promo: null, priceCase: null, cost: null, unitsPerCase: 6,
   stock: 0, stockMin: 0, varietal: "", vintage: null, abv: null, volumeMl: 750,
   highValue: false, active: true, shortDesc: "", img: "",
 };
@@ -149,7 +149,9 @@ export default function PosProducts({
               {p.highValue && <em style={{ color: "var(--red)" }}>★ Alto valor</em>}
             </span>
             <span>{p.categoryName || "—"}</span>
-            <span>{money(p.price)}</span>
+            <span>
+              {p.promo != null ? (<><s style={{ color: "var(--gray)", fontSize: ".78rem" }}>{money(p.price)}</s> <b style={{ color: "var(--red)" }}>{money(p.promo)}</b></>) : money(p.price)}
+            </span>
             <span style={{ color: "var(--gray)" }}>{money(p.cost)}</span>
             <span className={lowStock(p) ? "admin-nostock" : ""}>{p.stock}{lowStock(p) ? " ⚠" : ""}</span>
             <span className="admin-row-actions">
@@ -200,8 +202,12 @@ export default function PosProducts({
               <label>Volumen ml<input name="volumeMl" type="number" defaultValue={editing.volumeMl} /></label>
             </div>
 
-            <div className="admin-grid3">
+            <div className="admin-grid2">
               <label>Precio botella ($)<input name="price" type="number" min="0" defaultValue={editing.price} /></label>
+              <label>Precio con descuento ($) <span className="admin-opt">promo, opcional</span>
+                <input name="promo" type="number" min="0" defaultValue={editing.promo ?? ""} placeholder="vacío = sin promo" /></label>
+            </div>
+            <div className="admin-grid2">
               <label>Precio caja ($)<input name="priceCase" type="number" min="0" defaultValue={editing.priceCase ?? ""} /></label>
               <label>Costo ($)<input name="cost" type="number" min="0" defaultValue={editing.cost ?? ""} /></label>
             </div>

@@ -51,6 +51,7 @@ export default async function PanelHome() {
       </section>
 
       <div className="pos-cards">
+        <a className="pos-card" href="/admin/vender"><h3 className="serif">Vender 🧾</h3><p>Caja del local: lector de código, carrito y ticket.</p></a>
         <a className="pos-card" href="/admin/productos"><h3 className="serif">Productos</h3><p>Catálogo, costo, stock, fotos, SKU y Excel.</p></a>
         <a className="pos-card" href="/admin/pedidos"><h3 className="serif">Pedidos</h3><p>Pedidos online, marcar pagado y subir comprobantes.</p></a>
         <a className="pos-card" href="/admin/reportes"><h3 className="serif">Reportes</h3><p>Ventas, ganancia y valorización de stock.</p></a>

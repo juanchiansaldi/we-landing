@@ -27,6 +27,7 @@ export default async function ProductosPage() {
     supplierId: p.supplierId || "",
     supplierName: p.supplier?.nombre || "",
     price: p.price,
+    promo: p.promoPrice ?? null,
     priceCase: p.priceCase ?? null,
     cost: p.cost ?? null,
     unitsPerCase: p.unitsPerCase,

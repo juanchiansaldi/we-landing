@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 const LINKS = [
   { href: "/admin", label: "Inicio" },
+  { href: "/admin/vender", label: "Vender" },
   { href: "/admin/productos", label: "Productos" },
   { href: "/admin/categorias", label: "Categorías" },
   { href: "/admin/proveedores", label: "Proveedores" },
@@ -12,7 +13,7 @@ const LINKS = [
   { href: "/admin/reportes", label: "Reportes" },
 ];
 
-const SOON = ["Vender", "Stock", "Caja"];
+const SOON = ["Stock", "Caja"];
 
 export default function AdminNav() {
   const path = usePathname();
