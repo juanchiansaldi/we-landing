@@ -1,17 +1,13 @@
-import { redirect } from "next/navigation";
-import { prisma } from "../../../lib/prisma";
-import { isAuthed } from "../../../lib/auth";
-import AdminOrders from "../../../components/AdminOrders";
+import { prisma } from "../../../../lib/prisma";
+import AdminOrders from "../../../../components/AdminOrders";
 
 export const dynamic = "force-dynamic";
 
 const STORE_SLUG = process.env.DEFAULT_STORE_SLUG || "we";
 
-export default async function AdminOrdersPage() {
-  if (!isAuthed()) redirect("/admin/login");
-
+export default async function PedidosPage() {
   const store = await prisma.store.findUnique({ where: { slug: STORE_SLUG } });
-  if (!store) return <div className="admin-wrap">No hay tienda.</div>;
+  if (!store) return <div className="pos-wrap">No hay tienda.</div>;
 
   const orders = await prisma.order.findMany({
     where: { storeId: store.id },

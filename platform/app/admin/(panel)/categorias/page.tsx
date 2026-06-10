@@ -1,6 +1,6 @@
-import { prisma } from "../../../lib/prisma";
-import { getStore } from "../../../lib/pos";
-import PosCategorias from "../../../components/PosCategorias";
+import { prisma } from "../../../../lib/prisma";
+import { getStore } from "../../../../lib/pos";
+import PosCategorias from "../../../../components/PosCategorias";
 
 export const dynamic = "force-dynamic";
 

@@ -1,6 +1,6 @@
-import { prisma } from "../../../lib/prisma";
-import { getStore } from "../../../lib/pos";
-import PosProducts from "../../../components/PosProducts";
+import { prisma } from "../../../../lib/prisma";
+import { getStore } from "../../../../lib/pos";
+import PosProducts from "../../../../components/PosProducts";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +9,7 @@ export default async function ProductosPage() {
   const [products, categories, suppliers] = await Promise.all([
     prisma.product.findMany({
       where: { storeId: store.id },
-      include: { category: true, supplier: true },
+      include: { category: true, supplier: true, images: { orderBy: { order: "asc" }, take: 1 } },
       orderBy: { name: "asc" },
     }),
     prisma.category.findMany({ where: { storeId: store.id }, orderBy: { order: "asc" } }),
@@ -39,6 +39,7 @@ export default async function ProductosPage() {
     highValue: p.highValue,
     active: p.active,
     shortDesc: p.shortDesc || "",
+    img: p.images[0]?.url || "",
   }));
 
   return (

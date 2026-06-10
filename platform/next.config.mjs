@@ -32,6 +32,13 @@ const nextConfig = {
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },
+  async redirects() {
+    // el POS se unificó dentro de /admin
+    return [
+      { source: "/pos", destination: "/admin", permanent: false },
+      { source: "/pos/:path*", destination: "/admin/:path*", permanent: false },
+    ];
+  },
 };
 
 export default nextConfig;

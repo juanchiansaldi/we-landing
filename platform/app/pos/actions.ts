@@ -66,13 +66,21 @@ export async function posSaveProduct(data: FormData) {
     shortDesc: s(data, "shortDesc") || null,
   };
 
+  let productId = id;
   if (id) {
     await prisma.product.update({ where: { id }, data: fields });
   } else {
     const slug = await uniqueSlug(store.id, slugify(name));
-    await prisma.product.create({ data: { ...fields, slug, storeId: store.id } });
+    const created = await prisma.product.create({ data: { ...fields, slug, storeId: store.id } });
+    productId = created.id;
   }
-  revalidatePath("/pos/productos");
+
+  // foto principal (order 0)
+  const img = s(data, "img");
+  await prisma.productImage.deleteMany({ where: { productId } });
+  if (img) await prisma.productImage.create({ data: { productId, url: img, order: 0 } });
+
+  revalidatePath("/admin/productos");
   revalidatePath("/");
 }
 
@@ -82,7 +90,7 @@ export async function posDeleteProduct(data: FormData) {
   if (!id) return;
   await prisma.productImage.deleteMany({ where: { productId: id } });
   await prisma.product.delete({ where: { id } }).catch(() => {});
-  revalidatePath("/pos/productos");
+  revalidatePath("/admin/productos");
 }
 
 // ───────── Categorías ─────────
@@ -102,7 +110,7 @@ export async function posSaveCategory(data: FormData) {
       create: { storeId: store.id, name, slug: slugify(name), order },
     });
   }
-  revalidatePath("/pos/categorias");
+  revalidatePath("/admin/categorias");
 }
 
 export async function posDeleteCategory(data: FormData) {
@@ -113,7 +121,7 @@ export async function posDeleteCategory(data: FormData) {
   const count = await prisma.product.count({ where: { categoryId: id } });
   if (count > 0) return;
   await prisma.category.delete({ where: { id } }).catch(() => {});
-  revalidatePath("/pos/categorias");
+  revalidatePath("/admin/categorias");
 }
 
 // ───────── Proveedores ─────────
@@ -137,7 +145,7 @@ export async function posSaveSupplier(data: FormData) {
   } else {
     await prisma.supplier.create({ data: { ...fields, storeId: store.id } });
   }
-  revalidatePath("/pos/proveedores");
+  revalidatePath("/admin/proveedores");
 }
 
 export async function posDeleteSupplier(data: FormData) {
@@ -151,5 +159,5 @@ export async function posDeleteSupplier(data: FormData) {
   } else {
     await prisma.supplier.delete({ where: { id } }).catch(() => {});
   }
-  revalidatePath("/pos/proveedores");
+  revalidatePath("/admin/proveedores");
 }

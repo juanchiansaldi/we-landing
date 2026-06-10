@@ -11,14 +11,14 @@ type Row = {
   categoryId: string; categoryName: string; supplierId: string; supplierName: string;
   price: number; priceCase: number | null; cost: number | null; unitsPerCase: number;
   stock: number; stockMin: number; varietal: string; vintage: number | null;
-  abv: number | null; volumeMl: number; highValue: boolean; active: boolean; shortDesc: string;
+  abv: number | null; volumeMl: number; highValue: boolean; active: boolean; shortDesc: string; img: string;
 };
 
 const EMPTY: Row = {
   id: "", sku: "", barcode: "", name: "", brand: "", categoryId: "", categoryName: "",
   supplierId: "", supplierName: "", price: 0, priceCase: null, cost: null, unitsPerCase: 6,
   stock: 0, stockMin: 0, varietal: "", vintage: null, abv: null, volumeMl: 750,
-  highValue: false, active: true, shortDesc: "",
+  highValue: false, active: true, shortDesc: "", img: "",
 };
 
 const money = (n: number | null) => (n == null ? "—" : "$ " + n.toLocaleString("es-AR"));
@@ -31,7 +31,30 @@ export default function PosProducts({
   const [q, setQ] = useState("");
   const [pending, start] = useTransition();
   const [importing, setImporting] = useState(false);
+  const [imgVal, setImgVal] = useState("");
+  const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  function openEditor(row: Row) {
+    setImgVal(row.img || "");
+    setEditing(row);
+  }
+
+  async function uploadImage(file: File) {
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.set("file", file);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const j = await res.json().catch(() => ({}));
+      if (res.ok && j.url) setImgVal(j.url);
+      else alert(j.error || "No se pudo subir la imagen");
+    } catch {
+      alert("No se pudo subir la imagen");
+    } finally {
+      setUploading(false);
+    }
+  }
 
   const filtered = useMemo(() => {
     if (!q.trim()) return products;
@@ -98,7 +121,7 @@ export default function PosProducts({
             <input ref={fileRef} type="file" accept=".xlsx,.xls,.csv" hidden disabled={importing}
               onChange={(e) => { const f = e.target.files?.[0]; if (f) onImport(f); }} />
           </label>
-          <button className="btn btn-primary" type="button" onClick={() => setEditing({ ...EMPTY })}>+ Nuevo</button>
+          <button className="btn btn-primary" type="button" onClick={() => openEditor({ ...EMPTY })}>+ Nuevo</button>
         </div>
       </header>
 
@@ -130,7 +153,7 @@ export default function PosProducts({
             <span style={{ color: "var(--gray)" }}>{money(p.cost)}</span>
             <span className={lowStock(p) ? "admin-nostock" : ""}>{p.stock}{lowStock(p) ? " ⚠" : ""}</span>
             <span className="admin-row-actions">
-              <button type="button" onClick={() => setEditing(p)}>Editar</button>
+              <button type="button" onClick={() => openEditor(p)}>Editar</button>
               <button type="button" className="admin-del" onClick={() => onDelete(p)}>Borrar</button>
             </span>
           </div>
@@ -190,6 +213,25 @@ export default function PosProducts({
             </div>
 
             <label>Descripción corta<input name="shortDesc" defaultValue={editing.shortDesc} /></label>
+
+            <label>Foto del producto
+              <div className="img-upload">
+                <div className="img-prev">
+                  {imgVal ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={imgVal} alt="" />
+                  ) : (<i>We</i>)}
+                </div>
+                <div className="img-upload-ctrl">
+                  <label className="img-file-btn">
+                    {uploading ? "Subiendo…" : "Subir foto"}
+                    <input type="file" accept="image/*" disabled={uploading}
+                      onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadImage(f); e.target.value = ""; }} />
+                  </label>
+                  <input name="img" value={imgVal} onChange={(e) => setImgVal(e.target.value)} placeholder="o pegá una URL" />
+                </div>
+              </div>
+            </label>
 
             <div className="admin-checks">
               <label className="admin-check"><input type="checkbox" name="highValue" defaultChecked={editing.highValue} /> Alto valor ★</label>

@@ -59,11 +59,8 @@ export default function AdminOrders({ orders }: { orders: Order[] }) {
     <div className="admin-wrap">
       <header className="admin-top">
         <div>
-          <span className="eyebrow">We · Cava — Panel</span>
+          <span className="eyebrow">Administración</span>
           <h1 className="serif">Pedidos</h1>
-        </div>
-        <div className="admin-top-actions">
-          <a className="btn btn-ghost" href="/admin">← Productos</a>
         </div>
       </header>
 

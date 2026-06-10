@@ -44,12 +44,10 @@ export default function AdminCoupons({ coupons }: { coupons: Row[] }) {
     <div className="admin-wrap">
       <header className="admin-top">
         <div>
-          <span className="eyebrow">We · Cava — Panel</span>
+          <span className="eyebrow">Administración</span>
           <h1 className="serif">Cupones</h1>
         </div>
         <div className="admin-top-actions">
-          <a className="btn btn-ghost" href="/admin">← Productos</a>
-          <a className="btn btn-ghost" href="/admin/orders">Pedidos</a>
           <button className="btn btn-primary" type="button" onClick={() => setEditing({ ...EMPTY })}>
             + Nuevo cupón
           </button>
