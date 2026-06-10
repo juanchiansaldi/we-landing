@@ -1,7 +1,33 @@
+import crypto from "crypto";
 import { NextResponse } from "next/server";
 import { prisma } from "../../../../lib/prisma";
 import { mpPayment } from "../../../../lib/mp";
 import { syncByPreapproval } from "../../../../lib/subscriptions";
+
+const WEBHOOK_SECRET = process.env.MP_WEBHOOK_SECRET || "";
+
+/**
+ * Valida la firma x-signature de Mercado Pago (HMAC-SHA256).
+ * Si MP_WEBHOOK_SECRET no está seteado, no valida (compat) — conviene setearlo.
+ */
+function validSignature(req: Request, dataId: string): boolean {
+  if (!WEBHOOK_SECRET) return true; // sin secret configurado: no bloqueamos (todavía)
+  const sig = req.headers.get("x-signature") || "";
+  const requestId = req.headers.get("x-request-id") || "";
+  const parts = Object.fromEntries(
+    sig.split(",").map((kv) => kv.split("=").map((s) => s.trim()) as [string, string])
+  );
+  const ts = parts["ts"];
+  const v1 = parts["v1"];
+  if (!ts || !v1 || !dataId) return false;
+  const manifest = `id:${dataId};request-id:${requestId};ts:${ts};`;
+  const hmac = crypto.createHmac("sha256", WEBHOOK_SECRET).update(manifest).digest("hex");
+  try {
+    return crypto.timingSafeEqual(Buffer.from(hmac), Buffer.from(v1));
+  } catch {
+    return false;
+  }
+}
 
 // Mercado Pago manda notificaciones de pago y de suscripción. Confirmamos el
 // estado real consultando la API y actualizamos la orden / suscripción.
@@ -13,6 +39,11 @@ export async function POST(req: Request) {
     const dataId =
       body?.data?.id || url.searchParams.get("data.id") || url.searchParams.get("id");
     const paymentId = dataId;
+
+    // defensa: validar que la notificación venga firmada por Mercado Pago
+    if (!validSignature(req, String(dataId || ""))) {
+      return NextResponse.json({ error: "invalid signature" }, { status: 401 });
+    }
 
     // suscripciones (débito automático)
     if ((type === "subscription_preapproval" || type === "preapproval") && dataId) {

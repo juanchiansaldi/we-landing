@@ -2,9 +2,20 @@ import crypto from "crypto";
 import { cookies } from "next/headers";
 
 export const COOKIE_NAME = "we_admin";
-const SECRET = process.env.ADMIN_SECRET || "we-cava-dev-secret-change-me";
+
+// fail-closed: nunca firmamos con un secreto público por defecto.
+// En dev permite un fallback explícito; en prod exige ADMIN_SECRET.
+function getSecret(): string {
+  const s = process.env.ADMIN_SECRET || "";
+  if (s) return s;
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("ADMIN_SECRET es obligatorio en producción");
+  }
+  return "we-cava-dev-only-secret";
+}
 
 function sign(payload: string): string {
+  const SECRET = getSecret();
   const h = crypto.createHmac("sha256", SECRET).update(payload).digest("base64url");
   return `${payload}.${h}`;
 }

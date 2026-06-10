@@ -2,11 +2,32 @@ import type { Metadata } from "next";
 import "./globals.css";
 import LogoDefs from "../components/LogoDefs";
 
+const SITE = process.env.NEXT_PUBLIC_SITE_URL?.startsWith("http")
+  ? process.env.NEXT_PUBLIC_SITE_URL
+  : "https://tienda.wecavagourmet.com";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE),
   title: "Cava · Tienda — We · Cava & Gourmet",
   description:
     "Tienda online de We · Cava & Gourmet. Vinos, espumantes, quesos, chocolates y más, con envío en Crespo. +18 · Consumo responsable.",
   themeColor: "#0d0a0a",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "es_AR",
+    url: SITE,
+    siteName: "We · Cava & Gourmet",
+    title: "Cava · Tienda — We · Cava & Gourmet",
+    description: "Vinos, espumantes, quesos y gourmet. Comprá online con envío en Crespo.",
+    images: [{ url: "/assets/og.jpg", width: 1200, height: 630, alt: "We · Cava & Gourmet" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cava · Tienda — We · Cava & Gourmet",
+    description: "Vinos, espumantes, quesos y gourmet. Comprá online con envío en Crespo.",
+    images: ["/assets/og.jpg"],
+  },
 };
 
 export default function RootLayout({
