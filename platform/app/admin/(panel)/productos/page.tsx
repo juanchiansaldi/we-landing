@@ -19,6 +19,7 @@ export default async function ProductosPage() {
   const rows = products.map((p) => ({
     id: p.id,
     sku: p.sku || "",
+    quickCode: p.quickCode || "",
     barcode: p.barcode || "",
     name: p.name,
     brand: p.brand || "",

@@ -95,6 +95,7 @@ model Product {
 
   // ───── Campos POS (gestión del local). Todo opcional para no romper la tienda. ─────
   sku          String? // código interno (ej. WE-000123)
+  quickCode    String? // código rápido para tipear en la caja (ej. 170 = Coca)
   barcode      String? // código de barras de fábrica (EAN-13), si tiene
   cost         Int? // costo en pesos (para ganancia real)
   priceCase    Int? // precio por caja cerrada
@@ -123,6 +124,7 @@ model Product {
 
   @@unique([storeId, slug])
   @@unique([storeId, sku])
+  @@unique([storeId, quickCode])
   @@index([storeId, categoryId])
   @@index([storeId, barcode])
 }

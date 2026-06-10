@@ -7,7 +7,7 @@ import { posSaveProduct, posDeleteProduct } from "../app/pos/actions";
 type Cat = { id: string; name: string };
 type Sup = { id: string; name: string };
 type Row = {
-  id: string; sku: string; barcode: string; name: string; brand: string;
+  id: string; sku: string; quickCode: string; barcode: string; name: string; brand: string;
   categoryId: string; categoryName: string; supplierId: string; supplierName: string;
   price: number; promo: number | null; priceCase: number | null; cost: number | null; unitsPerCase: number;
   stock: number; stockMin: number; varietal: string; vintage: number | null;
@@ -15,7 +15,7 @@ type Row = {
 };
 
 const EMPTY: Row = {
-  id: "", sku: "", barcode: "", name: "", brand: "", categoryId: "", categoryName: "",
+  id: "", sku: "", quickCode: "", barcode: "", name: "", brand: "", categoryId: "", categoryName: "",
   supplierId: "", supplierName: "", price: 0, promo: null, priceCase: null, cost: null, unitsPerCase: 6,
   stock: 0, stockMin: 0, varietal: "", vintage: null, abv: null, volumeMl: 750,
   highValue: false, active: true, shortDesc: "", img: "",
@@ -60,7 +60,7 @@ export default function PosProducts({
     if (!q.trim()) return products;
     const t = q.toLowerCase();
     return products.filter((p) =>
-      `${p.name} ${p.brand} ${p.sku} ${p.barcode} ${p.categoryName} ${p.varietal}`.toLowerCase().includes(t)
+      `${p.name} ${p.brand} ${p.sku} ${p.quickCode} ${p.barcode} ${p.categoryName} ${p.varietal}`.toLowerCase().includes(t)
     );
   }, [products, q]);
 
@@ -141,7 +141,8 @@ export default function PosProducts({
         {filtered.map((p) => (
           <div className="admin-tr" key={p.id} style={{ gridTemplateColumns: "1fr 1.6fr 1fr .7fr .7fr .6fr 1fr" }}>
             <span style={{ fontSize: ".78rem" }}>
-              <b>{p.sku || "—"}</b>{p.barcode ? <em style={{ display: "block", color: "var(--gray)", fontStyle: "normal" }}>{p.barcode}</em> : null}
+              {p.quickCode ? <b style={{ color: "var(--red)", fontSize: ".95rem" }}>{p.quickCode}</b> : <b>{p.sku || "—"}</b>}
+              <em style={{ display: "block", color: "var(--gray)", fontStyle: "normal" }}>{p.barcode || p.sku}</em>
             </span>
             <span className="admin-name">
               <b>{p.name}</b>
@@ -170,10 +171,12 @@ export default function PosProducts({
 
             <label>Nombre *<input name="name" defaultValue={editing.name} required autoFocus /></label>
 
-            <div className="admin-grid2">
-              <label>SKU interno {editing.id ? "" : <span className="admin-opt">se genera solo si lo dejás vacío</span>}
-                <input name="sku" defaultValue={editing.sku} placeholder="WE-000123" /></label>
+            <div className="admin-grid3">
+              <label>Código rápido <span className="admin-opt">tipear en caja</span>
+                <input name="quickCode" defaultValue={editing.quickCode} placeholder="170" /></label>
               <label>Código de barras (EAN)<input name="barcode" defaultValue={editing.barcode} placeholder="7790000000000" /></label>
+              <label>SKU interno {editing.id ? "" : <span className="admin-opt">auto</span>}
+                <input name="sku" defaultValue={editing.sku} placeholder="WE-000123" /></label>
             </div>
 
             <div className="admin-grid2">

@@ -50,6 +50,7 @@ export async function posSaveProduct(data: FormData) {
     categoryId: s(data, "categoryId") || null,
     supplierId: s(data, "supplierId") || null,
     barcode: s(data, "barcode") || null,
+    quickCode: s(data, "quickCode") || null,
     sku: sku || null,
     price: n(data, "price") ?? 0, // precio botella (normal)
     promoPrice: n(data, "promoPrice"), // precio con descuento (si hay promo)
@@ -204,6 +205,7 @@ export async function createSale(input: SaleInput) {
 type ComboInput = {
   id?: string;
   name: string;
+  quickCode?: string;
   barcode?: string;
   components: { productId: string; qty: number }[];
   margin: number | null; // %
@@ -244,6 +246,7 @@ export async function saveCombo(input: ComboInput) {
     cost,
     price,
     margin,
+    quickCode: (input.quickCode || "").trim() || null,
     barcode: (input.barcode || "").trim() || null,
     active: input.active,
     categoryId: await comboCategoryId(store.id),

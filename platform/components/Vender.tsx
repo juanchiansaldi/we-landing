@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createSale } from "../app/pos/actions";
 
 type P = {
-  id: string; name: string; sku: string; barcode: string; brand: string;
+  id: string; name: string; sku: string; quickCode: string; barcode: string; brand: string;
   price: number; promo: number | null; priceCase: number | null; unitsPerCase: number; stock: number;
 };
 type Unit = "BOTELLA" | "CAJA";
@@ -39,6 +39,7 @@ export default function Vender({ catalog, store }: { catalog: P[]; store: { name
     const m = new Map<string, P>();
     for (const p of catalog) {
       if (p.barcode) m.set(p.barcode.toLowerCase(), p);
+      if (p.quickCode) m.set(p.quickCode.toLowerCase(), p);
       if (p.sku) m.set(p.sku.toLowerCase(), p);
     }
     return m;
@@ -48,7 +49,7 @@ export default function Vender({ catalog, store }: { catalog: P[]; store: { name
     const t = q.trim().toLowerCase();
     if (!t) return [];
     return catalog
-      .filter((p) => `${p.name} ${p.brand} ${p.sku} ${p.barcode}`.toLowerCase().includes(t))
+      .filter((p) => `${p.name} ${p.brand} ${p.sku} ${p.quickCode} ${p.barcode}`.toLowerCase().includes(t))
       .slice(0, 8);
   }, [q, catalog]);
 
@@ -124,7 +125,10 @@ export default function Vender({ catalog, store }: { catalog: P[]; store: { name
             <div className="vd-results">
               {results.map((p) => (
                 <button key={p.id} type="button" className="vd-res" onClick={() => { addToCart(p); setQ(""); focusInput(); }}>
-                  <div className="vd-res-name"><b>{p.name}</b>{p.brand && <em>{p.brand}</em>}</div>
+                  <div className="vd-res-name">
+                    <b>{p.quickCode && <span className="vd-code">{p.quickCode}</span>}{p.name}</b>
+                    {p.brand && <em>{p.brand}</em>}
+                  </div>
                   <div className="vd-res-meta">
                     <span>{money(p.promo ?? p.price)}</span>
                     <span className={p.stock <= 0 ? "vd-nost" : "vd-st"}>stock {p.stock}</span>

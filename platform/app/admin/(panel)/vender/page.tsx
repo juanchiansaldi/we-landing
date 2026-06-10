@@ -9,14 +9,14 @@ export default async function VenderPage() {
   const products = await prisma.product.findMany({
     where: { storeId: store.id, active: true },
     select: {
-      id: true, name: true, sku: true, barcode: true, brand: true,
+      id: true, name: true, sku: true, quickCode: true, barcode: true, brand: true,
       price: true, promoPrice: true, priceCase: true, unitsPerCase: true, stock: true,
     },
     orderBy: { name: "asc" },
   });
 
   const catalog = products.map((p) => ({
-    id: p.id, name: p.name, sku: p.sku || "", barcode: p.barcode || "", brand: p.brand || "",
+    id: p.id, name: p.name, sku: p.sku || "", quickCode: p.quickCode || "", barcode: p.barcode || "", brand: p.brand || "",
     price: p.price, promo: p.promoPrice ?? null, priceCase: p.priceCase ?? null,
     unitsPerCase: p.unitsPerCase, stock: p.stock,
   }));

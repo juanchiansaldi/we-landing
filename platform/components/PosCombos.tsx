@@ -4,16 +4,16 @@ import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { saveCombo, deleteCombo } from "../app/pos/actions";
 
-type Cat = { id: string; name: string; brand: string; cost: number; price: number };
+type Cat = { id: string; name: string; brand: string; quickCode: string; barcode: string; cost: number; price: number };
 type Comp = { productId: string; name: string; qty: number };
 type Combo = {
-  id: string; name: string; barcode: string; margin: number | null;
+  id: string; name: string; quickCode: string; barcode: string; margin: number | null;
   cost: number; price: number; active: boolean; components: Comp[];
 };
 
 const money = (n: number) => "$ " + Math.round(n).toLocaleString("es-AR");
 
-const EMPTY: Combo = { id: "", name: "", barcode: "", margin: 30, cost: 0, price: 0, active: true, components: [] };
+const EMPTY: Combo = { id: "", name: "", quickCode: "", barcode: "", margin: 30, cost: 0, price: 0, active: true, components: [] };
 
 export default function PosCombos({ combos, catalog }: { combos: Combo[]; catalog: Cat[] }) {
   const router = useRouter();
@@ -22,30 +22,40 @@ export default function PosCombos({ combos, catalog }: { combos: Combo[]; catalo
 
   // estado del editor
   const [name, setName] = useState("");
+  const [quickCode, setQuickCode] = useState("");
   const [barcode, setBarcode] = useState("");
   const [comps, setComps] = useState<Comp[]>([]);
   const [margin, setMargin] = useState<string>("30");
   const [manualPrice, setManualPrice] = useState<string>("");
-  const [pick, setPick] = useState("");
+  const [pickQ, setPickQ] = useState("");
 
   const catById = useMemo(() => new Map(catalog.map((c) => [c.id, c])), [catalog]);
 
+  const pickResults = useMemo(() => {
+    const t = pickQ.trim().toLowerCase();
+    if (!t) return [];
+    return catalog
+      .filter((p) => `${p.name} ${p.brand} ${p.quickCode} ${p.barcode}`.toLowerCase().includes(t))
+      .slice(0, 8);
+  }, [pickQ, catalog]);
+
   function open(c: Combo) {
     setEditing(c);
-    setName(c.name); setBarcode(c.barcode);
+    setName(c.name); setQuickCode(c.quickCode); setBarcode(c.barcode);
     setComps(c.components.map((x) => ({ ...x })));
     setMargin(c.margin != null ? String(c.margin) : "");
     setManualPrice(c.margin == null && c.price ? String(c.price) : "");
+    setPickQ("");
   }
 
   const cost = useMemo(() => comps.reduce((s, c) => s + (catById.get(c.productId)?.cost || 0) * c.qty, 0), [comps, catById]);
   const m = margin.trim() === "" ? null : Math.max(0, Number(margin) || 0);
   const price = m != null ? Math.round(cost * (1 + m / 100)) : 0;
 
-  function addComp() {
-    if (!pick) return;
-    setComps((cs) => cs.find((c) => c.productId === pick) ? cs : [...cs, { productId: pick, name: catById.get(pick)?.name || "", qty: 1 }]);
-    setPick("");
+  function addComp(productId: string) {
+    if (!productId) return;
+    setComps((cs) => cs.find((c) => c.productId === productId) ? cs : [...cs, { productId, name: catById.get(productId)?.name || "", qty: 1 }]);
+    setPickQ("");
   }
   function setQty(id: string, qty: number) {
     setComps((cs) => qty <= 0 ? cs.filter((c) => c.productId !== id) : cs.map((c) => c.productId === id ? { ...c, qty } : c));
@@ -57,6 +67,7 @@ export default function PosCombos({ combos, catalog }: { combos: Combo[]; catalo
       const res = await saveCombo({
         id: editing?.id || undefined,
         name: name.trim(),
+        quickCode: quickCode.trim(),
         barcode: barcode.trim(),
         components: comps.map((c) => ({ productId: c.productId, qty: c.qty })),
         margin: m,
@@ -91,7 +102,7 @@ export default function PosCombos({ combos, catalog }: { combos: Combo[]; catalo
         {combos.length === 0 && <div className="admin-empty">Sin combos. Creá el primero.</div>}
         {combos.map((c) => (
           <div className="admin-tr" key={c.id} style={{ gridTemplateColumns: "1.6fr 1.4fr .7fr .6fr .8fr 1fr", opacity: c.active ? 1 : 0.5 }}>
-            <span className="admin-name"><b>{c.name}</b>{!c.active && <em>inactivo</em>}</span>
+            <span className="admin-name"><b>{c.quickCode && <span className="vd-code">{c.quickCode}</span>}{c.name}</b>{!c.active && <em>inactivo</em>}</span>
             <span style={{ fontSize: ".82rem", color: "var(--gray)" }}>{c.components.map((x) => `${x.qty}× ${x.name}`).join(" + ")}</span>
             <span style={{ color: "var(--gray)" }}>{money(c.cost)}</span>
             <span>{c.margin != null ? `${c.margin}%` : "—"}</span>
@@ -108,18 +119,26 @@ export default function PosCombos({ combos, catalog }: { combos: Combo[]; catalo
         <div className="admin-modal" onClick={() => !pending && setEditing(null)}>
           <form className="admin-card admin-editor" style={{ width: "min(620px,100%)" }} onClick={(e) => e.stopPropagation()} onSubmit={(e) => { e.preventDefault(); onSave(); }}>
             <h2 className="serif">{editing.id ? "Editar combo" : "Nuevo combo"}</h2>
+            <label>Nombre *<input value={name} onChange={(e) => setName(e.target.value)} placeholder="Fernet + 2 Cocas" required /></label>
             <div className="admin-grid2">
-              <label>Nombre *<input value={name} onChange={(e) => setName(e.target.value)} placeholder="Fernet + 2 Cocas" required /></label>
+              <label>Código rápido del combo <span className="admin-opt">tipear en caja</span>
+                <input value={quickCode} onChange={(e) => setQuickCode(e.target.value)} placeholder="191" /></label>
               <label>Código de barras<input value={barcode} onChange={(e) => setBarcode(e.target.value)} placeholder="opcional" /></label>
             </div>
 
             <label>Productos que lleva</label>
-            <div className="combo-pick">
-              <select value={pick} onChange={(e) => setPick(e.target.value)}>
-                <option value="">— Elegí un producto —</option>
-                {catalog.map((p) => <option key={p.id} value={p.id}>{p.name}{p.brand ? ` · ${p.brand}` : ""} ({money(p.cost)} costo)</option>)}
-              </select>
-              <button type="button" className="btn btn-ghost" onClick={addComp} disabled={!pick}>Agregar</button>
+            <div className="combo-pick-wrap">
+              <input className="combo-search" value={pickQ} onChange={(e) => setPickQ(e.target.value)} placeholder="Buscá por nombre o código (ej. coca, 170)…" autoComplete="off" />
+              {pickResults.length > 0 && (
+                <div className="combo-results">
+                  {pickResults.map((p) => (
+                    <button key={p.id} type="button" className="combo-result" onClick={() => addComp(p.id)}>
+                      <span>{p.quickCode && <span className="vd-code">{p.quickCode}</span>}{p.name}{p.brand ? ` · ${p.brand}` : ""}</span>
+                      <span className="pos-muted">{money(p.cost)} costo</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="combo-comps">
               {comps.length === 0 && <span className="pos-muted">Todavía no agregaste productos.</span>}

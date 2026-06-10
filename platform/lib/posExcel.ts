@@ -1,6 +1,7 @@
 // Columnas del Excel de productos (mismas para plantilla, exportar e importar).
 export const COLS = [
   "SKU",
+  "Codigo_Rapido",
   "Codigo_Barras",
   "Nombre",
   "Bodega",
@@ -21,6 +22,7 @@ export const COLS = [
 
 export const EXAMPLE_ROW: Record<string, string | number> = {
   SKU: "",
+  Codigo_Rapido: "170",
   Codigo_Barras: "7791234567890",
   Nombre: "Malbec Reserva 2022",
   Bodega: "Finca Ejemplo",
@@ -42,6 +44,7 @@ export const EXAMPLE_ROW: Record<string, string | number> = {
 export function productToRow(p: any): Record<string, any> {
   return {
     SKU: p.sku || "",
+    Codigo_Rapido: p.quickCode || "",
     Codigo_Barras: p.barcode || "",
     Nombre: p.name,
     Bodega: p.brand || "",
@@ -75,6 +78,7 @@ const flt = (v: any) => {
 export function rowToFields(r: Record<string, any>) {
   return {
     sku: String(r.SKU ?? "").trim() || null,
+    quickCode: String(r.Codigo_Rapido ?? "").trim() || null,
     barcode: String(r.Codigo_Barras ?? "").trim() || null,
     name: String(r.Nombre ?? "").trim(),
     brand: String(r.Bodega ?? "").trim() || null,

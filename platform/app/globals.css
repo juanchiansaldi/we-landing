@@ -548,3 +548,12 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .combo-calc>div{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.85rem;color:var(--gray)}
 .combo-calc b{color:var(--white);font-family:'Spectral'}
 .combo-calc input{width:110px;background:var(--bg);border:1px solid var(--border2);border-radius:8px;color:var(--white);font-family:inherit;padding:.35rem .5rem;text-align:right}
+
+/* código rápido (chip) + buscador de componentes en combos */
+.vd-code{display:inline-block;background:var(--red);color:#fff;font-size:.7rem;font-weight:700;padding:.1rem .4rem;border-radius:6px;margin-right:6px;font-family:'DM Sans';vertical-align:middle}
+.combo-pick-wrap{position:relative}
+.combo-search{width:100%;background:var(--surf2);border:1px solid var(--border2);border-radius:9px;color:var(--white);font-family:inherit;font-size:.9rem;padding:.6rem .75rem;outline:none}
+.combo-search:focus{border-color:var(--red)}
+.combo-results{display:flex;flex-direction:column;gap:5px;margin-top:6px;max-height:220px;overflow-y:auto}
+.combo-result{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surf2);border:1px solid var(--border);border-radius:9px;padding:.5rem .7rem;cursor:pointer;text-align:left;font-family:inherit;color:inherit;font-size:.88rem}
+.combo-result:hover{border-color:var(--red)}
