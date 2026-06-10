@@ -67,10 +67,10 @@ export default function AdminOrders({ orders }: { orders: Order[] }) {
       fd.set("file", file);
       const res = await fetch("/api/admin/receipt", { method: "POST", body: fd });
       const j = await res.json().catch(() => ({}));
-      if (res.ok && j.url) {
+      if (res.ok && j.key) {
         const f2 = new FormData();
         f2.set("id", id);
-        f2.set("url", j.url);
+        f2.set("url", j.key); // guardamos el path; se firma al verlo
         await setOrderReceipt(f2);
         router.refresh();
       } else {
@@ -181,7 +181,7 @@ export default function AdminOrders({ orders }: { orders: Order[] }) {
                         <input type="file" accept="image/*,application/pdf" hidden
                           onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadReceipt(o.id, f); e.target.value = ""; }} />
                       </label>
-                      {o.receiptUrl && <a className="op-view" href={o.receiptUrl} target="_blank" rel="noopener">Ver comprobante ↗</a>}
+                      {o.receiptUrl && <a className="op-view" href={`/api/admin/receipt/view?key=${encodeURIComponent(o.receiptUrl)}`} target="_blank" rel="noopener">Ver comprobante ↗</a>}
                     </div>
                   </div>
                 </div>

@@ -1,7 +1,10 @@
+import { randomBytes } from "crypto";
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { isAuthed } from "../../../../lib/auth";
 
+// Comprobantes = datos sensibles (banco, montos, nombres). Bucket PRIVADO,
+// key con randomBytes, y se sirven con URL firmada de corta duración (ver route view).
 const BUCKET = "comprobantes";
 const ALLOWED: Record<string, string> = {
   jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", webp: "image/webp", pdf: "application/pdf",
@@ -36,12 +39,14 @@ export async function POST(req: Request) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     { auth: { persistSession: false } }
   );
-  await admin.storage.createBucket(BUCKET, { public: true }).catch(() => {});
+  // bucket privado (idempotente: si existe público, lo bajamos a privado)
+  await admin.storage.createBucket(BUCKET, { public: false }).catch(() => {});
+  await admin.storage.updateBucket(BUCKET, { public: false }).catch(() => {});
 
-  const key = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const key = `${Date.now()}-${randomBytes(16).toString("hex")}.${ext}`;
   const { error } = await admin.storage.from(BUCKET).upload(key, buffer, { contentType: real, upsert: false });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  const { data } = admin.storage.from(BUCKET).getPublicUrl(key);
-  return NextResponse.json({ url: data.publicUrl });
+  // guardamos solo el path (no una URL pública); se firma al verlo
+  return NextResponse.json({ key });
 }
