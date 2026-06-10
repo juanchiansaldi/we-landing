@@ -22,6 +22,17 @@ function LoginInner() {
   const [msg, setMsg] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // traduce errores de Supabase (vienen en inglés) a español
+  function esError(m: string): string {
+    const s = (m || "").toLowerCase();
+    if (s.includes("invalid") && s.includes("email")) return "Ese email no es válido.";
+    if (s.includes("already") || s.includes("registered")) return "Ya existe una cuenta con ese email. Probá entrar.";
+    if (s.includes("rate") || s.includes("too many") || s.includes("limit")) return "Demasiados intentos. Esperá un minuto y probá de nuevo.";
+    if (s.includes("password") && s.includes("least")) return "La contraseña tiene que tener al menos 6 caracteres.";
+    if (s.includes("invalid login") || s.includes("credentials")) return "Email o contraseña incorrectos.";
+    return "No se pudo. Probá de nuevo en un momento.";
+  }
+
   async function magicLink(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -31,7 +42,7 @@ function LoginInner() {
       options: { emailRedirectTo: `${location.origin}/auth/callback?next=${encodeURIComponent(next)}` },
     });
     setLoading(false);
-    if (error) setMsg({ kind: "err", text: error.message });
+    if (error) setMsg({ kind: "err", text: esError(error.message) });
     else setMsg({ kind: "ok", text: "Te mandamos un link a tu email. Abrilo para entrar." });
   }
 
@@ -49,7 +60,7 @@ function LoginInner() {
         },
       });
       setLoading(false);
-      if (error) return setMsg({ kind: "err", text: error.message });
+      if (error) return setMsg({ kind: "err", text: esError(error.message) });
       setMsg({ kind: "ok", text: "Cuenta creada. Revisá tu email para confirmarla y ya entrás." });
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
