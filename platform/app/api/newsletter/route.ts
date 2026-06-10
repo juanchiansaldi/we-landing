@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../../lib/prisma";
+import { rateLimit, clientIp } from "../../../lib/ratelimit";
 
 const STORE_SLUG = process.env.DEFAULT_STORE_SLUG || "we";
 
 export async function POST(req: Request) {
+  if (!rateLimit(`news:${clientIp(req)}`, 5, 60_000)) {
+    return NextResponse.json({ error: "Demasiados intentos. Esperá un minuto." }, { status: 429 });
+  }
   const body = await req.json().catch(() => ({}));
   const email = String(body?.email || "").trim().toLowerCase();
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
