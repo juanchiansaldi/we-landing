@@ -618,3 +618,20 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .vd-tag.on{border-color:#3fb950;color:#3fb950}
 .vd-tag.warn{border-color:var(--red);color:var(--red)}
 .vd-client{flex:1;background:var(--surf2);border:1px solid var(--border2);border-radius:8px;color:var(--white);font-family:inherit;padding:.45rem .6rem;max-width:60%}
+
+/* ═══════════ Pantalla de carga de marca (la copa que se llena) ═══════════ */
+.we-load{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;
+  min-height:70vh;position:relative;background:#0d0a0a;overflow:hidden;padding:40px}
+.we-load-full{position:fixed;inset:0;min-height:100vh;z-index:9999}
+.we-load-glow{position:absolute;width:340px;height:340px;border-radius:50%;
+  background:radial-gradient(circle,rgba(241,44,54,.28),transparent 65%);filter:blur(55px);pointer-events:none}
+.we-load-iso{position:relative;animation:weLoadBob 8s ease-in-out infinite}
+@keyframes weLoadBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.we-load-iso svg{height:230px;width:auto;display:block;filter:drop-shadow(0 24px 40px rgba(241,44,54,.28))}
+.we-load-empty{fill:rgba(241,233,220,.09)}
+.we-load-cap{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;position:relative}
+.we-load-t{font-family:'Spectral',serif;font-size:1.1rem;color:#f1e9dc}
+.we-load-s{font-size:.7rem;letter-spacing:.32em;text-transform:uppercase;color:#8a8079}
+.we-load-dots::after{content:'';animation:weLoadDots 1.6s steps(4,end) infinite}
+@keyframes weLoadDots{0%{content:''}25%{content:'·'}50%{content:'· ·'}75%{content:'· · ·'}}
+@media (prefers-reduced-motion:reduce){.we-load-iso{animation:none}}
