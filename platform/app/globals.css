@@ -563,3 +563,58 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .vd-print input{width:18px;height:18px;accent-color:var(--red);cursor:pointer}
 .vd-print span{font-size:.9rem;color:var(--white)}
 .vd-print em{font-size:.75rem;color:var(--gray);font-style:normal;margin-left:auto}
+
+/* ═══════════ POS Fases 3-8 (Stock, Compras, Clientes, Usuarios, Caja) ═══════════ */
+/* KPIs reutilizables */
+.dash-kpi{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.dash-kpi span{font-size:.78rem;color:var(--gray)}
+.dash-kpi b{font-size:1.4rem;font-family:var(--font-spectral)}
+
+/* toolbar (buscador + filtros) */
+.admin-toolbar{display:flex;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+.admin-search{flex:1;min-width:200px;background:var(--surf2);border:1px solid var(--border2);border-radius:10px;color:var(--white);font-family:inherit;font-size:.9rem;padding:.6rem .8rem;outline:none}
+.admin-search:focus{border-color:var(--red)}
+
+/* stock semáforo */
+.stk-ok{color:#3fb950}
+.stk-low{color:var(--red)}
+
+/* segmento (toggle 2 opciones) */
+.seg{display:flex;gap:6px;background:var(--surf2);border:1px solid var(--border);border-radius:11px;padding:4px;margin:6px 0}
+.seg button{flex:1;background:none;border:none;color:var(--gray);font-family:inherit;font-size:.85rem;padding:.5rem;border-radius:8px;cursor:pointer}
+.seg button.on{background:var(--red);color:#fff;font-weight:600}
+
+/* compras: líneas de productos */
+.buy-lines{display:flex;flex-direction:column;gap:8px;margin:4px 0 10px;max-height:260px;overflow-y:auto}
+.buy-line{display:flex;align-items:center;gap:10px;background:var(--surf2);border:1px solid var(--border);border-radius:10px;padding:.5rem .7rem}
+.buy-name{flex:1;font-size:.88rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.buy-f{display:flex;flex-direction:column;font-size:.68rem;color:var(--gray);gap:2px}
+.buy-f input{width:72px;background:var(--surf);border:1px solid var(--border2);border-radius:7px;color:var(--white);font-family:inherit;padding:.3rem .4rem}
+.buy-sub{font-family:var(--font-spectral);min-width:78px;text-align:right}
+.buy-total{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:12px;margin-top:6px}
+.buy-total b{font-family:var(--font-spectral);font-size:1.3rem;color:var(--red)}
+
+/* clientes: historial cuenta corriente */
+.cc-hist{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto}
+.cc-row{display:grid;grid-template-columns:.9fr 1.1fr 1fr .9fr;gap:8px;align-items:center;font-size:.8rem;padding:.35rem 0;border-bottom:1px solid var(--border)}
+
+/* caja */
+.cash-open{max-width:640px}
+.cash-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.cash-open-row{display:flex;gap:10px;margin-top:8px}
+.cash-open-row input{flex:1;background:var(--surf2);border:1px solid var(--border2);border-radius:10px;color:var(--white);font-family:inherit;font-size:1rem;padding:.6rem .8rem}
+.cash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:6px 0 16px}
+.cash-cell{background:var(--surf2);border:1px solid var(--border);border-radius:11px;padding:10px 12px;display:flex;flex-direction:column;gap:3px}
+.cash-cell span{font-size:.74rem;color:var(--gray)}
+.cash-cell b{font-family:var(--font-spectral);font-size:1.1rem}
+.cash-strong{border-color:var(--red)}
+.cash-strong b{color:var(--red)}
+.cash-close{border-top:1px solid var(--border);padding-top:14px}
+
+/* vender: barra vendedor/caja + selector cliente */
+.vd-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.vd-bar-tags{display:flex;gap:8px}
+.vd-tag{font-size:.74rem;padding:.25rem .6rem;border-radius:20px;background:var(--surf2);border:1px solid var(--border);color:var(--gray)}
+.vd-tag.on{border-color:#3fb950;color:#3fb950}
+.vd-tag.warn{border-color:var(--red);color:var(--red)}
+.vd-client{flex:1;background:var(--surf2);border:1px solid var(--border2);border-radius:8px;color:var(--white);font-family:inherit;padding:.45rem .6rem;max-width:60%}

@@ -8,7 +8,9 @@ type P = {
   id: string; name: string; sku: string; quickCode: string; barcode: string; brand: string;
   price: number; promo: number | null; priceCase: number | null; unitsPerCase: number; stock: number;
 };
+type Client = { id: string; name: string; ccBalance: number };
 type Unit = "BOTELLA" | "CAJA";
+type Pay = "EFECTIVO" | "TARJETA" | "TRANSFERENCIA" | "CUENTA_CORRIENTE";
 type Line = { p: P; unit: Unit; qty: number };
 type Ticket = {
   code: string;
@@ -20,12 +22,15 @@ const money = (n: number) => "$ " + Math.round(n).toLocaleString("es-AR");
 const unitPrice = (p: P, unit: Unit) =>
   unit === "CAJA" ? (p.priceCase ?? p.price * p.unitsPerCase) : (p.promo ?? p.price);
 
-export default function Vender({ catalog, store }: { catalog: P[]; store: { name: string } }) {
+export default function Vender({ catalog, clients, store, sellerName, cashOpen }: {
+  catalog: P[]; clients: Client[]; store: { name: string }; sellerName: string | null; cashOpen: boolean;
+}) {
   const router = useRouter();
   const [q, setQ] = useState("");
   const [cart, setCart] = useState<Line[]>([]);
   const [discount, setDiscount] = useState(0);
-  const [pay, setPay] = useState<"EFECTIVO" | "TARJETA" | "TRANSFERENCIA">("EFECTIVO");
+  const [pay, setPay] = useState<Pay>("EFECTIVO");
+  const [customerId, setCustomerId] = useState("");
   const [cashGiven, setCashGiven] = useState("");
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [printTicket, setPrintTicket] = useState(false); // apagado por default: no se factura todo
@@ -88,15 +93,17 @@ export default function Vender({ catalog, store }: { catalog: P[]; store: { name
 
   function cobrar() {
     if (!cart.length || pending) return;
+    if (pay === "CUENTA_CORRIENTE" && !customerId) { alert("Elegí un cliente para la cuenta corriente"); return; }
     start(async () => {
       const res = await createSale({
         items: cart.map((l) => ({ productId: l.p.id, unit: l.unit, qty: l.qty })),
         discount,
         payMethod: pay,
+        customerId: pay === "CUENTA_CORRIENTE" ? customerId : undefined,
       });
       if (res.ok && res.ticket) {
         const t = res.ticket as Ticket;
-        setCart([]); setDiscount(0); setCashGiven(""); setQ("");
+        setCart([]); setDiscount(0); setCashGiven(""); setQ(""); setCustomerId("");
         router.refresh();
         if (printTicket) {
           // solo cuando el vendedor lo pidió: mostramos el ticket y abrimos impresión
@@ -118,7 +125,13 @@ export default function Vender({ catalog, store }: { catalog: P[]; store: { name
       <div className="vender-grid">
         {/* IZQUIERDA: escáner + búsqueda */}
         <div className="vd-left">
-          <h1 className="serif" style={{ fontSize: "1.5rem", marginBottom: 12 }}>Vender</h1>
+          <div className="vd-bar">
+            <h1 className="serif" style={{ fontSize: "1.5rem" }}>Vender</h1>
+            <div className="vd-bar-tags">
+              <span className={sellerName ? "vd-tag on" : "vd-tag"}>{sellerName ? `👤 ${sellerName}` : "Sin vendedor"}</span>
+              <span className={cashOpen ? "vd-tag on" : "vd-tag warn"}>{cashOpen ? "Caja abierta" : "Caja cerrada"}</span>
+            </div>
+          </div>
           <div className="vd-scan">
             <input
               ref={inputRef}
@@ -192,12 +205,21 @@ export default function Vender({ catalog, store }: { catalog: P[]; store: { name
             <div className="vd-row vd-total"><span>Total</span><b>{money(total)}</b></div>
 
             <div className="vd-pays">
-              {(["EFECTIVO", "TARJETA", "TRANSFERENCIA"] as const).map((m) => (
+              {(["EFECTIVO", "TARJETA", "TRANSFERENCIA", "CUENTA_CORRIENTE"] as const).map((m) => (
                 <button key={m} type="button" className={pay === m ? "on" : ""} onClick={() => setPay(m)}>
-                  {m === "EFECTIVO" ? "Efectivo" : m === "TARJETA" ? "Tarjeta" : "Transfer."}
+                  {m === "EFECTIVO" ? "Efectivo" : m === "TARJETA" ? "Tarjeta" : m === "TRANSFERENCIA" ? "Transfer." : "Cta. corr."}
                 </button>
               ))}
             </div>
+            {pay === "CUENTA_CORRIENTE" && (
+              <div className="vd-row">
+                <span>Cliente</span>
+                <select className="vd-client" value={customerId} onChange={(e) => setCustomerId(e.target.value)}>
+                  <option value="">— Elegí un cliente —</option>
+                  {clients.map((c) => <option key={c.id} value={c.id}>{c.name}{c.ccBalance > 0 ? ` (debe ${money(c.ccBalance)})` : ""}</option>)}
+                </select>
+              </div>
+            )}
             {pay === "EFECTIVO" && cart.length > 0 && (
               <div className="vd-row">
                 <span>Paga con</span>

@@ -5,16 +5,21 @@ import { usePathname, useRouter } from "next/navigation";
 const LINKS = [
   { href: "/admin", label: "Inicio" },
   { href: "/admin/vender", label: "Vender" },
+  { href: "/admin/caja", label: "Caja" },
   { href: "/admin/productos", label: "Productos" },
+  { href: "/admin/stock", label: "Stock" },
+  { href: "/admin/compras", label: "Compras" },
   { href: "/admin/categorias", label: "Categorías" },
   { href: "/admin/proveedores", label: "Proveedores" },
   { href: "/admin/combos", label: "Combos" },
+  { href: "/admin/clientes", label: "Clientes" },
   { href: "/admin/pedidos", label: "Pedidos" },
   { href: "/admin/cupones", label: "Cupones" },
+  { href: "/admin/usuarios", label: "Usuarios" },
   { href: "/admin/reportes", label: "Reportes" },
 ];
 
-const SOON = ["Stock", "Caja"];
+const SOON: string[] = [];
 
 export default function AdminNav() {
   const path = usePathname();

@@ -1,8 +1,16 @@
 "use server";
 
+import crypto from "crypto";
+import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { prisma } from "../../lib/prisma";
-import { posGuard, getStore, nextSku, slugify } from "../../lib/pos";
+import { posGuard, getStore, nextSku, slugify, POS_USER_COOKIE } from "../../lib/pos";
+
+function hashPassword(pw: string): string {
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hash = crypto.scryptSync(pw, salt, 64).toString("hex");
+  return `${salt}:${hash}`;
+}
 
 function s(d: FormData, k: string): string {
   return String(d.get(k) || "").trim();
@@ -100,10 +108,12 @@ export async function posDeleteProduct(data: FormData) {
 }
 
 // ───────── Venta (POS) ─────────
+type PayMethodIn = "EFECTIVO" | "TARJETA" | "TRANSFERENCIA" | "CUENTA_CORRIENTE";
 type SaleInput = {
   items: { productId: string; unit: "BOTELLA" | "CAJA"; qty: number }[];
   discount: number;
-  payMethod: "EFECTIVO" | "TARJETA" | "TRANSFERENCIA";
+  payMethod: PayMethodIn;
+  customerId?: string; // requerido si payMethod = CUENTA_CORRIENTE
 };
 
 export async function createSale(input: SaleInput) {
@@ -137,12 +147,27 @@ export async function createSale(input: SaleInput) {
   const subtotal = lines.reduce((s, l) => s + l.subtotal, 0);
   const discount = Math.max(0, Math.min(Math.floor(input.discount || 0), subtotal));
   const total = subtotal - discount;
-  const pm = ["EFECTIVO", "TARJETA", "TRANSFERENCIA"].includes(input.payMethod) ? input.payMethod : "EFECTIVO";
+  const pm = (["EFECTIVO", "TARJETA", "TRANSFERENCIA", "CUENTA_CORRIENTE"].includes(input.payMethod) ? input.payMethod : "EFECTIVO") as PayMethodIn;
+
+  // cuenta corriente: necesita cliente
+  let customer = null as null | { id: string; name: string | null; ccBalance: number };
+  if (pm === "CUENTA_CORRIENTE") {
+    if (!input.customerId) return { ok: false, error: "Elegí un cliente para la cuenta corriente" };
+    customer = await prisma.customer.findFirst({ where: { id: input.customerId, storeId: store.id }, select: { id: true, name: true, ccBalance: true } });
+    if (!customer) return { ok: false, error: "Cliente no encontrado" };
+  }
+
+  // caja abierta (si hay) + vendedor activo (cookie)
+  const openCashSession = await prisma.cashSession.findFirst({ where: { storeId: store.id, status: "ABIERTA" }, orderBy: { openedAt: "desc" }, select: { id: true } });
+  const posUserId = cookies().get(POS_USER_COOKIE)?.value || null;
 
   const sale = await prisma.$transaction(async (tx) => {
     const created = await tx.sale.create({
       data: {
         storeId: store.id,
+        posUserId,
+        customerId: customer?.id ?? null,
+        cashSessionId: openCashSession?.id ?? null,
         subtotal,
         discount,
         total,
@@ -150,6 +175,7 @@ export async function createSale(input: SaleInput) {
         payCash: pm === "EFECTIVO" ? total : 0,
         payCard: pm === "TARJETA" ? total : 0,
         payTransfer: pm === "TRANSFERENCIA" ? total : 0,
+        payAccount: pm === "CUENTA_CORRIENTE" ? total : 0,
         items: {
           create: lines.map((l) => ({
             productId: l.p.id,
@@ -163,6 +189,15 @@ export async function createSale(input: SaleInput) {
         },
       },
     });
+
+    // cuenta corriente: cargo al saldo del cliente + asiento en el ledger
+    if (customer && pm === "CUENTA_CORRIENTE") {
+      const resulting = customer.ccBalance + total;
+      await tx.customer.update({ where: { id: customer.id }, data: { ccBalance: resulting } });
+      await tx.customerLedger.create({
+        data: { customerId: customer.id, type: "CARGO", amount: total, refSaleId: created.id, resultingBalance: resulting, note: `Venta #${created.id.slice(-6).toUpperCase()}` },
+      });
+    }
     // descontar stock + ledger. Si es combo, descuenta cada componente.
     for (const l of lines) {
       if (l.p.isKit && l.p.kitOf?.length) {
@@ -186,6 +221,9 @@ export async function createSale(input: SaleInput) {
   revalidatePath("/admin");
   revalidatePath("/admin/productos");
   revalidatePath("/admin/reportes");
+  revalidatePath("/admin/stock");
+  revalidatePath("/admin/caja");
+  revalidatePath("/admin/clientes");
   revalidatePath("/");
 
   return {
@@ -364,4 +402,242 @@ export async function posDeleteSupplier(data: FormData) {
     await prisma.supplier.delete({ where: { id } }).catch(() => {});
   }
   revalidatePath("/admin/proveedores");
+}
+
+// ═══════════════ Fase 3 · Stock ═══════════════
+/** Ajuste manual de stock: conteo físico, merma, rotura, etc. Escribe ledger + Product.stock. */
+export async function posAdjustStock(data: FormData) {
+  posGuard();
+  const store = await getStore();
+  const productId = s(data, "productId");
+  const mode = s(data, "mode"); // "set" (contar) | "delta" (sumar/restar)
+  const reason = s(data, "reason") || "ajuste";
+  const value = n(data, "value") ?? 0;
+  if (!productId) return { ok: false, error: "Falta el producto" };
+
+  const prod = await prisma.product.findFirst({ where: { id: productId, storeId: store.id }, select: { id: true, stock: true } });
+  if (!prod) return { ok: false, error: "Producto no encontrado" };
+
+  let delta = mode === "set" ? value - prod.stock : value;
+  if (delta === 0) return { ok: true };
+
+  const posUserId = cookies().get(POS_USER_COOKIE)?.value || null;
+  await prisma.$transaction(async (tx) => {
+    const updated = await tx.product.update({ where: { id: productId }, data: { stock: { increment: delta } } });
+    await tx.stockMovement.create({
+      data: {
+        storeId: store.id, productId, type: delta > 0 ? "INGRESO" : "EGRESO",
+        qty: delta, reason: reason || "ajuste", refType: "ajuste", posUserId, resultingStock: updated.stock,
+      },
+    });
+  });
+  revalidatePath("/admin/stock");
+  revalidatePath("/admin/productos");
+  revalidatePath("/admin");
+  return { ok: true };
+}
+
+// ═══════════════ Fase 5 · Compras ═══════════════
+type PurchaseInput = {
+  supplierId?: string;
+  invoiceNumber?: string;
+  note?: string;
+  updateCost: boolean; // si true, actualiza el costo del producto al costo de esta compra
+  items: { productId: string; qty: number; unitCost: number }[];
+};
+
+export async function posSavePurchase(input: PurchaseInput) {
+  posGuard();
+  const store = await getStore();
+  const items = (input.items || []).filter((i) => i.productId && i.qty > 0);
+  if (!items.length) return { ok: false, error: "Agregá al menos un producto" };
+
+  const prods = await prisma.product.findMany({ where: { storeId: store.id, id: { in: items.map((i) => i.productId) } }, select: { id: true } });
+  const valid = new Set(prods.map((p) => p.id));
+  const lines = items.filter((i) => valid.has(i.productId)).map((i) => ({
+    productId: i.productId, qty: Math.max(1, Math.floor(i.qty)), unitCost: Math.max(0, Math.floor(i.unitCost || 0)),
+  }));
+  if (!lines.length) return { ok: false, error: "Sin productos válidos" };
+
+  const total = lines.reduce((sm, l) => sm + l.unitCost * l.qty, 0);
+  const posUserId = cookies().get(POS_USER_COOKIE)?.value || null;
+
+  await prisma.$transaction(async (tx) => {
+    const purchase = await tx.purchase.create({
+      data: {
+        storeId: store.id,
+        supplierId: input.supplierId || null,
+        invoiceNumber: (input.invoiceNumber || "").trim() || null,
+        note: (input.note || "").trim() || null,
+        total,
+        items: { create: lines.map((l) => ({ productId: l.productId, qty: l.qty, unitCost: l.unitCost, subtotal: l.unitCost * l.qty })) },
+      },
+    });
+    for (const l of lines) {
+      const updated = await tx.product.update({
+        where: { id: l.productId },
+        data: { stock: { increment: l.qty }, ...(input.updateCost && l.unitCost > 0 ? { cost: l.unitCost } : {}) },
+      });
+      await tx.stockMovement.create({
+        data: { storeId: store.id, productId: l.productId, type: "INGRESO", qty: l.qty, reason: "compra", refType: "purchase", refId: purchase.id, posUserId, resultingStock: updated.stock },
+      });
+    }
+  });
+
+  // si se actualizaron costos, recalcular combos afectados
+  if (input.updateCost) {
+    for (const l of lines) await recomputeCombosForProduct(store.id, l.productId);
+  }
+
+  revalidatePath("/admin/compras");
+  revalidatePath("/admin/stock");
+  revalidatePath("/admin/productos");
+  revalidatePath("/admin");
+  return { ok: true, total };
+}
+
+// ═══════════════ Fase 6 · Clientes / Cuenta corriente ═══════════════
+export async function posSaveCustomer(data: FormData) {
+  posGuard();
+  const store = await getStore();
+  const id = s(data, "id");
+  const name = s(data, "name");
+  const email = s(data, "email");
+  if (!name && !email) return;
+  const fields = {
+    name: name || null,
+    phone: s(data, "phone") || null,
+    cuit: s(data, "cuit") || null,
+    vip: data.get("vip") === "on",
+  };
+  if (id) {
+    await prisma.customer.update({ where: { id }, data: fields });
+  } else {
+    // email es @unique por tienda; si no ponen, generamos uno interno
+    const mail = email || `cliente-${Date.now()}@local.we`;
+    await prisma.customer.create({ data: { ...fields, email: mail, storeId: store.id } });
+  }
+  revalidatePath("/admin/clientes");
+}
+
+export async function posDeleteCustomer(data: FormData) {
+  posGuard();
+  const id = s(data, "id");
+  if (!id) return;
+  const orders = await prisma.order.count({ where: { customerId: id } });
+  const sales = await prisma.sale.count({ where: { customerId: id } });
+  if (orders > 0 || sales > 0) return { ok: false, error: "El cliente tiene movimientos; no se puede borrar" };
+  await prisma.customerLedger.deleteMany({ where: { customerId: id } });
+  await prisma.customer.delete({ where: { id } }).catch(() => {});
+  revalidatePath("/admin/clientes");
+  return { ok: true };
+}
+
+/** Asiento manual en la cuenta corriente: CARGO (le fío) o PAGO (me pagó). */
+export async function posLedgerEntry(data: FormData) {
+  posGuard();
+  const store = await getStore();
+  const customerId = s(data, "customerId");
+  const type = s(data, "type") === "PAGO" ? "PAGO" : "CARGO";
+  const amount = Math.abs(n(data, "amount") ?? 0);
+  const note = s(data, "note") || null;
+  if (!customerId || amount <= 0) return { ok: false, error: "Falta cliente o monto" };
+
+  const customer = await prisma.customer.findFirst({ where: { id: customerId, storeId: store.id }, select: { id: true, ccBalance: true } });
+  if (!customer) return { ok: false, error: "Cliente no encontrado" };
+
+  const resulting = type === "CARGO" ? customer.ccBalance + amount : customer.ccBalance - amount;
+  await prisma.$transaction(async (tx) => {
+    await tx.customer.update({ where: { id: customerId }, data: { ccBalance: resulting } });
+    await tx.customerLedger.create({ data: { customerId, type: type as any, amount, resultingBalance: resulting, note } });
+  });
+  revalidatePath("/admin/clientes");
+  return { ok: true };
+}
+
+// ═══════════════ Fase 7 · Usuarios / roles (POS) ═══════════════
+export async function posSaveUser(data: FormData) {
+  posGuard();
+  const store = await getStore();
+  const id = s(data, "id");
+  const username = s(data, "username").toLowerCase().replace(/\s+/g, "");
+  const nombre = s(data, "nombre");
+  const role = s(data, "role") === "ADMIN" ? "ADMIN" : "VENDEDOR";
+  const activo = data.get("activo") === "on";
+  const password = s(data, "password");
+  if (!username || !nombre) return { ok: false, error: "Falta usuario o nombre" };
+
+  if (id) {
+    const fields: any = { nombre, role, activo };
+    if (password) fields.passwordHash = hashPassword(password);
+    await prisma.posUser.update({ where: { id }, data: fields });
+  } else {
+    if (!password) return { ok: false, error: "Poné una contraseña" };
+    const exists = await prisma.posUser.findFirst({ where: { storeId: store.id, username } });
+    if (exists) return { ok: false, error: "Ese usuario ya existe" };
+    await prisma.posUser.create({ data: { storeId: store.id, username, nombre, role: role as any, activo, passwordHash: hashPassword(password) } });
+  }
+  revalidatePath("/admin/usuarios");
+  return { ok: true };
+}
+
+export async function posDeleteUser(data: FormData) {
+  posGuard();
+  const id = s(data, "id");
+  if (!id) return;
+  const sales = await prisma.sale.count({ where: { posUserId: id } });
+  if (sales > 0) {
+    await prisma.posUser.update({ where: { id }, data: { activo: false } }).catch(() => {});
+  } else {
+    await prisma.posUser.delete({ where: { id } }).catch(() => {});
+  }
+  revalidatePath("/admin/usuarios");
+  return { ok: true };
+}
+
+/** Elegir el vendedor activo (se guarda en cookie, estampa las ventas). */
+export async function setActiveSeller(data: FormData) {
+  posGuard();
+  const id = s(data, "id");
+  const c = cookies();
+  if (id) c.set(POS_USER_COOKIE, id, { httpOnly: true, sameSite: "lax", path: "/", maxAge: 86400 * 30 });
+  else c.delete(POS_USER_COOKIE);
+  revalidatePath("/admin/vender");
+  revalidatePath("/admin/usuarios");
+}
+
+// ═══════════════ Fase 8 · Caja ═══════════════
+export async function openCash(data: FormData) {
+  posGuard();
+  const store = await getStore();
+  const already = await prisma.cashSession.findFirst({ where: { storeId: store.id, status: "ABIERTA" } });
+  if (already) return { ok: false, error: "Ya hay una caja abierta" };
+  const openingAmount = n(data, "openingAmount") ?? 0;
+  const posUserId = cookies().get(POS_USER_COOKIE)?.value || null;
+  await prisma.cashSession.create({ data: { storeId: store.id, openingAmount, openedById: posUserId, note: s(data, "note") || null } });
+  revalidatePath("/admin/caja");
+  revalidatePath("/admin/vender");
+  return { ok: true };
+}
+
+export async function closeCash(data: FormData) {
+  posGuard();
+  const store = await getStore();
+  const session = await prisma.cashSession.findFirst({ where: { storeId: store.id, status: "ABIERTA" }, orderBy: { openedAt: "desc" } });
+  if (!session) return { ok: false, error: "No hay caja abierta" };
+
+  const counted = n(data, "countedAmount") ?? 0;
+  // efectivo esperado = apertura + ventas en efectivo de esta sesión
+  const sales = await prisma.sale.findMany({ where: { cashSessionId: session.id, voided: false }, select: { payCash: true } });
+  const cashSales = sales.reduce((sm, s2) => sm + s2.payCash, 0);
+  const expected = session.openingAmount + cashSales;
+  const difference = counted - expected;
+
+  await prisma.cashSession.update({
+    where: { id: session.id },
+    data: { status: "CERRADA", closedAt: new Date(), declaredAmount: expected, countedAmount: counted, difference, note: s(data, "note") || session.note },
+  });
+  revalidatePath("/admin/caja");
+  revalidatePath("/admin/vender");
+  return { ok: true, expected, difference };
 }

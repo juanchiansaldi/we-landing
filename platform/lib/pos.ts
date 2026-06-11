@@ -4,6 +4,9 @@ import { isAuthed } from "./auth";
 
 const STORE_SLUG = process.env.DEFAULT_STORE_SLUG || "we";
 
+/** Cookie del vendedor activo en el POS (estampa las ventas con su posUserId). */
+export const POS_USER_COOKIE = "we_pos_user";
+
 /** Por ahora el POS se protege con el login de admin. Fase 7 = usuarios propios. */
 export function posGuard() {
   if (!isAuthed()) redirect("/admin/login");
