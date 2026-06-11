@@ -28,6 +28,7 @@ export default function Vender({ catalog, store }: { catalog: P[]; store: { name
   const [pay, setPay] = useState<"EFECTIVO" | "TARJETA" | "TRANSFERENCIA">("EFECTIVO");
   const [cashGiven, setCashGiven] = useState("");
   const [ticket, setTicket] = useState<Ticket | null>(null);
+  const [printTicket, setPrintTicket] = useState(false); // apagado por default: no se factura todo
   const [msg, setMsg] = useState<string | null>(null);
   const [pending, start] = useTransition();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -94,9 +95,18 @@ export default function Vender({ catalog, store }: { catalog: P[]; store: { name
         payMethod: pay,
       });
       if (res.ok && res.ticket) {
-        setTicket(res.ticket as Ticket);
+        const t = res.ticket as Ticket;
         setCart([]); setDiscount(0); setCashGiven(""); setQ("");
         router.refresh();
+        if (printTicket) {
+          // solo cuando el vendedor lo pidió: mostramos el ticket y abrimos impresión
+          setTicket(t);
+          setTimeout(() => window.print(), 350);
+        } else {
+          setMsg(`✓ Venta #${t.code} registrada`);
+          setTimeout(() => setMsg((m) => (m === `✓ Venta #${t.code} registrada` ? null : m)), 2500);
+          focusInput();
+        }
       } else {
         alert(res.error || "No se pudo registrar la venta");
       }
@@ -195,6 +205,12 @@ export default function Vender({ catalog, store }: { catalog: P[]; store: { name
                 {change > 0 && <b style={{ color: "#3fb950" }}>Vuelto {money(change)}</b>}
               </div>
             )}
+
+            <label className="vd-print">
+              <input type="checkbox" checked={printTicket} onChange={(e) => setPrintTicket(e.target.checked)} />
+              <span>Imprimir comprobante</span>
+              <em>{printTicket ? "se imprime al cobrar" : "no se imprime"}</em>
+            </label>
 
             <button className="btn btn-primary vd-cobrar" type="button" onClick={cobrar} disabled={!cart.length || pending}>
               {pending ? "Registrando…" : `Cobrar ${money(total)}`}

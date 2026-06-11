@@ -557,3 +557,9 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .combo-results{display:flex;flex-direction:column;gap:5px;margin-top:6px;max-height:220px;overflow-y:auto}
 .combo-result{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surf2);border:1px solid var(--border);border-radius:9px;padding:.5rem .7rem;cursor:pointer;text-align:left;font-family:inherit;color:inherit;font-size:.88rem}
 .combo-result:hover{border-color:var(--red)}
+
+/* toggle de imprimir comprobante en la caja (apagado por default) */
+.vd-print{display:flex;align-items:center;gap:8px;margin:10px 0 4px;cursor:pointer;user-select:none}
+.vd-print input{width:18px;height:18px;accent-color:var(--red);cursor:pointer}
+.vd-print span{font-size:.9rem;color:var(--white)}
+.vd-print em{font-size:.75rem;color:var(--gray);font-style:normal;margin-left:auto}
