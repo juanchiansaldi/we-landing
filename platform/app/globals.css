@@ -559,7 +559,7 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .combo-calc input{width:110px;background:var(--bg);border:1px solid var(--border2);border-radius:8px;color:var(--white);font-family:inherit;padding:.35rem .5rem;text-align:right}
 
 /* código rápido (chip) + buscador de componentes en combos */
-.vd-code{display:inline-block;background:var(--red);color:#fff;font-size:.7rem;font-weight:700;padding:.1rem .4rem;border-radius:6px;margin-right:6px;font-family:'DM Sans';vertical-align:middle}
+.vd-code{display:inline-block;background:rgba(241,44,54,.12);color:#ff5965;font-size:.68rem;font-weight:600;letter-spacing:.02em;padding:.12rem .44rem;border-radius:6px;margin-right:7px;border:1px solid rgba(241,44,54,.3);font-family:'DM Sans';vertical-align:middle;line-height:1.45}
 .combo-pick-wrap{position:relative}
 .combo-search{width:100%;background:var(--surf2);border:1px solid var(--border2);border-radius:9px;color:var(--white);font-family:inherit;font-size:.9rem;padding:.6rem .75rem;outline:none}
 .combo-search:focus{border-color:var(--red)}
@@ -608,11 +608,23 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .cc-row{display:grid;grid-template-columns:.9fr 1.1fr 1fr .9fr;gap:8px;align-items:center;font-size:.8rem;padding:.35rem 0;border-bottom:1px solid var(--border)}
 
 /* caja */
-.cash-open{max-width:640px}
-.cash-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
-.cash-open-row{display:flex;gap:10px;margin-top:8px}
-.cash-open-row input{flex:1;background:var(--surf2);border:1px solid var(--border2);border-radius:10px;color:var(--white);font-family:inherit;font-size:1rem;padding:.6rem .8rem}
-.cash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:6px 0 16px}
+.cash-open{max-width:560px;padding:28px 26px}
+.cash-open-empty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px}
+.cash-ico{font-size:2.3rem;line-height:1;margin-bottom:6px}
+.cash-open-empty h2{font-size:1.5rem}
+.cash-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+/* input de plata con $ adelante */
+.cash-money{display:flex;align-items:center;gap:2px;background:var(--surf2);border:1px solid var(--border2);border-radius:13px;padding:.2rem .9rem;transition:border-color .15s}
+.cash-money:focus-within{border-color:var(--red)}
+.cash-cur{font-family:var(--font-spectral);font-size:1.4rem;color:var(--gray)}
+.cash-money input{flex:1;width:100%;background:none;border:none;color:var(--white);font-family:var(--font-spectral);font-size:1.7rem;padding:.45rem .3rem;outline:none}
+.cash-open-empty .cash-money{width:100%;margin:16px 0 6px}
+.cash-btn{width:100%;justify-content:center;padding:.85rem;font-size:.92rem}
+.cash-close-row{display:flex;gap:10px;align-items:stretch;margin-top:8px}
+.cash-close-row .cash-money{flex:1}
+.cash-btn-inline{white-space:nowrap;padding-inline:1.4rem}
+.cash-diff{margin-top:12px;font-size:.95rem;font-weight:600}
+.cash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:6px 0 18px}
 .cash-cell{background:var(--surf2);border:1px solid var(--border);border-radius:11px;padding:10px 12px;display:flex;flex-direction:column;gap:3px}
 .cash-cell span{font-size:.74rem;color:var(--gray)}
 .cash-cell b{font-family:var(--font-spectral);font-size:1.1rem}

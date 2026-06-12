@@ -40,13 +40,15 @@ export default function PosCaja({ current, history }: { current: Current | null;
       </header>
 
       {!current ? (
-        <div className="admin-card cash-open">
+        <div className="admin-card cash-open cash-open-empty">
+          <div className="cash-ico">💵</div>
           <h2 className="serif">Abrir caja</h2>
-          <p className="pos-muted">¿Con cuánto efectivo arrancás? (fondo de caja / cambio)</p>
-          <div className="cash-open-row">
-            <input type="number" min="0" value={opening} onChange={(e) => setOpening(e.target.value)} placeholder="0" />
-            <button className="btn btn-primary" type="button" onClick={doOpen} disabled={pending}>{pending ? "Abriendo…" : "Abrir caja"}</button>
+          <p className="pos-muted">¿Con cuánto efectivo arrancás? Es el fondo para dar cambio.</p>
+          <div className="cash-money">
+            <span className="cash-cur">$</span>
+            <input type="number" min="0" value={opening} onChange={(e) => setOpening(e.target.value)} placeholder="0" autoFocus />
           </div>
+          <button className="btn btn-primary cash-btn" type="button" onClick={doOpen} disabled={pending}>{pending ? "Abriendo…" : "Abrir caja"}</button>
         </div>
       ) : (
         <div className="admin-card cash-open">
@@ -64,15 +66,18 @@ export default function PosCaja({ current, history }: { current: Current | null;
           </div>
 
           <div className="cash-close">
-            <h3 style={{ fontSize: ".95rem", margin: "0 0 8px" }}>Cerrar caja</h3>
+            <h3 className="serif" style={{ fontSize: "1.05rem", margin: "0 0 4px" }}>Cerrar caja</h3>
             <p className="pos-muted" style={{ marginTop: 0 }}>Contá la plata que hay en la caja y ponela acá:</p>
-            <div className="cash-open-row">
-              <input type="number" min="0" value={counted} onChange={(e) => setCounted(e.target.value)} placeholder="efectivo contado" />
-              <button className="btn btn-primary" type="button" onClick={doClose} disabled={pending}>{pending ? "Cerrando…" : "Cerrar caja"}</button>
+            <div className="cash-close-row">
+              <div className="cash-money">
+                <span className="cash-cur">$</span>
+                <input type="number" min="0" value={counted} onChange={(e) => setCounted(e.target.value)} placeholder="0" />
+              </div>
+              <button className="btn btn-primary cash-btn-inline" type="button" onClick={doClose} disabled={pending}>{pending ? "Cerrando…" : "Cerrar caja"}</button>
             </div>
             {diff !== null && (
-              <p style={{ marginTop: 10 }} className={diff === 0 ? "stk-ok" : "stk-low"}>
-                {diff === 0 ? "✓ Cuadra exacto" : diff > 0 ? `Sobran ${money(diff)}` : `Faltan ${money(-diff)}`}
+              <p className={`cash-diff ${diff === 0 ? "stk-ok" : "stk-low"}`}>
+                {diff === 0 ? "✓ Cuadra exacto" : diff > 0 ? `Sobran ${money(diff)} en caja` : `Faltan ${money(-diff)} en caja`}
               </p>
             )}
           </div>
