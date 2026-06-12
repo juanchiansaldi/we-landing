@@ -380,6 +380,10 @@ export async function posSaveSupplier(data: FormData) {
     telefono: s(data, "telefono") || null,
     email: s(data, "email") || null,
     notas: s(data, "notas") || null,
+    direccion: s(data, "direccion") || null,
+    mapsUrl: s(data, "mapsUrl") || null,
+    lat: f(data, "lat"),
+    lng: f(data, "lng"),
     activo: data.get("activo") === "on",
   };
   if (id) {

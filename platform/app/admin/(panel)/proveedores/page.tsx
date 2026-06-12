@@ -14,6 +14,7 @@ export default async function ProveedoresPage() {
   const rows = provs.map((p) => ({
     id: p.id, nombre: p.nombre, cuit: p.cuit || "", contacto: p.contacto || "",
     telefono: p.telefono || "", email: p.email || "", notas: p.notas || "",
+    direccion: p.direccion || "", mapsUrl: p.mapsUrl || "", lat: p.lat ?? null, lng: p.lng ?? null,
     activo: p.activo, count: p._count.productos,
   }));
   return <PosProveedores proveedores={rows} />;

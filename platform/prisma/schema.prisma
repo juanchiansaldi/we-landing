@@ -352,6 +352,10 @@ model Supplier {
   telefono  String?
   email     String?
   notas     String?
+  direccion String? // dirección de texto (manual u opcional)
+  mapsUrl   String? // link de Google Maps pegado
+  lat       Float? // ubicación extraída del link
+  lng       Float?
   activo    Boolean  @default(true)
   createdAt DateTime @default(now())
 

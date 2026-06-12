@@ -679,3 +679,9 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .guest-login:hover{color:var(--red)}
 .acct-upsell{display:block;margin-top:10px;padding-top:10px;border-top:1px solid var(--border2);font-size:.8rem;color:#caa14a;text-decoration:none;line-height:1.5}
 .acct-upsell:hover{color:#e0c069}
+
+/* proveedores: link a Google Maps */
+.prov-map{display:inline-flex;align-items:center;gap:3px;font-size:.74rem;color:#5a9cff;text-decoration:none;margin-top:2px;width:fit-content}
+.prov-map:hover{text-decoration:underline}
+.prov-mapinfo{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.78rem;color:#3fb950;background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.25);border-radius:9px;padding:.5rem .7rem;margin:-4px 0 2px}
+.prov-mapinfo a{color:#5a9cff;text-decoration:none;white-space:nowrap}
