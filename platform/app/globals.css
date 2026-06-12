@@ -318,7 +318,7 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .order-meta{display:flex;flex-direction:column;line-height:1.3}
 .order-meta b{font-family:'Spectral'}
 .order-items-mini{color:var(--gray);font-size:.84rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.order-right{display:flex;align-items:center;gap:14px}
+.order-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 .order-right b{font-family:'Spectral';font-size:1.05rem}
 .pay-badge{font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;font-weight:600;padding:.3rem .6rem;border-radius:9999px}
 .pay-paid{background:rgba(46,160,67,.16);color:#3fb950}
@@ -650,3 +650,8 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .dash-low-row{display:flex;justify-content:space-between;align-items:center;padding:.6rem .8rem;border-radius:9px;text-decoration:none;color:var(--white);font-size:.9rem;border:1px solid transparent;transition:background .15s,border-color .15s}
 .dash-low-row:hover{background:var(--surf2);border-color:var(--border)}
 .dash-low-row em{font-style:normal;font-size:.8rem}
+
+/* botón coordinar pedido por WhatsApp (en Mi cuenta) */
+.order-wpp{display:inline-flex;align-items:center;gap:6px;background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.45);color:#25d366;border-radius:9px;padding:.4rem .7rem;font-size:.78rem;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .15s,border-color .15s}
+.order-wpp:hover{background:rgba(37,211,102,.2);border-color:#25d366}
+.order-wpp svg{flex-shrink:0}

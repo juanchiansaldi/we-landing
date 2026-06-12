@@ -5,8 +5,10 @@ import { fmt } from "../../lib/format";
 import AddressManager, { type Addr } from "../../components/AddressManager";
 import LogoutButton from "../../components/LogoutButton";
 import RepeatOrderButton from "../../components/RepeatOrderButton";
+import OrderWhatsAppButton from "../../components/OrderWhatsAppButton";
 import CancelSubButton from "../../components/CancelSubButton";
 import ProfileEditor from "../../components/ProfileEditor";
+import { getStore } from "../../lib/pos";
 import { syncPendingForCustomer } from "../../lib/subscriptions";
 
 export const dynamic = "force-dynamic";
@@ -37,6 +39,8 @@ export default async function CuentaPage({
   if (searchParams.sub === "ok") {
     await syncPendingForCustomer(customer.id);
   }
+
+  const store = await getStore();
 
   const [addresses, orders, subs] = await Promise.all([
     prisma.address.findMany({
@@ -134,6 +138,14 @@ export default async function CuentaPage({
                     {PAY_LABEL[o.paymentStatus] || o.paymentStatus}
                   </span>
                   <b>{fmt(o.total)}</b>
+                  <OrderWhatsAppButton
+                    phone={store.whatsapp}
+                    storeName={store.name}
+                    code={o.id.slice(-6).toUpperCase()}
+                    items={o.items.map((i) => ({ qty: i.qty, name: i.name }))}
+                    total={o.total}
+                    pending={o.paymentStatus !== "PAID"}
+                  />
                   <RepeatOrderButton
                     cart={Object.fromEntries(
                       o.items.filter((i) => i.productId).map((i) => [i.productId as string, i.qty])
