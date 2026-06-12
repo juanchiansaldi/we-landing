@@ -429,17 +429,57 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .dash-lbl{color:var(--gray);font-size:.8rem}
 
 /* ===== POS / Gestión del local ===== */
-.pos{min-height:100dvh;background:var(--bg)}
-.pos-nav{position:sticky;top:0;z-index:900;display:flex;align-items:center;gap:18px;padding:.7rem clamp(16px,3vw,32px);background:var(--surf);border-bottom:1px solid var(--border2);flex-wrap:wrap}
-.pos-logo{font-family:'Spectral';font-weight:600;font-size:1.05rem;color:var(--white);white-space:nowrap}
-.pos-links{display:flex;align-items:center;gap:4px;flex:1;flex-wrap:wrap}
-.pos-links a{color:var(--gray);font-size:.88rem;padding:.4rem .8rem;border-radius:9px;transition:background .2s,color .2s}
-.pos-links a:hover{color:var(--white);background:var(--surf2)}
-.pos-links a.active{color:#fff;background:var(--red)}
-.pos-soon{color:var(--gray2);font-size:.82rem;padding:.4rem .6rem;opacity:.6}
-.pos-exit{color:var(--gray);font-size:.82rem}
-.pos-exit:hover{color:var(--red)}
-.pos-wrap{max-width:1100px;margin:0 auto;padding:28px clamp(16px,3vw,32px) 80px}
+/* ===== Panel admin: layout con sidebar izquierdo ===== */
+.pos{display:flex;min-height:100dvh;background:var(--bg)}
+.pos-body{flex:1;min-width:0;background:var(--bg)}
+
+.side{position:sticky;top:0;height:100dvh;width:250px;flex-shrink:0;display:flex;flex-direction:column;gap:14px;background:var(--surf);border-right:1px solid var(--border2);padding:18px 13px}
+.side-brand{display:flex;align-items:center;gap:11px;padding:6px 8px 4px;text-decoration:none}
+.side-logo{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--red),#7a1320);color:#fff;flex-shrink:0;box-shadow:0 6px 16px -6px rgba(241,44,54,.5)}
+.side-logo svg{width:18px;height:18px}
+.side-brand-txt{display:flex;flex-direction:column;line-height:1.15}
+.side-brand-txt b{font-family:'Spectral';font-size:1.18rem;color:var(--white);font-weight:600}
+.side-brand-txt em{font-style:normal;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gray)}
+
+.side-nav{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:15px;padding-top:2px}
+.side-nav::-webkit-scrollbar{width:0}
+.side-group{display:flex;flex-direction:column;gap:2px}
+.side-group-label{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gray);opacity:.6;padding:0 8px;margin-bottom:3px}
+.side-link{display:flex;align-items:center;gap:11px;padding:.55rem .7rem;border-radius:10px;color:var(--gray);font-size:.9rem;text-decoration:none;transition:background .15s,color .15s}
+.side-link svg{width:18px;height:18px;flex-shrink:0;opacity:.85}
+.side-link:hover{background:var(--surf2);color:var(--cream)}
+.side-link.active{background:var(--red-soft);color:var(--white);font-weight:500}
+.side-link.active svg{color:var(--red);opacity:1}
+.side-dot{margin-left:auto;width:6px;height:6px;border-radius:50%;background:var(--red)}
+
+.side-foot{display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid var(--border)}
+.side-store-link{font-size:.78rem;color:var(--gray);text-decoration:none;padding:0 8px}
+.side-store-link:hover{color:var(--red)}
+.side-user{display:flex;align-items:center;gap:10px;padding:9px;border-radius:13px;background:var(--surf2);border:1px solid var(--border);cursor:pointer;text-align:left;font-family:inherit;width:100%;transition:background .15s,border-color .15s}
+.side-user:hover{background:var(--red-soft);border-color:var(--border2)}
+.side-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#e78ba6,#b23a5d);color:#fff;font-weight:700;flex-shrink:0;font-size:.95rem}
+.side-user-info{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
+.side-user-info b{font-size:.8rem;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.side-user-info em{font-style:normal;font-size:.66rem;color:var(--gray)}
+.side-user svg{width:16px;height:16px;color:var(--gray);flex-shrink:0}
+
+.pos-wrap{max-width:1280px;margin:0 auto;padding:30px clamp(18px,3vw,42px) 80px}
+
+@media(max-width:860px){
+  .pos{flex-direction:column}
+  .side{position:sticky;top:0;z-index:900;height:auto;width:100%;flex-direction:row;align-items:center;gap:8px;padding:10px 12px;border-right:none;border-bottom:1px solid var(--border2);overflow-x:auto}
+  .side-brand{padding:0;flex-shrink:0}
+  .side-brand-txt{display:none}
+  .side-nav{flex-direction:row;gap:6px;overflow:visible;padding-top:0}
+  .side-group{flex-direction:row;gap:6px}
+  .side-group-label{display:none}
+  .side-link{white-space:nowrap;padding:.45rem .7rem}
+  .side-dot{display:none}
+  .side-foot{flex-direction:row;border-top:none;padding-top:0;flex-shrink:0;margin-left:auto}
+  .side-store-link{display:none}
+  .side-user-info{display:none}
+  .side-user{padding:7px}
+}
 .pos-head{margin-bottom:22px}
 .pos-head h1{font-size:2rem;font-weight:500;margin-top:4px}
 .pos-muted{color:var(--gray);font-size:.92rem;margin-top:4px}
