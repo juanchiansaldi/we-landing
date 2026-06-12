@@ -15,6 +15,7 @@ export type StoreProduct = {
   stock: boolean;
   stockQty: number;
   nuevo: boolean;
+  combo: boolean;
   meta: { k: string; v: string }[];
 };
 
@@ -26,7 +27,12 @@ export async function getStorefront() {
   const [products, categories] = await Promise.all([
     prisma.product.findMany({
       where: { storeId: store.id, active: true },
-      include: { images: { orderBy: { order: "asc" }, take: 1 }, category: true },
+      include: {
+        images: { orderBy: { order: "asc" }, take: 1 },
+        category: true,
+        // para combos: traemos los componentes y su stock para calcular disponibilidad
+        kitOf: { include: { component: { select: { stock: true } } } },
+      },
       orderBy: { createdAt: "asc" },
     }),
     prisma.category.findMany({ where: { storeId: store.id }, orderBy: { order: "asc" } }),
@@ -36,21 +42,30 @@ export async function getStorefront() {
   const normImg = (u: string | null | undefined) =>
     u ? u.replace(/^\.\//, "/") : null;
 
-  const mapped: StoreProduct[] = products.map((p) => ({
-    id: p.id,
-    name: p.name,
-    brand: p.brand,
-    cat: p.category?.name ?? "",
-    price: p.price,
-    promo: p.promoPrice,
-    img: normImg(p.images[0]?.url),
-    notes: p.shortDesc,
-    desc: p.description,
-    stock: p.stock > 0,
-    stockQty: p.stock,
-    nuevo: p.isNew,
-    meta: Array.isArray(p.meta) ? (p.meta as { k: string; v: string }[]) : [],
-  }));
+  const mapped: StoreProduct[] = products.map((p) => {
+    // combos: la disponibilidad es cuántos combos se pueden armar con el stock de los componentes
+    const qty = p.isKit
+      ? (p.kitOf.length
+          ? Math.min(...p.kitOf.map((k) => Math.floor(k.component.stock / Math.max(1, k.qty))))
+          : 0)
+      : p.stock;
+    return {
+      id: p.id,
+      name: p.name,
+      brand: p.brand,
+      cat: p.category?.name ?? "",
+      price: p.price,
+      promo: p.promoPrice,
+      img: normImg(p.images[0]?.url),
+      notes: p.shortDesc,
+      desc: p.description,
+      stock: qty > 0,
+      stockQty: qty,
+      nuevo: p.isNew,
+      combo: p.isKit,
+      meta: Array.isArray(p.meta) ? (p.meta as { k: string; v: string }[]) : [],
+    };
+  });
 
   return {
     store: {

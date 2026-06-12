@@ -586,12 +586,15 @@ export default function Storefront({ store, products, cats, loggedIn, me }: Prop
                   return (
                     <article className="pcard" key={p.id} onClick={() => setDetailId(p.id)}>
                       <div className={`pcard-media${p.img ? "" : " ph"}`}>
-                        {!p.stock && <span className="pbadge out">Sin stock</span>}
-                        {p.stock && p.nuevo && <span className="pbadge">Nuevo</span>}
-                        {p.stock && !p.nuevo && sale && <span className="pbadge">Oferta</span>}
-                        {p.stock && !p.nuevo && !sale && p.stockQty > 0 && p.stockQty <= 5 && (
-                          <span className="pbadge low">¡Últimas {p.stockQty}!</span>
-                        )}
+                        <div className="pbadges">
+                          {p.combo && <span className="pbadge combo">Combo</span>}
+                          {!p.stock && <span className="pbadge out">Sin stock</span>}
+                          {p.stock && p.nuevo && <span className="pbadge">Nuevo</span>}
+                          {p.stock && !p.nuevo && sale && <span className="pbadge">Oferta</span>}
+                          {p.stock && !p.nuevo && !sale && p.stockQty > 0 && p.stockQty <= 5 && (
+                            <span className="pbadge low">¡Últimas {p.stockQty}!</span>
+                          )}
+                        </div>
                         <button
                           className={`pfav${favs.has(p.id) ? " on" : ""}`}
                           type="button"
