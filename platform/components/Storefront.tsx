@@ -400,6 +400,7 @@ export default function Storefront({ store, products, cats, loggedIn, me }: Prop
         }),
       });
       const j = await res.json().catch(() => ({}));
+      if (j.error === "login_required") { window.location.href = "/cuenta/login?email=" + encodeURIComponent(guest.email) + "&next=" + encodeURIComponent("/"); return; }
       if (j.error === "address") { window.location.href = "/cuenta?add=1"; return; }
       if (j.error === "guest") { alert(j.message || "Completá tus datos de envío."); return; }
       if (res.ok && j.transfer) {
@@ -432,6 +433,10 @@ export default function Storefront({ store, products, cats, loggedIn, me }: Prop
       const j = await res.json().catch(() => ({}));
       if (res.ok && j.init_point) {
         window.location.href = j.init_point;
+        return;
+      }
+      if (j.error === "login_required") {
+        window.location.href = "/cuenta/login?email=" + encodeURIComponent(guest.email) + "&next=" + encodeURIComponent("/");
         return;
       }
       if (j.error === "address") {

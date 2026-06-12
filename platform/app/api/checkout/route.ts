@@ -54,11 +54,24 @@ export async function POST(req: Request) {
     if (!email || !/^\S+@\S+\.\S+$/.test(email) || !name || !street || !city) {
       return NextResponse.json({ error: "guest", message: "Completá tus datos de envío" }, { status: 400 });
     }
-    buyer = await prisma.customer.upsert({
+    // Seguridad: un request sin autenticar NUNCA modifica un Customer existente.
+    const existing = await prisma.customer.findUnique({
       where: { storeId_email: { storeId: store.id, email } },
-      update: { name: name || undefined, phone: phone || undefined },
-      create: { storeId: store.id, email, name: name || null, phone: phone || null },
     });
+    if (existing?.authId) {
+      // el email ya tiene cuenta registrada → exigir login (no tocamos sus datos)
+      return NextResponse.json(
+        { error: "login_required", message: "Ese email ya tiene una cuenta. Iniciá sesión para comprar." },
+        { status: 409 }
+      );
+    }
+    // reutilizamos un registro de invitado previo SIN sobrescribir su nombre/teléfono;
+    // si no existe, lo creamos con los datos de este checkout.
+    buyer =
+      existing ||
+      (await prisma.customer.create({
+        data: { storeId: store.id, email, name: name || null, phone: phone || null },
+      }));
     shipSnapshot = {
       recipient: name, phone, street, number: String(g.number || "").trim() || null,
       city, province: String(g.province || "").trim() || "Entre Ríos",
