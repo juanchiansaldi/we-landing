@@ -30,10 +30,12 @@ function parseMaps(url: string): { name?: string; lat?: number; lng?: number } {
   return out;
 }
 
+// solo permitimos http(s) en el href (evita javascript:/data: si pegan algo raro)
+const safeUrl = (u: string) => (/^https?:\/\//i.test(u.trim()) ? u.trim() : "");
 const mapsLink = (r: { mapsUrl: string; lat: number | null; lng: number | null }) =>
   r.lat != null && r.lng != null
     ? `https://www.google.com/maps/search/?api=1&query=${r.lat},${r.lng}`
-    : r.mapsUrl || "";
+    : safeUrl(r.mapsUrl || "");
 
 export default function PosProveedores({ proveedores }: { proveedores: Row[] }) {
   const router = useRouter();
