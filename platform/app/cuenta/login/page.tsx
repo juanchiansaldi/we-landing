@@ -14,9 +14,11 @@ function LoginInner() {
   const next = rawNext.startsWith("/") && !rawNext.startsWith("//") && !rawNext.startsWith("/\\") ? rawNext : "/cuenta";
   const supabase = supabaseBrowser();
 
-  const [mode, setMode] = useState<Mode>("magic");
-  const [register, setRegister] = useState(false);
-  const [email, setEmail] = useState("");
+  // prefill desde el checkout invitado (?email=&register=1)
+  const wantRegister = params.get("register") === "1";
+  const [mode, setMode] = useState<Mode>(wantRegister ? "password" : "magic");
+  const [register, setRegister] = useState(wantRegister);
+  const [email, setEmail] = useState(params.get("email") || "");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [msg, setMsg] = useState<{ kind: "ok" | "err"; text: string } | null>(null);

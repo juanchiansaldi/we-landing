@@ -1,11 +1,12 @@
 import { getStorefront } from "../lib/store";
+import { currentCustomer } from "../lib/customer";
 import Storefront from "../components/Storefront";
 
 // Siempre leer datos frescos de la base (no cachear el catálogo en build)
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const data = await getStorefront();
+  const [data, customer] = await Promise.all([getStorefront(), currentCustomer()]);
 
   if (!data) {
     return (
@@ -20,5 +21,13 @@ export default async function Home() {
     );
   }
 
-  return <Storefront store={data.store} products={data.products} cats={data.cats} />;
+  return (
+    <Storefront
+      store={data.store}
+      products={data.products}
+      cats={data.cats}
+      loggedIn={!!customer}
+      me={customer ? { name: customer.name || "", email: customer.email, phone: customer.phone || "" } : null}
+    />
+  );
 }

@@ -655,3 +655,15 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .order-wpp{display:inline-flex;align-items:center;gap:6px;background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.45);color:#25d366;border-radius:9px;padding:.4rem .7rem;font-size:.78rem;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .15s,border-color .15s}
 .order-wpp:hover{background:rgba(37,211,102,.2);border-color:#25d366}
 .order-wpp svg{flex-shrink:0}
+
+/* checkout invitado (comprar sin cuenta) */
+.guest-form{display:flex;flex-direction:column;gap:8px;background:var(--surf);border:1px solid var(--border2);border-radius:12px;padding:12px;margin-bottom:4px}
+.guest-hint{font-size:.78rem;color:var(--gray);margin:0 0 2px}
+.g-in{width:100%;background:var(--surf2);border:1px solid var(--border2);border-radius:9px;color:var(--white);font-family:inherit;font-size:.86rem;padding:.55rem .7rem;outline:none}
+.g-in:focus{border-color:var(--red)}
+.g-row{display:flex;gap:8px}
+.g-row .g-in{flex:1;min-width:0}
+.guest-login{font-size:.78rem;color:var(--gray);text-decoration:underline;text-align:center;margin-top:2px}
+.guest-login:hover{color:var(--red)}
+.acct-upsell{display:block;margin-top:10px;padding-top:10px;border-top:1px solid var(--border2);font-size:.8rem;color:#caa14a;text-decoration:none;line-height:1.5}
+.acct-upsell:hover{color:#e0c069}

@@ -14,30 +14,69 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Mercado Pago no está configurado" }, { status: 500 });
   }
 
-  // 1) tiene que estar logueado
-  const customer = await currentCustomer();
-  if (!customer) {
-    return NextResponse.json({ error: "auth", message: "Iniciá sesión para comprar" }, { status: 401 });
-  }
-
   const body = await req.json().catch(() => ({}));
   const cart: CartItem[] = Array.isArray(body?.items) ? body.items : [];
   if (!cart.length) return NextResponse.json({ error: "Carrito vacío" }, { status: 400 });
 
-  // 2) tiene que tener una dirección de envío (la elegida o la predeterminada)
-  const addressId = String(body?.addressId || "");
-  const address =
-    (addressId
-      ? await prisma.address.findFirst({ where: { id: addressId, customerId: customer.id } })
-      : null) ||
-    (await prisma.address.findFirst({ where: { customerId: customer.id, isDefault: true } })) ||
-    (await prisma.address.findFirst({ where: { customerId: customer.id }, orderBy: { createdAt: "asc" } }));
-  if (!address) {
-    return NextResponse.json({ error: "address", message: "Agregá una dirección de envío" }, { status: 400 });
-  }
-
   const store = await prisma.store.findUnique({ where: { slug: STORE_SLUG } });
   if (!store) return NextResponse.json({ error: "Tienda no encontrada" }, { status: 500 });
+
+  // ── Comprador: logueado (Supabase) o INVITADO (datos cargados en el checkout) ──
+  const logged = await currentCustomer();
+  let buyer = logged;
+  let shipSnapshot: {
+    recipient: string | null; phone: string | null; street: string; number: string | null;
+    city: string; province: string; zip: string | null; notes: string | null;
+  } | null = null;
+
+  if (buyer) {
+    // logueado: usa la dirección elegida / predeterminada / primera
+    const addressId = String(body?.addressId || "");
+    const address =
+      (addressId ? await prisma.address.findFirst({ where: { id: addressId, customerId: buyer.id } }) : null) ||
+      (await prisma.address.findFirst({ where: { customerId: buyer.id, isDefault: true } })) ||
+      (await prisma.address.findFirst({ where: { customerId: buyer.id }, orderBy: { createdAt: "asc" } }));
+    if (!address) {
+      return NextResponse.json({ error: "address", message: "Agregá una dirección de envío" }, { status: 400 });
+    }
+    shipSnapshot = {
+      recipient: address.recipient, phone: address.phone, street: address.street, number: address.number,
+      city: address.city, province: address.province, zip: address.zip, notes: address.notes,
+    };
+  } else {
+    // invitado: validamos sus datos y creamos/reutilizamos el Customer por email
+    const g = body?.guest || {};
+    const email = String(g.email || "").trim().toLowerCase();
+    const name = String(g.name || "").trim();
+    const phone = String(g.phone || "").trim();
+    const street = String(g.street || "").trim();
+    const city = String(g.city || "").trim();
+    if (!email || !/^\S+@\S+\.\S+$/.test(email) || !name || !street || !city) {
+      return NextResponse.json({ error: "guest", message: "Completá tus datos de envío" }, { status: 400 });
+    }
+    buyer = await prisma.customer.upsert({
+      where: { storeId_email: { storeId: store.id, email } },
+      update: { name: name || undefined, phone: phone || undefined },
+      create: { storeId: store.id, email, name: name || null, phone: phone || null },
+    });
+    shipSnapshot = {
+      recipient: name, phone, street, number: String(g.number || "").trim() || null,
+      city, province: String(g.province || "").trim() || "Entre Ríos",
+      zip: String(g.zip || "").trim() || null, notes: String(g.notes || "").trim() || null,
+    };
+    // guardamos la dirección si todavía no tiene ninguna (para su cuenta / próximas compras)
+    const has = await prisma.address.count({ where: { customerId: buyer.id } });
+    if (!has) {
+      await prisma.address.create({
+        data: {
+          storeId: store.id, customerId: buyer.id,
+          recipient: name, phone: shipSnapshot.phone, street: shipSnapshot.street, number: shipSnapshot.number,
+          city: shipSnapshot.city, province: shipSnapshot.province, zip: shipSnapshot.zip, notes: shipSnapshot.notes,
+          isDefault: true,
+        },
+      });
+    }
+  }
 
   const ids = cart.map((c) => c.id);
   const products = await prisma.product.findMany({
@@ -65,23 +104,12 @@ export async function POST(req: Request) {
   const discount = discountFor(coupon, subtotal);
   const total = subtotal - discount;
 
-  const shipSnapshot = {
-    recipient: address.recipient,
-    phone: address.phone,
-    street: address.street,
-    number: address.number,
-    city: address.city,
-    province: address.province,
-    zip: address.zip,
-    notes: address.notes,
-  };
-
   const isTransfer = String(body?.method || "") === "transferencia";
 
   const order = await prisma.order.create({
     data: {
       storeId: store.id,
-      customerId: customer.id,
+      customerId: buyer.id,
       subtotal,
       total,
       paymentMethod: isTransfer ? "transferencia" : "mercadopago",
@@ -127,9 +155,9 @@ export async function POST(req: Request) {
       body: {
         items: mpItems,
         payer: {
-          email: customer.email,
-          name: address.recipient || customer.name || undefined,
-          phone: address.phone ? { number: address.phone } : undefined,
+          email: buyer.email,
+          name: shipSnapshot.recipient || buyer.name || undefined,
+          phone: shipSnapshot.phone ? { number: shipSnapshot.phone } : undefined,
         },
         back_urls: {
           success: `${SITE}/checkout/success`,
@@ -145,7 +173,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ init_point: pref.init_point, orderId: order.id });
   } catch (e: any) {
-    // si MP falla, dejamos la orden marcada como fallida
     await prisma.order
       .update({ where: { id: order.id }, data: { paymentStatus: "FAILED" } })
       .catch(() => {});

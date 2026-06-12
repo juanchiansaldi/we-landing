@@ -12,10 +12,14 @@ type StoreInfo = {
   shipNote: string | null;
 };
 
+type Me = { name: string; email: string; phone: string };
+
 type Props = {
   store: StoreInfo;
   products: StoreProduct[];
   cats: string[];
+  loggedIn: boolean;
+  me: Me | null;
 };
 
 type Quick = "" | "ofertas" | "combos" | "novedades";
@@ -49,7 +53,7 @@ function isCombo(p: StoreProduct) {
 
 const priceOf = (p: StoreProduct) => p.promo ?? p.price;
 
-export default function Storefront({ store, products, cats }: Props) {
+export default function Storefront({ store, products, cats, loggedIn, me }: Props) {
   const [search, setSearch] = useState("");
   const [activeCats, setActiveCats] = useState<string[]>([]);
   const [onlyOffer, setOnlyOffer] = useState(false);
@@ -72,6 +76,12 @@ export default function Storefront({ store, products, cats }: Props) {
   const [toast, setToast] = useState<string | null>(null);
   const [news, setNews] = useState("");
   const [newsOk, setNewsOk] = useState(false);
+  // datos del comprador invitado (sin cuenta)
+  const [guest, setGuest] = useState({
+    name: me?.name || "", email: me?.email || "", phone: me?.phone || "",
+    street: "", number: "", city: "", province: "Entre Ríos", zip: "", notes: "",
+  });
+  const setG = (k: string, v: string) => setGuest((g) => ({ ...g, [k]: v }));
 
   const FREE_SHIP = 25000;
 
@@ -101,7 +111,20 @@ export default function Storefront({ store, products, cats }: Props) {
       const f = localStorage.getItem("we-fav");
       if (f) setFavs(new Set(JSON.parse(f)));
     } catch {}
+    // datos de invitado guardados (para no recargarlos en cada compra)
+    if (!loggedIn) {
+      try {
+        const g = localStorage.getItem("we-guest");
+        if (g) setGuest((prev) => ({ ...prev, ...JSON.parse(g) }));
+      } catch {}
+    }
   }, []);
+
+  // persistir datos de invitado
+  useEffect(() => {
+    if (loggedIn) return;
+    try { localStorage.setItem("we-guest", JSON.stringify(guest)); } catch {}
+  }, [guest, loggedIn]);
 
   function toggleFav(id: string) {
     setFavs((prev) => {
@@ -341,8 +364,28 @@ export default function Storefront({ store, products, cats }: Props) {
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, "_blank");
   }
 
+  // ¿están completos los datos del comprador invitado?
+  const guestValid =
+    loggedIn ||
+    (guest.name.trim() !== "" &&
+      /^\S+@\S+\.\S+$/.test(guest.email.trim()) &&
+      guest.phone.trim() !== "" &&
+      guest.street.trim() !== "" &&
+      guest.city.trim() !== "");
+
+  function guestBody() {
+    return loggedIn ? undefined : guest;
+  }
+  function ensureGuest() {
+    if (loggedIn || guestValid) return true;
+    setCartOpen(true);
+    alert("Completá tus datos de envío (nombre, email, teléfono, calle y ciudad) para terminar la compra.");
+    return false;
+  }
+
   async function checkoutTransfer() {
     if (!cartLines.length || paying) return;
+    if (!ensureGuest()) return;
     setPaying(true);
     try {
       const res = await fetch("/api/checkout", {
@@ -353,11 +396,12 @@ export default function Storefront({ store, products, cats }: Props) {
           coupon: coupon?.code || undefined,
           giftNote: isGift ? giftMsg.trim() : undefined,
           method: "transferencia",
+          guest: guestBody(),
         }),
       });
       const j = await res.json().catch(() => ({}));
-      if (res.status === 401 || j.error === "auth") { window.location.href = "/cuenta/login?next=" + encodeURIComponent("/"); return; }
       if (j.error === "address") { window.location.href = "/cuenta?add=1"; return; }
+      if (j.error === "guest") { alert(j.message || "Completá tus datos de envío."); return; }
       if (res.ok && j.transfer) {
         setTransferDone({ code: j.code, alias: j.alias || store.alias || "" });
         return;
@@ -372,6 +416,7 @@ export default function Storefront({ store, products, cats }: Props) {
 
   async function checkoutMP() {
     if (!cartLines.length || paying) return;
+    if (!ensureGuest()) return;
     setPaying(true);
     try {
       const res = await fetch("/api/checkout", {
@@ -381,6 +426,7 @@ export default function Storefront({ store, products, cats }: Props) {
           items: cartLines.map((l) => ({ id: l.p.id, qty: l.qty })),
           coupon: coupon?.code || undefined,
           giftNote: isGift ? giftMsg.trim() : undefined,
+          guest: guestBody(),
         }),
       });
       const j = await res.json().catch(() => ({}));
@@ -388,12 +434,13 @@ export default function Storefront({ store, products, cats }: Props) {
         window.location.href = j.init_point;
         return;
       }
-      if (res.status === 401 || j.error === "auth") {
-        window.location.href = "/cuenta/login?next=" + encodeURIComponent("/");
-        return;
-      }
       if (j.error === "address") {
         window.location.href = "/cuenta?add=1";
+        return;
+      }
+      if (j.error === "guest") {
+        alert(j.message || "Completá tus datos de envío.");
+        setPaying(false);
         return;
       }
       alert(j.message || j.error || "No se pudo iniciar el pago. Probá de nuevo o escribinos por WhatsApp.");
@@ -703,6 +750,26 @@ export default function Storefront({ store, products, cats }: Props) {
                   onChange={(e) => setGiftMsg(e.target.value)}
                 />
               )}
+              {!loggedIn && !transferDone && (
+                <div className="guest-form">
+                  <p className="guest-hint">Comprá sin crear cuenta — con estos datos coordinamos la entrega.</p>
+                  <input className="g-in" placeholder="Nombre y apellido" value={guest.name} onChange={(e) => setG("name", e.target.value)} autoComplete="name" />
+                  <div className="g-row">
+                    <input className="g-in" type="email" placeholder="Email" value={guest.email} onChange={(e) => setG("email", e.target.value)} autoComplete="email" />
+                    <input className="g-in" type="tel" placeholder="Teléfono / WhatsApp" value={guest.phone} onChange={(e) => setG("phone", e.target.value)} autoComplete="tel" />
+                  </div>
+                  <div className="g-row">
+                    <input className="g-in" placeholder="Calle" value={guest.street} onChange={(e) => setG("street", e.target.value)} autoComplete="address-line1" style={{ flex: 2 }} />
+                    <input className="g-in" placeholder="N°" value={guest.number} onChange={(e) => setG("number", e.target.value)} style={{ flex: 1, minWidth: 0 }} />
+                  </div>
+                  <div className="g-row">
+                    <input className="g-in" placeholder="Ciudad" value={guest.city} onChange={(e) => setG("city", e.target.value)} autoComplete="address-level2" />
+                    <input className="g-in" placeholder="Provincia" value={guest.province} onChange={(e) => setG("province", e.target.value)} />
+                  </div>
+                  <input className="g-in" placeholder="Entre calles / referencia (opcional)" value={guest.notes} onChange={(e) => setG("notes", e.target.value)} />
+                  <a className="guest-login" href="/cuenta/login?next=/">¿Ya tenés cuenta? Entrá</a>
+                </div>
+              )}
               <div className="cart-pay">
                 <button className="btn mp-btn" type="button" onClick={checkoutMP} disabled={paying}>
                   {paying ? "Abriendo Mercado Pago…" : "Pagar con tarjeta · Mercado Pago"}
@@ -722,6 +789,11 @@ export default function Storefront({ store, products, cats }: Props) {
                     <span className="tw" onClick={() => transferWhatsApp(transferDone.code)}>
                       <Icon d={ICONS.wa} /> Enviar comprobante por WhatsApp
                     </span>
+                    {!loggedIn && (
+                      <a className="acct-upsell" href={`/cuenta/login?email=${encodeURIComponent(guest.email)}&register=1&next=/cuenta`}>
+                        💡 Creá tu cuenta para seguir tus pedidos — ya tenemos tu email y dirección, solo elegí una contraseña.
+                      </a>
+                    )}
                   </div>
                 )}
               </div>
