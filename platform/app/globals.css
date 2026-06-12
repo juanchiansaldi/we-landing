@@ -264,7 +264,16 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .admin-check{flex-direction:row!important;align-items:center;gap:8px!important;color:var(--cream)!important;font-size:.88rem!important;cursor:pointer}
 .admin-check input{margin-top:0!important;width:16px;height:16px;accent-color:var(--red)}
 .admin-editor-foot{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}
-@media(max-width:760px){.admin-tr{grid-template-columns:46px 1.4fr .8fr .6fr;gap:10px}.admin-th span:nth-child(3),.admin-tr>span:nth-child(3),.admin-th span:nth-child(5),.admin-tr>span:nth-child(5),.admin-th span:nth-child(6),.admin-tr>span:nth-child(6){display:none}.admin-grid2{grid-template-columns:1fr}}
+@media(max-width:760px){
+  /* tablas: scroll horizontal en vez de apretar/ocultar columnas (anda con el grid inline) */
+  .admin-table{overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch}
+  .admin-tr{min-width:540px}
+  .admin-grid2{grid-template-columns:1fr}
+  .buy-line{flex-wrap:wrap}
+  .buy-name{flex-basis:100%}
+  .buy-sub{margin-left:auto}
+  .cc-row{grid-template-columns:1fr 1fr;gap:4px 10px}
+}
 
 /* ===== CHECKOUT RESULT ===== */
 .checkout-result{min-height:100dvh;display:grid;place-items:center;padding:24px}
@@ -635,3 +644,9 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .we-load-dots::after{content:'';animation:weLoadDots 1.6s steps(4,end) infinite}
 @keyframes weLoadDots{0%{content:''}25%{content:'·'}50%{content:'· ·'}75%{content:'· · ·'}}
 @media (prefers-reduced-motion:reduce){.we-load-iso{animation:none}}
+
+/* dashboard: lista de "reponer pronto" */
+.dash-low{display:flex;flex-direction:column;gap:2px}
+.dash-low-row{display:flex;justify-content:space-between;align-items:center;padding:.6rem .8rem;border-radius:9px;text-decoration:none;color:var(--white);font-size:.9rem;border:1px solid transparent;transition:background .15s,border-color .15s}
+.dash-low-row:hover{background:var(--surf2);border-color:var(--border)}
+.dash-low-row em{font-style:normal;font-size:.8rem}
