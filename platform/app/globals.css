@@ -864,3 +864,20 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 
 /* toolbar / buscador del panel coherente con inputs */
 .pos .admin-search{background:var(--surf2);border:1px solid var(--border2);border-radius:11px}
+
+/* ═══════════ Ventas del local (historial + anular) ═══════════ */
+.vt-range{display:flex;gap:8px}
+.vt-range button{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--gray);border-radius:9999px;padding:.4rem .9rem;font-size:.84rem;cursor:pointer;font-family:inherit;transition:background .15s,color .15s}
+.vt-range button:hover{color:var(--cream)}
+.vt-range button.on{background:var(--red);border-color:var(--red);color:#fff}
+.vt-anulada{display:inline-block;margin-left:8px;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#ff6b73;background:rgba(241,44,54,.14);border:1px solid rgba(241,44,54,.3);border-radius:6px;padding:.06rem .4rem;vertical-align:middle}
+.vt-head{display:flex;align-items:center;gap:10px}
+.vt-items{display:flex;flex-direction:column;gap:6px;margin:4px 0 2px;max-height:46vh;overflow-y:auto}
+.vt-item{display:flex;justify-content:space-between;gap:12px;font-size:.9rem;color:var(--cream);padding:.4rem 0;border-bottom:1px solid var(--border)}
+.vt-item span:last-child{font-family:var(--font-spectral);white-space:nowrap}
+.vt-totals{margin-top:8px}
+.vt-trow{display:flex;justify-content:space-between;color:var(--gray);font-size:.9rem;padding:3px 0}
+.vt-grand{border-top:1px solid var(--border);margin-top:6px;padding-top:10px;color:var(--white);font-size:1.1rem}
+.vt-grand span:last-child{font-family:var(--font-spectral);font-size:1.5rem;color:#ff5965}
+.vt-void{background:transparent;border:1px solid rgba(241,44,54,.5);color:#ff6b73}
+.vt-void:hover{background:rgba(241,44,54,.12)}

@@ -10,6 +10,7 @@ const NAV: { group: string; items: { href: string; label: string; icon: string }
   ] },
   { group: "Local", items: [
     { href: "/admin/vender", label: "Vender", icon: "cart" },
+    { href: "/admin/ventas", label: "Ventas", icon: "receipt" },
     { href: "/admin/caja", label: "Caja", icon: "wallet" },
   ] },
   { group: "Inventario", items: [
@@ -32,6 +33,7 @@ function Icon({ n }: { n: string }) {
     dashboard: <><rect x="3" y="3" width="7" height="9" rx="1" /><rect x="14" y="3" width="7" height="5" rx="1" /><rect x="14" y="12" width="7" height="9" rx="1" /><rect x="3" y="16" width="7" height="5" rx="1" /></>,
     orders: <><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><path d="M3 6h18M16 10a4 4 0 0 1-8 0" /></>,
     cart: <><circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" /><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6" /></>,
+    receipt: <><path d="M5 2v20l2-1.2 2 1.2 2-1.2 2 1.2 2-1.2 2 1.2 2-1.2V2l-2 1.2-2-1.2-2 1.2-2-1.2-2 1.2-2-1.2z" /><path d="M8.5 8h7M8.5 12h7M8.5 16h4" /></>,
     wallet: <><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4M3 5v14a2 2 0 0 0 2 2h16v-5" /><path d="M18 12a2 2 0 0 0 0 4h4v-4z" /></>,
     tag: <><path d="M20.59 13.41 13.42 20.6a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" /><circle cx="7" cy="7" r="1.2" /></>,
     layers: <><path d="m12 2 9 5-9 5-9-5 9-5z" /><path d="m3 12 9 5 9-5M3 17l9 5 9-5" /></>,

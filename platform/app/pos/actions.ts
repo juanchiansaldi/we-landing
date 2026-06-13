@@ -645,3 +645,51 @@ export async function closeCash(data: FormData) {
   revalidatePath("/admin/vender");
   return { ok: true, expected, difference };
 }
+
+// ═══════════════ Ventas del local · anular ═══════════════
+/** Anula una venta: repone el stock (incluye combos vía sus movimientos) y revierte la cuenta corriente. */
+export async function voidSale(data: FormData) {
+  posGuard();
+  const store = await getStore();
+  const saleId = s(data, "saleId");
+  if (!saleId) return { ok: false, error: "Falta la venta" };
+  const sale = await prisma.sale.findFirst({
+    where: { id: saleId, storeId: store.id },
+    select: { id: true, voided: true, total: true, payMethod: true, customerId: true },
+  });
+  if (!sale) return { ok: false, error: "Venta no encontrada" };
+  if (sale.voided) return { ok: false, error: "La venta ya está anulada" };
+  const code = sale.id.slice(-6).toUpperCase();
+
+  await prisma.$transaction(async (tx) => {
+    await tx.sale.update({ where: { id: sale.id }, data: { voided: true } });
+
+    // revertir cada movimiento de stock que generó la venta (qty con signo opuesto)
+    const moves = await tx.stockMovement.findMany({ where: { storeId: store.id, refType: "sale", refId: sale.id } });
+    for (const mv of moves) {
+      const back = -mv.qty; // reponer lo que se había descontado
+      const updated = await tx.product.update({ where: { id: mv.productId }, data: { stock: { increment: back } } });
+      await tx.stockMovement.create({
+        data: { storeId: store.id, productId: mv.productId, type: "INGRESO", qty: back, reason: "anulación", refType: "anulacion", refId: sale.id, resultingStock: updated.stock },
+      });
+    }
+
+    // cuenta corriente: descontar la deuda que había generado + asiento de reversa
+    if (sale.payMethod === "CUENTA_CORRIENTE" && sale.customerId) {
+      const c = await tx.customer.findUnique({ where: { id: sale.customerId }, select: { ccBalance: true } });
+      if (c) {
+        const bal = c.ccBalance - sale.total;
+        await tx.customer.update({ where: { id: sale.customerId }, data: { ccBalance: bal } });
+        await tx.customerLedger.create({ data: { customerId: sale.customerId, type: "PAGO", amount: sale.total, refSaleId: sale.id, resultingBalance: bal, note: `Anulación venta #${code}` } });
+      }
+    }
+  });
+
+  revalidatePath("/admin/ventas");
+  revalidatePath("/admin/stock");
+  revalidatePath("/admin/caja");
+  revalidatePath("/admin/clientes");
+  revalidatePath("/admin");
+  revalidatePath("/admin/reportes");
+  return { ok: true };
+}
