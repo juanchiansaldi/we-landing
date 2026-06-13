@@ -522,41 +522,84 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 }
 
 /* ===== POS · Vender ===== */
-.vender{max-width:1100px;margin:0 auto;padding:20px clamp(12px,2.5vw,28px) 60px}
-.vender-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:start}
-.vd-scan input{width:100%;background:var(--surf);border:2px solid var(--red);border-radius:12px;color:var(--white);font-family:inherit;font-size:1.1rem;padding:.9rem 1.1rem;outline:none}
-.vd-msg{margin-top:8px;color:#3fb950;font-weight:600;font-size:.9rem}
-.vd-results{margin-top:12px;display:flex;flex-direction:column;gap:8px}
-.vd-res{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surf);border:1px solid var(--border2);border-radius:11px;padding:.7rem .9rem;cursor:pointer;text-align:left;font-family:inherit;color:inherit}
-.vd-res:hover{border-color:var(--red)}
-.vd-res-name b{font-family:'Spectral';font-weight:500}
-.vd-res-name em{display:block;color:var(--gray);font-size:.76rem;font-style:normal}
-.vd-res-meta{display:flex;flex-direction:column;align-items:flex-end;gap:2px;font-size:.82rem}
-.vd-st{color:var(--gray)}.vd-nost{color:var(--red)}
-.vd-cart{background:var(--surf);border:1px solid var(--border);border-radius:14px;min-height:200px;max-height:46vh;overflow-y:auto;padding:8px}
-.vd-empty{color:var(--gray);text-align:center;padding:50px 10px}
-.vd-item{padding:10px;border-bottom:1px solid var(--border)}
+.vender{max-width:1320px;margin:0 auto;padding:24px clamp(14px,2.5vw,36px) 60px}
+.vender-grid{display:grid;grid-template-columns:1fr 372px;gap:20px;align-items:start}
+
+/* buscador / escáner */
+.vd-scan{display:flex;align-items:center;gap:10px;background:var(--surf);border:1px solid var(--border2);border-radius:13px;padding:0 14px;transition:border-color .15s}
+.vd-scan:focus-within{border-color:var(--red)}
+.vd-scan svg{width:19px;height:19px;color:var(--gray);flex-shrink:0}
+.vd-scan input{flex:1;width:100%;background:none;border:none;color:var(--white);font-family:inherit;font-size:1.02rem;padding:.85rem 0;outline:none}
+.vd-scan-x{background:none;border:none;color:var(--gray);cursor:pointer;font-size:.9rem;padding:4px}
+.vd-scan-x:hover{color:var(--red)}
+
+/* chips de categoría */
+.vd-cats{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.vd-cats button{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--gray);border-radius:9999px;padding:.4rem .85rem;font-size:.82rem;cursor:pointer;font-family:inherit;transition:background .15s,color .15s}
+.vd-cats button:hover{color:var(--cream)}
+.vd-cats button.on{background:var(--red);border-color:var(--red);color:#fff}
+
+.vd-msg{margin-top:10px;color:#4ade80;font-weight:600;font-size:.88rem}
+
+/* grilla de productos tocables */
+.vd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:12px;margin-top:14px}
+.vd-grid-empty{grid-column:1/-1;color:var(--gray);text-align:center;padding:40px 10px}
+.vd-prod{display:flex;flex-direction:column;gap:2px;background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:13px;text-align:left;cursor:pointer;font-family:inherit;transition:transform .12s,border-color .15s,background .15s}
+.vd-prod:hover{transform:translateY(-2px);border-color:var(--red);background:#191921}
+.vd-prod:active{transform:translateY(0)}
+.vd-prod-top{display:flex;align-items:center;gap:6px;margin-bottom:6px;min-height:20px}
+.vd-prod-combo{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#fff;background:var(--red);border-radius:5px;padding:.08rem .35rem}
+.vd-prod-stk{margin-left:auto;font-size:.68rem;color:var(--gray)}
+.vd-prod-stk.out{color:#ff6b73}
+.vd-prod-name{font-family:'Spectral';font-weight:500;font-size:.95rem;color:var(--white);line-height:1.2}
+.vd-prod-brand{font-size:.72rem;color:var(--gray)}
+.vd-prod-price{font-family:'Spectral';font-weight:600;font-size:1.05rem;color:#ff5965;margin-top:6px}
+.vd-prod-price s{color:var(--gray);font-size:.78rem;font-weight:400;margin-left:6px}
+
+/* ticket / cobro (derecha) */
+.vd-right{position:sticky;top:18px;display:flex;flex-direction:column;gap:14px}
+.vd-ticketcard{background:var(--surf);border:1px solid var(--border);border-radius:16px;padding:16px;min-height:160px}
+.vd-tk-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px}
+.vd-tk-head b{font-family:'Spectral';font-size:1.1rem;color:var(--white)}
+.vd-tk-head span{font-size:.78rem;color:var(--gray)}
+.vd-empty{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--gray);text-align:center;padding:34px 10px}
+.vd-empty span{font-size:1.8rem}
+.vd-empty em{font-size:.8rem;font-style:normal;opacity:.7}
+.vd-items{display:flex;flex-direction:column;max-height:42vh;overflow-y:auto}
+.vd-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
 .vd-item:last-child{border-bottom:none}
-.vd-item-main{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.vd-item-main b{font-family:'Spectral';font-weight:500;font-size:1rem}
-.vd-unit{background:var(--surf2);border:1px solid var(--border2);color:var(--cream);border-radius:9999px;padding:.2rem .6rem;font-size:.72rem;cursor:pointer;font-family:inherit}
+.vd-item-info{flex:1;min-width:0}
+.vd-item-info b{display:block;font-family:'Spectral';font-weight:500;font-size:.95rem;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vd-item-sub2{display:flex;align-items:center;gap:8px;margin-top:3px;font-size:.74rem;color:var(--gray)}
+.vd-unit{background:rgba(255,255,255,.06);border:1px solid var(--border2);color:var(--cream);border-radius:9999px;padding:.12rem .55rem;font-size:.68rem;cursor:pointer;font-family:inherit}
 .vd-unit.caja{background:var(--red);border-color:var(--red);color:#fff}
-.vd-item-price{color:var(--gray);font-size:.78rem;margin-left:auto}
-.vd-item-r{display:flex;align-items:center;gap:12px;margin-top:8px}
-.vd-item-sub{font-family:'Spectral';margin-left:auto}
-.vd-rm{background:none;border:none;color:var(--gray);cursor:pointer;font-size:1rem}
+.vd-item-sub{font-family:'Spectral';font-weight:500;color:var(--white);min-width:62px;text-align:right}
+.vd-rm{background:none;border:none;color:var(--gray);cursor:pointer;font-size:.9rem;padding:2px}
 .vd-rm:hover{color:var(--red)}
-.vd-foot{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:18px;margin-top:14px;display:flex;flex-direction:column;gap:10px}
+
+/* venta cobrada */
+.vd-done{display:flex;flex-direction:column;align-items:center;text-align:center;gap:5px;padding:18px 10px}
+.vd-done-ico{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(74,222,128,.15);color:#4ade80;font-size:1.7rem;margin-bottom:4px}
+.vd-done-t{font-family:'Spectral';font-size:1.2rem;color:var(--white)}
+.vd-done-s{color:var(--cream);font-size:.92rem}
+.vd-done-change{color:#4ade80;font-weight:600}
+.vd-done-code{color:var(--gray);font-size:.78rem;font-family:'DM Sans'}
+.vd-done .btn{margin-top:12px;width:100%}
+
+.vd-foot{background:var(--surf);border:1px solid var(--border);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px}
 .vd-row{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.92rem;color:var(--gray)}
 .vd-row b{color:var(--white);font-family:'Spectral'}
-.vd-total{font-size:1.1rem;border-top:1px solid var(--border);padding-top:10px}
-.vd-total b{font-size:1.6rem;color:var(--red)}
+.vd-total{font-size:1.05rem;border-top:1px solid var(--border);padding-top:12px}
+.vd-total b{font-size:1.7rem;color:#ff5965}
 .vd-disc{width:120px;background:var(--surf2);border:1px solid var(--border2);border-radius:9px;color:var(--white);font-family:inherit;padding:.45rem .6rem;outline:none;text-align:right}
-.vd-pays{display:flex;gap:8px;margin-top:4px}
-.vd-pays button{flex:1;background:var(--surf2);border:1px solid var(--border2);color:var(--cream);border-radius:10px;padding:.6rem;font-size:.85rem;cursor:pointer;font-family:inherit}
+.vd-pays-l{font-size:.74rem;color:var(--gray);margin-top:2px}
+.vd-pays{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.vd-pays button{background:var(--surf2);border:1px solid var(--border2);color:var(--cream);border-radius:10px;padding:.6rem;font-size:.84rem;cursor:pointer;font-family:inherit;transition:background .15s,border-color .15s}
+.vd-pays button:hover{border-color:var(--border2);background:rgba(255,255,255,.06)}
 .vd-pays button.on{background:var(--red);border-color:var(--red);color:#fff}
-.vd-cobrar{margin-top:6px;font-size:1.05rem;padding:.85rem}
-@media(max-width:760px){.vender-grid{grid-template-columns:1fr}.vd-cart{max-height:38vh}}
+.vd-cash .vd-change{color:#4ade80}
+.vd-cobrar{margin-top:6px;font-size:1.05rem;padding:.9rem}
+@media(max-width:880px){.vender-grid{grid-template-columns:1fr}.vd-right{position:static}.vd-items{max-height:none}}
 
 /* ticket */
 .vd-ticket-overlay{position:fixed;inset:0;z-index:1300;background:rgba(6,4,4,.7);backdrop-filter:blur(4px);display:grid;place-items:center;padding:18px}
