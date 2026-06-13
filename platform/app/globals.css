@@ -544,16 +544,21 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 /* grilla de productos tocables */
 .vd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:12px;margin-top:14px}
 .vd-grid-empty{grid-column:1/-1;color:var(--gray);text-align:center;padding:40px 10px}
-.vd-prod{display:flex;flex-direction:column;gap:2px;background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:13px;text-align:left;cursor:pointer;font-family:inherit;transition:transform .12s,border-color .15s,background .15s}
+.vd-prod{display:flex;flex-direction:column;background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:0;overflow:hidden;text-align:left;cursor:pointer;font-family:inherit;transition:transform .12s,border-color .15s,background .15s}
 .vd-prod:hover{transform:translateY(-2px);border-color:var(--red);background:#191921}
 .vd-prod:active{transform:translateY(0)}
-.vd-prod-top{display:flex;align-items:center;gap:6px;margin-bottom:6px;min-height:20px}
-.vd-prod-combo{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#fff;background:var(--red);border-radius:5px;padding:.08rem .35rem}
-.vd-prod-stk{margin-left:auto;font-size:.68rem;color:var(--gray)}
-.vd-prod-stk.out{color:#ff6b73}
-.vd-prod-name{font-family:'Spectral';font-weight:500;font-size:.95rem;color:var(--white);line-height:1.2}
-.vd-prod-brand{font-size:.72rem;color:var(--gray)}
-.vd-prod-price{font-family:'Spectral';font-weight:600;font-size:1.05rem;color:#ff5965;margin-top:6px}
+.vd-prod-media{position:relative;height:104px;background:#0e0e14;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.vd-prod-media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s var(--ease,ease)}
+.vd-prod:hover .vd-prod-media img{transform:scale(1.05)}
+.vd-prod-ph{font-family:'Spectral';font-style:italic;font-size:1.7rem;color:rgba(241,44,54,.4)}
+.vd-prod-badges{position:absolute;top:7px;left:7px;display:flex;gap:4px;align-items:center}
+.vd-prod-badges .vd-code{margin:0}
+.vd-prod-combo{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#fff;background:var(--red);border-radius:5px;padding:.1rem .35rem}
+.vd-prod-stk{position:absolute;top:7px;right:7px;font-size:.64rem;background:rgba(8,8,12,.62);backdrop-filter:blur(3px);color:#dfe0e6;padding:.12rem .42rem;border-radius:6px}
+.vd-prod-stk.out{color:#ff8087}
+.vd-prod-name{font-family:'Spectral';font-weight:500;font-size:.92rem;color:var(--white);line-height:1.2;padding:10px 11px 0}
+.vd-prod-brand{font-size:.72rem;color:var(--gray);padding:1px 11px 0}
+.vd-prod-price{font-family:'Spectral';font-weight:600;font-size:1.05rem;color:#ff5965;padding:6px 11px 12px}
 .vd-prod-price s{color:var(--gray);font-size:.78rem;font-weight:400;margin-left:6px}
 
 /* ticket / cobro (derecha) */

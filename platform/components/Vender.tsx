@@ -6,7 +6,7 @@ import { createSale } from "../app/pos/actions";
 
 type P = {
   id: string; name: string; sku: string; quickCode: string; barcode: string; brand: string;
-  cat: string; isKit: boolean;
+  cat: string; isKit: boolean; img: string | null;
   price: number; promo: number | null; priceCase: number | null; unitsPerCase: number; stock: number;
 };
 type Client = { id: string; name: string; ccBalance: number };
@@ -157,9 +157,14 @@ export default function Vender({ catalog, clients, store, sellerName, cashOpen }
               const pr = p.promo ?? p.price;
               return (
                 <button key={p.id} type="button" className="vd-prod" onClick={() => addToCart(p)}>
-                  <div className="vd-prod-top">
-                    {p.quickCode && <span className="vd-code">{p.quickCode}</span>}
-                    {p.isKit && <span className="vd-prod-combo">combo</span>}
+                  <div className="vd-prod-media">
+                    {p.img
+                      ? <img src={p.img} alt={p.name} loading="lazy" />
+                      : <span className="vd-prod-ph">We</span>}
+                    <div className="vd-prod-badges">
+                      {p.quickCode && <span className="vd-code">{p.quickCode}</span>}
+                      {p.isKit && <span className="vd-prod-combo">combo</span>}
+                    </div>
                     <span className={`vd-prod-stk ${p.stock <= 0 ? "out" : ""}`}>{p.stock <= 0 ? "sin stock" : `${p.stock} u`}</span>
                   </div>
                   <p className="vd-prod-name">{p.name}</p>

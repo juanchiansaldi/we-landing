@@ -14,6 +14,7 @@ export default async function VenderPage() {
         id: true, name: true, sku: true, quickCode: true, barcode: true, brand: true,
         price: true, promoPrice: true, priceCase: true, unitsPerCase: true, stock: true, isKit: true,
         category: { select: { name: true } },
+        images: { orderBy: { order: "asc" }, take: 1, select: { url: true } },
         kitOf: { select: { qty: true, component: { select: { stock: true } } } },
       },
       orderBy: { name: "asc" },
@@ -32,6 +33,7 @@ export default async function VenderPage() {
   const catalog = products.map((p) => ({
     id: p.id, name: p.name, sku: p.sku || "", quickCode: p.quickCode || "", barcode: p.barcode || "", brand: p.brand || "",
     cat: p.category?.name || "", isKit: p.isKit,
+    img: (p.images[0]?.url || "").replace(/^\.\//, "/") || null,
     price: p.price, promo: p.promoPrice ?? null, priceCase: p.priceCase ?? null,
     unitsPerCase: p.unitsPerCase,
     // combos: el stock disponible sale de los componentes
