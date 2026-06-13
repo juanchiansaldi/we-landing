@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 const NAV: { group: string; items: { href: string; label: string; icon: string }[] }[] = [
   { group: "Tienda", items: [
-    { href: "/admin", label: "Inicio", icon: "dashboard" },
+    { href: "/admin", label: "Dashboard", icon: "dashboard" },
     { href: "/admin/pedidos", label: "Pedidos", icon: "orders" },
     { href: "/admin/cupones", label: "Cupones", icon: "ticket" },
   ] },
@@ -65,10 +65,11 @@ export default function AdminNav() {
   return (
     <aside className="side">
       <a href="/admin" className="side-brand">
-        <span className="side-logo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 22h8M12 11v11M7 2h10l-1 6a4 4 0 0 1-8 0z" /></svg>
+        <span className="side-logo"><svg viewBox="0 0 183.92 299"><use href="#we-iso" /></svg></span>
+        <span className="side-brand-txt">
+          <span className="side-word"><svg viewBox="0 0 520.10 261.99"><use href="#we-word" /></svg></span>
+          <em>Gestión</em>
         </span>
-        <span className="side-brand-txt"><b>WeCava</b><em>ERP · Vinoteca</em></span>
       </a>
 
       <nav className="side-nav">
