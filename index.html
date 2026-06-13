@@ -190,7 +190,8 @@ h1.hero-title b{font-weight:600}
 
 /* hero visual: filling isotipo */
 .hero-vis{position:relative;height:520px;display:flex;align-items:center;justify-content:center}
-.hero-vis .glow{position:absolute;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(241,44,54,.3),transparent 65%);filter:blur(50px)}
+.hero-vis .glow{position:absolute;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(241,44,54,.3),transparent 65%);filter:blur(50px);animation:ember 5.5s ease-in-out infinite;will-change:opacity,transform}
+@keyframes ember{0%,100%{opacity:.7;transform:scale(.95)}50%{opacity:1;transform:scale(1.09)}}
 .iso-stage{position:relative;height:340px;animation:bob 8s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
 .iso-stage svg{height:340px;width:auto;display:block;filter:drop-shadow(0 24px 40px rgba(241,44,54,.25))}
@@ -585,7 +586,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
 /* ===== prefers-reduced-motion ===== */
 @media(prefers-reduced-motion:reduce){
   *{scroll-behavior:auto!important}
-  .atmos .blob,.iso-stage,.tw-cursor{animation:none!important}
+  .atmos .blob,.iso-stage,.tw-cursor,.hero-vis .glow{animation:none!important}
   .marquee-track{animation:none!important;transform:none!important}
   .reveal{opacity:1!important;transform:none!important}
   .esencia{min-height:0}
