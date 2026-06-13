@@ -881,3 +881,50 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .vt-grand span:last-child{font-family:var(--font-spectral);font-size:1.5rem;color:#ff5965}
 .vt-void{background:transparent;border:1px solid rgba(241,44,54,.5);color:#ff6b73}
 .vt-void:hover{background:rgba(241,44,54,.12)}
+
+/* ═══════════ Manual / Ayuda ═══════════ */
+.man-wrap{max-width:980px}
+.man-sec{margin-bottom:34px}
+.man-sec h2{font-size:1.3rem;display:flex;align-items:center;gap:10px;margin-bottom:6px;font-weight:600}
+.man-num-sec{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;background:var(--red);color:#fff;font-size:.95rem;font-family:'DM Sans';font-weight:700;flex-shrink:0}
+.man-steps{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.man-step{display:flex;align-items:center;gap:14px;background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:14px 16px;text-decoration:none;color:inherit;transition:border-color .15s,transform .12s}
+.man-step:hover{border-color:var(--red);transform:translateX(3px)}
+.man-n{flex-shrink:0;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--red-soft);color:#ff5965;font-weight:700;font-size:.92rem}
+.man-step>div{flex:1;min-width:0}
+.man-step b{font-family:'Spectral';font-weight:500;font-size:1.02rem;color:var(--white)}
+.man-step p{color:var(--gray);font-size:.86rem;margin-top:3px;line-height:1.5}
+.man-step p b{font-family:inherit;font-weight:600;color:var(--cream);font-size:inherit}
+.man-go{flex-shrink:0;color:var(--gray);font-size:.82rem}
+.man-step:hover .man-go{color:var(--red)}
+.man-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:14px}
+.man-card{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:16px;text-decoration:none;color:inherit;display:block;transition:border-color .15s}
+a.man-card:hover{border-color:var(--red)}
+.man-card b{font-family:'Spectral';font-weight:500;font-size:1.02rem;color:var(--white);display:block;margin-bottom:5px}
+.man-card p{color:var(--gray);font-size:.86rem;line-height:1.55}
+.man-card p b,.man-step p b{display:inline}
+.man-card a,.man-tip a{color:#ff5965;text-decoration:underline}
+.man-flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:12px;margin-top:14px}
+.man-flow-step{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:16px;text-decoration:none;color:inherit;transition:border-color .15s}
+.man-flow-step:hover{border-color:var(--red)}
+.man-flow-step>span{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--red);color:#fff;font-size:.82rem;font-weight:700;margin-bottom:9px}
+.man-flow-step b{font-family:'Spectral';font-weight:500;display:block;color:var(--white)}
+.man-flow-step p{color:var(--gray);font-size:.84rem;margin-top:4px;line-height:1.5}
+.man-tip{background:rgba(241,180,44,.08);border:1px solid rgba(241,180,44,.25);border-radius:12px;padding:12px 15px;font-size:.88rem;color:var(--cream);margin-top:14px;line-height:1.55}
+.man-tip b{color:var(--white)}
+.man-gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(265px,1fr));gap:10px;margin-top:14px}
+.man-gloss>div{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+.man-gloss b{font-family:'Spectral';font-weight:500;color:var(--white);display:block;margin-bottom:2px}
+.man-gloss span{color:var(--gray);font-size:.85rem;line-height:1.5}
+.man-foot{margin-top:30px;padding-top:18px;border-top:1px solid var(--border);color:var(--gray);font-size:.82rem;text-align:center}
+
+@media print{
+  .side,.man-print-btn,.admin-top-actions{display:none!important}
+  .pos,.pos-body{display:block!important;background:#fff!important;min-height:0!important}
+  .pos-wrap{max-width:none;padding:0}
+  .man-wrap *{color:#1b1b1b!important;background:#fff!important;border-color:#dcdcdc!important}
+  .man-num-sec,.man-flow-step>span{background:#b1121b!important;color:#fff!important}
+  .man-n{background:#f6e4e5!important;color:#b1121b!important}
+  .man-step,.man-card,.man-flow-step,.man-gloss>div,.man-tip{break-inside:avoid}
+  .eyebrow{color:#b1121b!important}
+}

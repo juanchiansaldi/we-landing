@@ -26,6 +26,9 @@ const NAV: { group: string; items: { href: string; label: string; icon: string }
     { href: "/admin/usuarios", label: "Usuarios", icon: "badge" },
     { href: "/admin/reportes", label: "Reportes", icon: "chart" },
   ] },
+  { group: "Ayuda", items: [
+    { href: "/admin/manual", label: "Manual", icon: "book" },
+  ] },
 ];
 
 function Icon({ n }: { n: string }) {
@@ -45,6 +48,7 @@ function Icon({ n }: { n: string }) {
     users: <><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /></>,
     badge: <><rect x="3" y="4" width="18" height="16" rx="2" /><circle cx="9" cy="10" r="2" /><path d="M15 8h3M15 12h3M7 16h10" /></>,
     chart: <><path d="M3 3v18h18" /><path d="m19 9-5 5-4-4-3 3" /></>,
+    book: <><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" /></>,
     power: <><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10" /></>,
   };
   return (
