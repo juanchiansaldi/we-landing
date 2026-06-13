@@ -928,3 +928,9 @@ a.man-card:hover{border-color:var(--red)}
   .man-step,.man-card,.man-flow-step,.man-gloss>div,.man-tip{break-inside:avoid}
   .eyebrow{color:#b1121b!important}
 }
+
+/* Vender: banner de edición de venta */
+.vd-editbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:rgba(241,180,44,.1);border:1px solid rgba(241,180,44,.3);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:.86rem;color:var(--cream)}
+.vd-editbar b{color:var(--white)}
+.vd-editbar button{background:rgba(255,255,255,.06);border:1px solid var(--border2);color:var(--cream);border-radius:9px;padding:.4rem .8rem;font-size:.8rem;cursor:pointer;font-family:inherit;white-space:nowrap}
+.vd-editbar button:hover{border-color:var(--red);color:var(--white)}

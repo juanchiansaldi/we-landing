@@ -4,10 +4,10 @@ import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { voidSale } from "../app/pos/actions";
 
-type Item = { name: string; qty: number; unit: string; subtotal: number };
+type Item = { productId: string | null; name: string; qty: number; unit: string; subtotal: number };
 type Sale = {
   id: string; code: string; at: string; subtotal: number; discount: number; total: number;
-  payMethod: string; voided: boolean; seller: string; customer: string; items: Item[];
+  payMethod: string; voided: boolean; customerId: string | null; seller: string; customer: string; items: Item[];
 };
 
 const money = (n: number) => "$ " + Math.round(n).toLocaleString("es-AR");
@@ -41,6 +41,17 @@ export default function PosVentas({ sales }: { sales: Sale[] }) {
       if (res?.ok === false) { alert(res.error); return; }
       setOpen(null); router.refresh();
     });
+  }
+
+  function editar(s: Sale) {
+    const items = s.items.filter((i) => i.productId).map((i) => ({ productId: i.productId as string, unit: i.unit, qty: i.qty }));
+    if (!items.length) { alert("Esta venta no tiene productos vinculados; usá Anular y rehacela."); return; }
+    try {
+      localStorage.setItem("we-edit-sale", JSON.stringify({
+        saleId: s.id, code: s.code, items, discount: s.discount, payMethod: s.payMethod, customerId: s.customerId || "",
+      }));
+    } catch {}
+    router.push("/admin/vender?edit=1");
   }
 
   return (
@@ -109,7 +120,10 @@ export default function PosVentas({ sales }: { sales: Sale[] }) {
             <div className="admin-editor-foot">
               <button type="button" className="btn btn-ghost" onClick={() => setOpen(null)} disabled={pending}>Cerrar</button>
               {!open.voided && (
-                <button type="button" className="btn vt-void" onClick={() => anular(open)} disabled={pending}>{pending ? "Anulando…" : "Anular venta"}</button>
+                <button type="button" className="btn btn-ghost" onClick={() => editar(open)} disabled={pending}>✏️ Editar</button>
+              )}
+              {!open.voided && (
+                <button type="button" className="btn vt-void" onClick={() => anular(open)} disabled={pending}>{pending ? "Anulando…" : "Anular"}</button>
               )}
             </div>
           </div>

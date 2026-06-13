@@ -693,3 +693,101 @@ export async function voidSale(data: FormData) {
   revalidatePath("/admin/reportes");
   return { ok: true };
 }
+
+// ═══════════════ Editar venta = revertir la original + crear la nueva (atómico) ═══════════════
+export async function editSale(input: SaleInput & { originalSaleId: string }) {
+  posGuard();
+  const store = await getStore();
+  const orig = await prisma.sale.findFirst({
+    where: { id: input.originalSaleId, storeId: store.id },
+    select: { id: true, voided: true, total: true, payMethod: true, customerId: true },
+  });
+  if (!orig) return { ok: false, error: "Venta original no encontrada" };
+  if (orig.voided) return { ok: false, error: "Esa venta está anulada; no se puede editar" };
+
+  const items = (input.items || []).filter((i) => i.productId && i.qty > 0);
+  if (!items.length) return { ok: false, error: "El ticket nuevo está vacío" };
+
+  // armar las líneas nuevas (mismo criterio que createSale)
+  const prods = await prisma.product.findMany({
+    where: { storeId: store.id, id: { in: items.map((i) => i.productId) } },
+    include: { kitOf: { include: { component: true } } },
+  });
+  const byId = new Map(prods.map((p) => [p.id, p]));
+  const lines = items.map((i) => {
+    const p = byId.get(i.productId); if (!p) return null;
+    const qty = Math.max(1, Math.floor(i.qty));
+    const unit = i.unit === "CAJA" ? "CAJA" : "BOTELLA";
+    const unitPrice = unit === "CAJA" ? (p.priceCase ?? p.price * p.unitsPerCase) : (p.promoPrice ?? p.price);
+    const bottles = unit === "CAJA" ? qty * p.unitsPerCase : qty;
+    return { p, unit, qty, unitPrice, unitCost: p.cost ?? 0, subtotal: unitPrice * qty, bottles };
+  }).filter(Boolean) as any[];
+  if (!lines.length) return { ok: false, error: "Sin items válidos" };
+
+  const subtotal = lines.reduce((s, l) => s + l.subtotal, 0);
+  const discount = Math.max(0, Math.min(Math.floor(input.discount || 0), subtotal));
+  const total = subtotal - discount;
+  const pm = (["EFECTIVO", "TARJETA", "TRANSFERENCIA", "CUENTA_CORRIENTE"].includes(input.payMethod) ? input.payMethod : "EFECTIVO") as PayMethodIn;
+  if (pm === "CUENTA_CORRIENTE") {
+    if (!input.customerId) return { ok: false, error: "Elegí un cliente para la cuenta corriente" };
+    const c = await prisma.customer.findFirst({ where: { id: input.customerId, storeId: store.id }, select: { id: true } });
+    if (!c) return { ok: false, error: "Cliente no encontrado" };
+  }
+  const openCashSession = await prisma.cashSession.findFirst({ where: { storeId: store.id, status: "ABIERTA" }, orderBy: { openedAt: "desc" }, select: { id: true } });
+  const posUserId = cookies().get(POS_USER_COOKIE)?.value || null;
+  const origCode = orig.id.slice(-6).toUpperCase();
+
+  const newSale = await prisma.$transaction(async (tx) => {
+    // 1) revertir el stock de la venta original
+    const moves = await tx.stockMovement.findMany({ where: { storeId: store.id, refType: "sale", refId: orig.id } });
+    for (const mv of moves) {
+      const back = -mv.qty;
+      const up = await tx.product.update({ where: { id: mv.productId }, data: { stock: { increment: back } } });
+      await tx.stockMovement.create({ data: { storeId: store.id, productId: mv.productId, type: "INGRESO", qty: back, reason: "edición", refType: "edicion", refId: orig.id, posUserId, resultingStock: up.stock } });
+    }
+    // 1b) revertir la cuenta corriente original (saldo fresco dentro de la tx)
+    if (orig.payMethod === "CUENTA_CORRIENTE" && orig.customerId) {
+      const c = await tx.customer.findUnique({ where: { id: orig.customerId }, select: { ccBalance: true } });
+      if (c) { const bal = c.ccBalance - orig.total; await tx.customer.update({ where: { id: orig.customerId }, data: { ccBalance: bal } }); await tx.customerLedger.create({ data: { customerId: orig.customerId, type: "PAGO", amount: orig.total, refSaleId: orig.id, resultingBalance: bal, note: `Edición venta #${origCode}` } }); }
+    }
+
+    // 2) crear la venta nueva
+    const created = await tx.sale.create({
+      data: {
+        storeId: store.id, posUserId, customerId: pm === "CUENTA_CORRIENTE" ? input.customerId! : null,
+        cashSessionId: openCashSession?.id ?? null, subtotal, discount, total, payMethod: pm as any,
+        payCash: pm === "EFECTIVO" ? total : 0, payCard: pm === "TARJETA" ? total : 0,
+        payTransfer: pm === "TRANSFERENCIA" ? total : 0, payAccount: pm === "CUENTA_CORRIENTE" ? total : 0,
+        note: `Edición de #${origCode}`,
+        items: { create: lines.map((l) => ({ productId: l.p.id, name: l.p.name, unit: l.unit as any, qty: l.qty, unitPrice: l.unitPrice, unitCost: l.unitCost, subtotal: l.subtotal })) },
+      },
+    });
+    const newCode = created.id.slice(-6).toUpperCase();
+    await tx.sale.update({ where: { id: orig.id }, data: { voided: true, note: `Editada → #${newCode}` } });
+
+    // 2b) descontar el stock nuevo (combos por componente)
+    for (const l of lines) {
+      if (l.p.isKit && l.p.kitOf?.length) {
+        for (const ki of l.p.kitOf) { const dec = l.qty * ki.qty; const up = await tx.product.update({ where: { id: ki.componentId }, data: { stock: { decrement: dec } } }); await tx.stockMovement.create({ data: { storeId: store.id, productId: ki.componentId, type: "EGRESO", qty: -dec, reason: "venta combo", refType: "sale", refId: created.id, posUserId, resultingStock: up.stock } }); }
+      } else { const up = await tx.product.update({ where: { id: l.p.id }, data: { stock: { decrement: l.bottles } } }); await tx.stockMovement.create({ data: { storeId: store.id, productId: l.p.id, type: "EGRESO", qty: -l.bottles, reason: "venta", refType: "sale", refId: created.id, posUserId, resultingStock: up.stock } }); }
+    }
+    // 2c) cuenta corriente nueva (saldo fresco)
+    if (pm === "CUENTA_CORRIENTE" && input.customerId) {
+      const c = await tx.customer.findUnique({ where: { id: input.customerId }, select: { ccBalance: true } });
+      if (c) { const resulting = c.ccBalance + total; await tx.customer.update({ where: { id: input.customerId }, data: { ccBalance: resulting } }); await tx.customerLedger.create({ data: { customerId: input.customerId, type: "CARGO", amount: total, refSaleId: created.id, resultingBalance: resulting, note: `Venta #${newCode} (edición de #${origCode})` } }); }
+    }
+    return created;
+  });
+
+  revalidatePath("/admin/ventas");
+  revalidatePath("/admin/stock");
+  revalidatePath("/admin/caja");
+  revalidatePath("/admin/clientes");
+  revalidatePath("/admin");
+  revalidatePath("/admin/reportes");
+
+  return {
+    ok: true,
+    ticket: { code: newSale.id.slice(-6).toUpperCase(), items: lines.map((l) => ({ name: l.p.name, unit: l.unit, qty: l.qty, unitPrice: l.unitPrice, subtotal: l.subtotal })), subtotal, discount, total, payMethod: pm },
+  };
+}

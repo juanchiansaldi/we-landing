@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { createSale } from "../app/pos/actions";
+import { createSale, editSale } from "../app/pos/actions";
 
 type P = {
   id: string; name: string; sku: string; quickCode: string; barcode: string; brand: string;
@@ -39,12 +39,34 @@ export default function Vender({ catalog, clients, store, sellerName, cashOpen }
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [printTicket, setPrintTicket] = useState(false);
   const [done, setDone] = useState<Done | null>(null);
+  const [editing, setEditing] = useState<{ id: string; code: string } | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const [pending, start] = useTransition();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const focusInput = () => inputRef.current?.focus();
-  useEffect(() => { focusInput(); }, []);
+  useEffect(() => {
+    focusInput();
+    // si venimos de "Editar venta", precargamos el carrito
+    if (typeof window === "undefined") return;
+    if (new URLSearchParams(window.location.search).get("edit") !== "1") return;
+    try {
+      const raw = localStorage.getItem("we-edit-sale");
+      localStorage.removeItem("we-edit-sale");
+      if (!raw) return;
+      const e = JSON.parse(raw) as { saleId: string; code: string; items: { productId: string; unit: Unit; qty: number }[]; discount: number; payMethod: Pay; customerId: string };
+      const byId = new Map(catalog.map((p) => [p.id, p]));
+      const lines: Line[] = [];
+      for (const it of e.items) { const p = byId.get(it.productId); if (p) lines.push({ p, unit: it.unit, qty: it.qty }); }
+      if (!lines.length) return;
+      setCart(lines);
+      setDiscount(e.discount || 0);
+      if (["EFECTIVO", "TARJETA", "TRANSFERENCIA", "CUENTA_CORRIENTE"].includes(e.payMethod)) setPay(e.payMethod);
+      if (e.customerId) setCustomerId(e.customerId);
+      setEditing({ id: e.saleId, code: e.code });
+      window.history.replaceState(null, "", "/admin/vender");
+    } catch {}
+  }, []);
 
   const cats = useMemo(() => [...new Set(catalog.map((p) => p.cat).filter(Boolean))].sort(), [catalog]);
 
@@ -103,18 +125,21 @@ export default function Vender({ catalog, clients, store, sellerName, cashOpen }
   function cobrar() {
     if (!cart.length || pending) return;
     if (pay === "CUENTA_CORRIENTE" && !customerId) { alert("Elegí un cliente para la cuenta corriente"); return; }
+    const payload = {
+      items: cart.map((l) => ({ productId: l.p.id, unit: l.unit, qty: l.qty })),
+      discount,
+      payMethod: pay,
+      customerId: pay === "CUENTA_CORRIENTE" ? customerId : undefined,
+    };
     start(async () => {
-      const res = await createSale({
-        items: cart.map((l) => ({ productId: l.p.id, unit: l.unit, qty: l.qty })),
-        discount,
-        payMethod: pay,
-        customerId: pay === "CUENTA_CORRIENTE" ? customerId : undefined,
-      });
+      const res = editing
+        ? await editSale({ ...payload, originalSaleId: editing.id })
+        : await createSale(payload);
       if (res.ok && res.ticket) {
         const t = res.ticket as Ticket;
         const ch = pay === "EFECTIVO" && cashGiven ? Math.max(0, Number(cashGiven) - t.total) : 0;
         setDone({ code: t.code, total: t.total, pay, change: ch });
-        setCart([]); setDiscount(0); setCashGiven(""); setQ(""); setCustomerId("");
+        setCart([]); setDiscount(0); setCashGiven(""); setQ(""); setCustomerId(""); setEditing(null);
         router.refresh();
         if (printTicket) { setTicket(t); setTimeout(() => window.print(), 350); }
       } else {
@@ -126,12 +151,19 @@ export default function Vender({ catalog, clients, store, sellerName, cashOpen }
   return (
     <div className="vender">
       <div className="vd-bar">
-        <h1 className="serif">Vender</h1>
+        <h1 className="serif">{editing ? "Editar venta" : "Vender"}</h1>
         <div className="vd-bar-tags">
           <span className={sellerName ? "vd-tag on" : "vd-tag"}>{sellerName ? `👤 ${sellerName}` : "Sin vendedor"}</span>
           <span className={cashOpen ? "vd-tag on" : "vd-tag warn"}>{cashOpen ? "● Caja abierta" : "○ Caja cerrada"}</span>
         </div>
       </div>
+
+      {editing && (
+        <div className="vd-editbar">
+          <span>✏️ Editando la venta <b>#{editing.code}</b> — al cobrar se reemplaza por una nueva (se ajusta stock y cuenta corriente).</span>
+          <button type="button" onClick={() => { setEditing(null); setCart([]); setDiscount(0); setCustomerId(""); }}>Cancelar edición</button>
+        </div>
+      )}
 
       <div className="vender-grid">
         {/* IZQUIERDA: catálogo tocable */}
@@ -257,7 +289,7 @@ export default function Vender({ catalog, clients, store, sellerName, cashOpen }
               </label>
 
               <button className="btn btn-primary vd-cobrar" type="button" onClick={cobrar} disabled={!cart.length || pending}>
-                {pending ? "Registrando…" : `Cobrar ${money(total)}`}
+                {pending ? (editing ? "Guardando…" : "Registrando…") : editing ? `Guardar cambios · ${money(total)}` : `Cobrar ${money(total)}`}
               </button>
             </div>
           )}

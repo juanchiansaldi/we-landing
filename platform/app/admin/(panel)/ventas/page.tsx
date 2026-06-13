@@ -20,10 +20,10 @@ export default async function VentasPage() {
     code: s.id.slice(-6).toUpperCase(),
     at: s.createdAt.toISOString(),
     subtotal: s.subtotal, discount: s.discount, total: s.total,
-    payMethod: s.payMethod, voided: s.voided,
+    payMethod: s.payMethod, voided: s.voided, customerId: s.customerId,
     seller: s.posUser?.nombre || "",
     customer: s.customer?.name || "",
-    items: s.items.map((i) => ({ name: i.name, qty: i.qty, unit: i.unit, subtotal: i.subtotal })),
+    items: s.items.map((i) => ({ productId: i.productId, name: i.name, qty: i.qty, unit: i.unit, subtotal: i.subtotal })),
   }));
 
   return <PosVentas sales={rows} />;
