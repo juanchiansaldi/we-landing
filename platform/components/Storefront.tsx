@@ -465,7 +465,6 @@ export default function Storefront({ store, products, cats, loggedIn, me }: Prop
         <div className="nav-right">
           <div className="nav-links">
             <a href="https://wecavagourmet.com">Inicio</a>
-            <a href="https://wecavagourmet.com/#seleccion">Selección</a>
             <a href="/club">Club We</a>
             <a href="#" className="active">Cava · Tienda</a>
             <a href="/cuenta">Mi cuenta</a>
