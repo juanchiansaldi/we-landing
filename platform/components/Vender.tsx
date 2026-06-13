@@ -272,6 +272,7 @@ export default function Vender({ catalog, clients, store, sellerName, cashOpen }
               <div className="tk-head">{store.name}</div>
               <div className="tk-sub">Crespo, Entre Ríos · Comprobante NO fiscal</div>
               <div className="tk-line">Venta #{ticket.code}</div>
+              <div className="tk-line">{new Date().toLocaleString("es-AR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })}{sellerName ? ` · ${sellerName}` : ""}</div>
               <div className="tk-hr" />
               {ticket.items.map((i, k) => (
                 <div className="tk-item" key={k}>
@@ -282,7 +283,7 @@ export default function Vender({ catalog, clients, store, sellerName, cashOpen }
               <div className="tk-hr" />
               {ticket.discount > 0 && <div className="tk-item"><span>Descuento</span><span>− {money(ticket.discount)}</span></div>}
               <div className="tk-item tk-total"><span>TOTAL</span><span>{money(ticket.total)}</span></div>
-              <div className="tk-line">Pago: {ticket.payMethod}</div>
+              <div className="tk-line">Pago: {PAY_LABEL[ticket.payMethod as Pay] || ticket.payMethod}</div>
               <div className="tk-foot">¡Gracias por tu compra! 🍷</div>
             </div>
             <div className="vd-ticket-actions">

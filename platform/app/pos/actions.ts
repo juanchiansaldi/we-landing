@@ -65,7 +65,6 @@ export async function posSaveProduct(data: FormData) {
     priceCase: n(data, "priceCase"),
     cost: n(data, "cost"),
     unitsPerCase: n(data, "unitsPerCase") ?? 6,
-    stock: n(data, "stock") ?? 0,
     stockMin: n(data, "stockMin") ?? 0,
     varietal: s(data, "varietal") || null,
     vintage: n(data, "vintage"),
@@ -78,10 +77,11 @@ export async function posSaveProduct(data: FormData) {
 
   let productId = id;
   if (id) {
+    // OJO: al editar NO tocamos el stock (se ajusta desde /admin/stock, que deja registro)
     await prisma.product.update({ where: { id }, data: fields });
   } else {
     const slug = await uniqueSlug(store.id, slugify(name));
-    const created = await prisma.product.create({ data: { ...fields, slug, storeId: store.id } });
+    const created = await prisma.product.create({ data: { ...fields, stock: n(data, "stock") ?? 0, slug, storeId: store.id } });
     productId = created.id;
   }
 

@@ -217,7 +217,12 @@ export default function PosProducts({
 
             <div className="admin-grid3">
               <label>Unid. por caja<input name="unitsPerCase" type="number" min="1" defaultValue={editing.unitsPerCase} /></label>
-              <label>Stock (botellas)<input name="stock" type="number" defaultValue={editing.stock} /></label>
+              {editing.id ? (
+                <label>Stock actual <a href="/admin/stock" className="admin-opt" style={{ color: "var(--red)", textDecoration: "underline" }}>ajustar en Stock ↗</a>
+                  <input type="number" value={editing.stock} disabled readOnly /></label>
+              ) : (
+                <label>Stock inicial (botellas)<input name="stock" type="number" defaultValue={editing.stock} /></label>
+              )}
               <label>Stock mínimo<input name="stockMin" type="number" min="0" defaultValue={editing.stockMin} /></label>
             </div>
 
