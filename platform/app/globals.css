@@ -762,3 +762,57 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .low-pill.out{background:rgba(241,44,54,.15);color:#ff5965}
 @media(max-width:1080px){.dash-cols{grid-template-columns:1fr}.dash-kpis{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.dash-kpis{grid-template-columns:1fr}}
+
+/* ═══════════════ Tema unificado del panel admin (estética ERP, paleta del demo + rojo We) ═══════════════ */
+.pos{
+  --bg:#0E0E14;
+  --surf:#15151D;
+  --surf2:#0E0E14;
+  --white:#f6f6f9;
+  --cream:#d9d9e1;
+  --gray:#83838f;
+  --gray2:#4a4a56;
+  --border:rgba(255,255,255,.08);
+  --border2:rgba(255,255,255,.14);
+  --red-soft:rgba(241,44,54,.15);
+}
+.side{background:#101017}
+.side-user{background:rgba(255,255,255,.04)}
+
+/* botones del panel: esquina redondeada (no pastilla) y ghost estilo demo */
+.pos .btn{border-radius:11px;font-weight:600}
+.pos .btn-primary{box-shadow:0 8px 22px -10px rgba(241,44,54,.6)}
+.pos .btn-ghost{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);color:var(--cream)}
+.pos .btn-ghost:hover{background:rgba(255,255,255,.1)}
+
+/* headers iguales en todas las pantallas: título + subtítulo, sin eyebrow */
+.pos .admin-top .eyebrow,.pos .pos-head .eyebrow{display:none}
+.pos .admin-top h1,.dash-top h1{font-size:1.7rem;font-weight:600}
+.pos .pos-head h1{font-size:1.7rem;font-weight:600;margin-top:2px}
+
+/* tablas estilo demo */
+.pos .admin-table{background:var(--surf);border-color:var(--border);border-radius:18px}
+.pos .admin-th{background:rgba(255,255,255,.025);border-bottom-color:var(--border);color:var(--gray)}
+.pos .admin-tr{border-bottom-color:rgba(255,255,255,.05);padding:13px 18px}
+.pos .admin-tr:not(.admin-th):hover{background:rgba(255,255,255,.025)}
+.pos .admin-row-actions button{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);border-radius:9px;color:var(--cream)}
+.pos .admin-row-actions button:hover{border-color:var(--red);color:var(--white)}
+.pos .admin-empty{color:var(--gray)}
+
+/* cards + modal */
+.pos .admin-card{border-radius:18px;border-color:var(--border)}
+.admin-modal .admin-editor{background:#191921}
+
+/* KPIs unificados: Stock/Clientes (dash-kpi) = mismo look que el dashboard (kpi) */
+.dash-kpi{background:var(--surf);border:1px solid var(--border);border-radius:16px;padding:18px}
+.dash-kpi span{font-size:.78rem;color:var(--gray)}
+.dash-kpi b{font-size:1.8rem;font-family:var(--font-spectral);font-weight:500;margin-top:6px;color:var(--white)}
+
+/* pills de estado: sin mayúsculas, suaves como el demo */
+.pos .pay-badge{text-transform:none;letter-spacing:0;font-size:.72rem;padding:.22rem .65rem}
+.stk-ok{color:#4ade80}
+.stk-low{color:#ff6b73}
+.admin-nostock{color:#ff6b73}
+
+/* toolbar / buscador del panel coherente con inputs */
+.pos .admin-search{background:var(--surf2);border:1px solid var(--border2);border-radius:11px}

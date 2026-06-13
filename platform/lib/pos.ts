@@ -7,6 +7,12 @@ const STORE_SLUG = process.env.DEFAULT_STORE_SLUG || "we";
 /** Cookie del vendedor activo en el POS (estampa las ventas con su posUserId). */
 export const POS_USER_COOKIE = "we_pos_user";
 
+/** Stock disponible de un combo = cuántos se pueden armar con el stock de los componentes. */
+export function comboStock(kitOf: { qty: number; component: { stock: number } }[]): number {
+  if (!kitOf.length) return 0;
+  return Math.min(...kitOf.map((k) => Math.floor(k.component.stock / Math.max(1, k.qty))));
+}
+
 /** Por ahora el POS se protege con el login de admin. Fase 7 = usuarios propios. */
 export function posGuard() {
   if (!isAuthed()) redirect("/admin/login");

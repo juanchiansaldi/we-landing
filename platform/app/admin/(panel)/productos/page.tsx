@@ -8,7 +8,7 @@ export default async function ProductosPage() {
   const store = await getStore();
   const [products, categories, suppliers] = await Promise.all([
     prisma.product.findMany({
-      where: { storeId: store.id },
+      where: { storeId: store.id, isKit: false }, // los combos se gestionan en /admin/combos
       include: { category: true, supplier: true, images: { orderBy: { order: "asc" }, take: 1 } },
       orderBy: { name: "asc" },
     }),
