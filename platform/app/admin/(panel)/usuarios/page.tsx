@@ -1,11 +1,12 @@
 import { cookies } from "next/headers";
 import { prisma } from "../../../../lib/prisma";
-import { getStore, POS_USER_COOKIE } from "../../../../lib/pos";
+import { getStore, POS_USER_COOKIE , adminGuard } from "../../../../lib/pos";
 import PosUsuarios from "../../../../components/PosUsuarios";
 
 export const dynamic = "force-dynamic";
 
 export default async function UsuariosPage() {
+  adminGuard();
   const store = await getStore();
   const users = await prisma.posUser.findMany({
     where: { storeId: store.id },

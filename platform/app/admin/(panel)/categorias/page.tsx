@@ -1,10 +1,11 @@
 import { prisma } from "../../../../lib/prisma";
-import { getStore } from "../../../../lib/pos";
+import { getStore , adminGuard } from "../../../../lib/pos";
 import PosCategorias from "../../../../components/PosCategorias";
 
 export const dynamic = "force-dynamic";
 
 export default async function CategoriasPage() {
+  adminGuard();
   const store = await getStore();
   const cats = await prisma.category.findMany({
     where: { storeId: store.id },

@@ -1,8 +1,14 @@
 import { redirect } from "next/navigation";
 import { prisma } from "./prisma";
-import { isAuthed } from "./auth";
+import { isAuthed, isFullAccess } from "./auth";
 
 const STORE_SLUG = process.env.DEFAULT_STORE_SLUG || "we";
+
+/** Páginas solo para dueño/admin: un vendedor se va a la caja. */
+export function adminGuard() {
+  if (!isAuthed()) redirect("/admin/login");
+  if (!isFullAccess()) redirect("/admin/vender");
+}
 
 /** Cookie del vendedor activo en el POS (estampa las ventas con su posUserId). */
 export const POS_USER_COOKIE = "we_pos_user";

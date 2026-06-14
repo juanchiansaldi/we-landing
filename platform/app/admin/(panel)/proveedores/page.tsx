@@ -1,10 +1,11 @@
 import { prisma } from "../../../../lib/prisma";
-import { getStore } from "../../../../lib/pos";
+import { getStore , adminGuard } from "../../../../lib/pos";
 import PosProveedores from "../../../../components/PosProveedores";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProveedoresPage() {
+  adminGuard();
   const store = await getStore();
   const provs = await prisma.supplier.findMany({
     where: { storeId: store.id },

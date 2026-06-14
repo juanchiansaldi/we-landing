@@ -2,32 +2,33 @@
 
 import { usePathname, useRouter } from "next/navigation";
 
-const NAV: { group: string; items: { href: string; label: string; icon: string }[] }[] = [
+// v: true → visible también para el rol VENDEDOR. El resto es solo dueño/admin.
+const NAV: { group: string; items: { href: string; label: string; icon: string; v?: boolean }[] }[] = [
   { group: "Tienda", items: [
     { href: "/admin", label: "Dashboard", icon: "dashboard" },
     { href: "/admin/pedidos", label: "Pedidos", icon: "orders" },
     { href: "/admin/cupones", label: "Cupones", icon: "ticket" },
   ] },
   { group: "Local", items: [
-    { href: "/admin/vender", label: "Vender", icon: "cart" },
-    { href: "/admin/ventas", label: "Ventas", icon: "receipt" },
-    { href: "/admin/caja", label: "Caja", icon: "wallet" },
+    { href: "/admin/vender", label: "Vender", icon: "cart", v: true },
+    { href: "/admin/ventas", label: "Ventas", icon: "receipt", v: true },
+    { href: "/admin/caja", label: "Caja", icon: "wallet", v: true },
   ] },
   { group: "Inventario", items: [
-    { href: "/admin/productos", label: "Productos", icon: "tag" },
-    { href: "/admin/stock", label: "Stock", icon: "layers" },
+    { href: "/admin/productos", label: "Productos", icon: "tag", v: true },
+    { href: "/admin/stock", label: "Stock", icon: "layers", v: true },
     { href: "/admin/compras", label: "Compras", icon: "truck" },
     { href: "/admin/combos", label: "Combos", icon: "gift" },
     { href: "/admin/categorias", label: "Categorías", icon: "folder" },
     { href: "/admin/proveedores", label: "Proveedores", icon: "store" },
   ] },
   { group: "Datos", items: [
-    { href: "/admin/clientes", label: "Clientes", icon: "users" },
+    { href: "/admin/clientes", label: "Clientes", icon: "users", v: true },
     { href: "/admin/usuarios", label: "Usuarios", icon: "badge" },
     { href: "/admin/reportes", label: "Reportes", icon: "chart" },
   ] },
   { group: "Ayuda", items: [
-    { href: "/admin/manual", label: "Manual", icon: "book" },
+    { href: "/admin/manual", label: "Manual", icon: "book", v: true },
   ] },
 ];
 
@@ -58,7 +59,9 @@ function Icon({ n }: { n: string }) {
   );
 }
 
-export default function AdminNav() {
+const ROLE_LABEL: Record<string, string> = { OWNER: "Dueño", ADMIN: "Admin", VENDEDOR: "Vendedor" };
+
+export default function AdminNav({ role = "OWNER", name = "Dueño" }: { role?: string; name?: string }) {
   const path = usePathname();
   const router = useRouter();
 
@@ -68,9 +71,15 @@ export default function AdminNav() {
     router.refresh();
   }
 
+  const isVendedor = role === "VENDEDOR";
+  const groups = NAV
+    .map((g) => ({ ...g, items: g.items.filter((it) => (isVendedor ? it.v : true)) }))
+    .filter((g) => g.items.length);
+  const initial = (name || "?").trim().charAt(0).toUpperCase() || "?";
+
   return (
     <aside className="side">
-      <a href="/admin" className="side-brand">
+      <a href={isVendedor ? "/admin/vender" : "/admin"} className="side-brand">
         <span className="side-logo"><svg viewBox="0 0 183.92 299"><use href="#we-iso" /></svg></span>
         <span className="side-brand-txt">
           <span className="side-word"><svg viewBox="0 0 520.10 261.99"><use href="#we-word" /></svg></span>
@@ -79,7 +88,7 @@ export default function AdminNav() {
       </a>
 
       <nav className="side-nav">
-        {NAV.map((g) => (
+        {groups.map((g) => (
           <div className="side-group" key={g.group}>
             <p className="side-group-label">{g.group}</p>
             {g.items.map((it) => {
@@ -99,8 +108,8 @@ export default function AdminNav() {
       <div className="side-foot">
         <a href="/" target="_blank" className="side-store-link">Ver tienda ↗</a>
         <button className="side-user" type="button" onClick={logout} title="Cerrar sesión">
-          <span className="side-avatar">J</span>
-          <span className="side-user-info"><b>Juan Ansaldi</b><em>Owner · cerrar sesión</em></span>
+          <span className="side-avatar">{initial}</span>
+          <span className="side-user-info"><b>{name}</b><em>{ROLE_LABEL[role] || role} · cerrar sesión</em></span>
           <Icon n="power" />
         </button>
       </div>

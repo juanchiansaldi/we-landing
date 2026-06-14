@@ -1,5 +1,5 @@
 import { prisma } from "../../../../lib/prisma";
-import { getStore } from "../../../../lib/pos";
+import { getStore , adminGuard } from "../../../../lib/pos";
 import { fmt } from "../../../../lib/format";
 import ReportesChart from "../../../../components/ReportesChart";
 
@@ -23,6 +23,7 @@ function rangeFor(period: Period): { start: Date; days: number } {
 }
 
 export default async function ReportesPage({ searchParams }: { searchParams: { period?: string } }) {
+  adminGuard();
   const period = (["hoy", "7d", "30d", "mes"].includes(searchParams.period || "") ? searchParams.period : "30d") as Period;
   const store = await getStore();
   const { start, days } = rangeFor(period);

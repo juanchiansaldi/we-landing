@@ -1,10 +1,11 @@
 import { prisma } from "../../../lib/prisma";
-import { getStore } from "../../../lib/pos";
+import { getStore , adminGuard } from "../../../lib/pos";
 import { fmt } from "../../../lib/format";
 
 export const dynamic = "force-dynamic";
 
 export default async function PanelHome() {
+  adminGuard();
   const store = await getStore();
 
   const start14 = new Date(); start14.setDate(start14.getDate() - 13); start14.setHours(0, 0, 0, 0);

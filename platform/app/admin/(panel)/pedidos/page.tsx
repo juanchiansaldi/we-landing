@@ -1,4 +1,5 @@
 import { prisma } from "../../../../lib/prisma";
+import { adminGuard } from "../../../../lib/pos";
 import AdminOrders from "../../../../components/AdminOrders";
 
 export const dynamic = "force-dynamic";
@@ -6,6 +7,7 @@ export const dynamic = "force-dynamic";
 const STORE_SLUG = process.env.DEFAULT_STORE_SLUG || "we";
 
 export default async function PedidosPage() {
+  adminGuard();
   const store = await prisma.store.findUnique({ where: { slug: STORE_SLUG } });
   if (!store) return <div className="pos-wrap">No hay tienda.</div>;
 
