@@ -15,7 +15,7 @@ h1,h2,h3,h4{font-family:'Spectral',serif;font-weight:400;letter-spacing:-.012em;
 .serif{font-family:'Spectral',serif}
 .red-text{color:var(--red)}
 ::selection{background:var(--red);color:#fff}
-.wrap{max-width:1200px;margin:0 auto;padding:0 28px}
+.wrap{max-width:1340px;margin:0 auto;padding:0 28px}
 .eyebrow{font-size:.7rem;letter-spacing:.34em;text-transform:uppercase;color:var(--red);font-weight:600;display:inline-flex;align-items:center;gap:0}
 
 /* NAV */
