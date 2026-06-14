@@ -1,4 +1,5 @@
 "use server";
+import { sendPaymentConfirmed } from "../../lib/email";
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -119,12 +120,18 @@ export async function setOrderPaid(data: FormData) {
   const id = String(data.get("id") || "");
   const paid = data.get("paid") === "true";
   if (!id) return;
+  const before = await prisma.order.findUnique({ where: { id }, select: { paymentStatus: true } });
   await prisma.order.update({
     where: { id },
     data: paid
       ? { paymentStatus: "PAID", paidAt: new Date(), status: "CONFIRMED" }
       : { paymentStatus: "PENDING", paidAt: null },
   });
+  // email "pago confirmado" al marcar pagada una transferencia (una sola vez)
+  if (paid && before?.paymentStatus !== "PAID") {
+    const ord = await prisma.order.findUnique({ where: { id }, select: { total: true, customer: { select: { email: true } } } });
+    if (ord?.customer?.email) await sendPaymentConfirmed({ to: ord.customer.email, code: id.slice(-6).toUpperCase(), total: ord.total }).catch(() => {});
+  }
   revalidatePath("/admin/pedidos");
 }
 

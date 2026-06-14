@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "../../../../lib/prisma";
 import { mpPayment } from "../../../../lib/mp";
 import { syncByPreapproval } from "../../../../lib/subscriptions";
+import { sendPaymentConfirmed } from "../../../../lib/email";
 
 const WEBHOOK_SECRET = process.env.MP_WEBHOOK_SECRET || "";
 
@@ -81,6 +82,9 @@ export async function POST(req: Request) {
             }
           }
           await prisma.product.updateMany({ where: { stock: { lt: 0 } }, data: { stock: 0 } }).catch(() => {});
+          // email "pago confirmado" al cliente
+          const ord = await prisma.order.findUnique({ where: { id: orderId }, select: { total: true, customer: { select: { email: true } } } });
+          if (ord?.customer?.email) await sendPaymentConfirmed({ to: ord.customer.email, code: orderId.slice(-6).toUpperCase(), total: ord.total }).catch(() => {});
         }
       }
     }

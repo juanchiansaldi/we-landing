@@ -3,6 +3,7 @@ import { prisma } from "../../../lib/prisma";
 import { mpPreference, mpReady } from "../../../lib/mp";
 import { currentCustomer } from "../../../lib/customer";
 import { validateCoupon, discountFor, couponLabel } from "../../../lib/coupon";
+import { sendOrderReceived } from "../../../lib/email";
 
 const STORE_SLUG = process.env.DEFAULT_STORE_SLUG || "we";
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -139,6 +140,13 @@ export async function POST(req: Request) {
       },
     },
   });
+
+  // email "recibimos tu pedido" (no bloquea si Resend no está configurado)
+  await sendOrderReceived({
+    to: buyer.email, name: shipSnapshot.recipient || buyer.name, code: order.id.slice(-6).toUpperCase(),
+    items: lines.map((l) => ({ name: l.product.name, qty: l.qty, subtotal: l.price * l.qty })),
+    total, method: isTransfer ? "transferencia" : "mercadopago", alias: store.alias,
+  }).catch(() => {});
 
   // Transferencia: el pedido queda PENDIENTE; el admin sube el comprobante y lo marca pagado.
   if (isTransfer) {
