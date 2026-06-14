@@ -39,6 +39,7 @@ model Store {
   stockMoves    StockMovement[]
   purchases     Purchase[]
   cashSessions  CashSession[]
+  cashMovements CashMovement[]
   auditLogs     AuditLog[]
   posUsers      PosUser[]
 }
@@ -481,9 +482,26 @@ model CashSession {
   status        CashStatus @default(ABIERTA)
   note          String?
 
-  sales Sale[]
+  sales     Sale[]
+  movements CashMovement[]
 
   @@index([storeId, status])
+}
+
+// Retiros / ingresos de efectivo de la caja que NO son ventas (ej. pagar un proveedor, agregar cambio)
+model CashMovement {
+  id            String      @id @default(cuid())
+  storeId       String
+  store         Store       @relation(fields: [storeId], references: [id])
+  cashSessionId String
+  cashSession   CashSession @relation(fields: [cashSessionId], references: [id])
+  type          MoveType // INGRESO | EGRESO
+  amount        Int
+  reason        String
+  posUserId     String?
+  createdAt     DateTime    @default(now())
+
+  @@index([cashSessionId])
 }
 
 model KitItem {

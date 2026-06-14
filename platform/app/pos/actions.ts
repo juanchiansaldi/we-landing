@@ -631,10 +631,14 @@ export async function closeCash(data: FormData) {
   if (!session) return { ok: false, error: "No hay caja abierta" };
 
   const counted = n(data, "countedAmount") ?? 0;
-  // efectivo esperado = apertura + ventas en efectivo de esta sesión
-  const sales = await prisma.sale.findMany({ where: { cashSessionId: session.id, voided: false }, select: { payCash: true } });
+  // efectivo esperado = apertura + ventas en efectivo + ingresos − egresos de caja
+  const [sales, movs] = await Promise.all([
+    prisma.sale.findMany({ where: { cashSessionId: session.id, voided: false }, select: { payCash: true } }),
+    prisma.cashMovement.findMany({ where: { cashSessionId: session.id }, select: { type: true, amount: true } }),
+  ]);
   const cashSales = sales.reduce((sm, s2) => sm + s2.payCash, 0);
-  const expected = session.openingAmount + cashSales;
+  const movNet = movs.reduce((sm, m) => sm + (m.type === "INGRESO" ? m.amount : -m.amount), 0);
+  const expected = session.openingAmount + cashSales + movNet;
   const difference = counted - expected;
 
   await prisma.cashSession.update({
@@ -644,6 +648,23 @@ export async function closeCash(data: FormData) {
   revalidatePath("/admin/caja");
   revalidatePath("/admin/vender");
   return { ok: true, expected, difference };
+}
+
+/** Registra un retiro o ingreso de efectivo de la caja abierta (no es una venta). */
+export async function addCashMovement(data: FormData) {
+  posGuard();
+  const store = await getStore();
+  const session = await prisma.cashSession.findFirst({ where: { storeId: store.id, status: "ABIERTA" }, orderBy: { openedAt: "desc" }, select: { id: true } });
+  if (!session) return { ok: false, error: "Tenés que abrir la caja primero" };
+  const type = s(data, "type") === "INGRESO" ? "INGRESO" : "EGRESO";
+  const amount = Math.abs(n(data, "amount") ?? 0);
+  const reason = s(data, "reason");
+  if (amount <= 0) return { ok: false, error: "Poné un monto" };
+  if (!reason) return { ok: false, error: "Poné un motivo" };
+  const posUserId = cookies().get(POS_USER_COOKIE)?.value || null;
+  await prisma.cashMovement.create({ data: { storeId: store.id, cashSessionId: session.id, type: type as any, amount, reason, posUserId } });
+  revalidatePath("/admin/caja");
+  return { ok: true };
 }
 
 // ═══════════════ Ventas del local · anular ═══════════════

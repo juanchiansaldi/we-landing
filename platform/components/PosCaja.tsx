@@ -2,11 +2,13 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { openCash, closeCash } from "../app/pos/actions";
+import { openCash, closeCash, addCashMovement } from "../app/pos/actions";
 
+type Mov = { id: string; type: string; amount: number; reason: string; at: string };
 type Current = {
   id: string; openingAmount: number; openedAt: string;
-  count: number; cash: number; card: number; transfer: number; account: number; total: number; expectedCash: number;
+  count: number; cash: number; card: number; transfer: number; account: number; total: number;
+  movIn: number; movOut: number; expectedCash: number; movements: Mov[];
 };
 type Hist = { id: string; openedAt: string; closedAt: string; openingAmount: number; expected: number; counted: number; difference: number };
 
@@ -18,8 +20,18 @@ export default function PosCaja({ current, history }: { current: Current | null;
   const [pending, start] = useTransition();
   const [opening, setOpening] = useState("");
   const [counted, setCounted] = useState("");
+  const [movType, setMovType] = useState<"EGRESO" | "INGRESO">("EGRESO");
+  const [movAmount, setMovAmount] = useState("");
+  const [movReason, setMovReason] = useState("");
 
   const diff = current && counted !== "" ? (Number(counted) || 0) - current.expectedCash : null;
+
+  function doMovement() {
+    if (!movAmount || Number(movAmount) <= 0) { alert("Poné un monto"); return; }
+    if (!movReason.trim()) { alert("Poné un motivo (ej. pago proveedor, cambio)"); return; }
+    const fd = new FormData(); fd.set("type", movType); fd.set("amount", movAmount); fd.set("reason", movReason.trim());
+    start(async () => { const res = await addCashMovement(fd); if (res?.ok === false) { alert(res.error); return; } setMovAmount(""); setMovReason(""); router.refresh(); });
+  }
 
   function doOpen() {
     const fd = new FormData(); fd.set("openingAmount", opening || "0");
@@ -62,7 +74,37 @@ export default function PosCaja({ current, history }: { current: Current | null;
             <div className="cash-cell"><span>Tarjeta</span><b>{money(current.card)}</b></div>
             <div className="cash-cell"><span>Transferencia</span><b>{money(current.transfer)}</b></div>
             <div className="cash-cell"><span>Cuenta corriente</span><b>{money(current.account)}</b></div>
+            {current.movIn > 0 && <div className="cash-cell"><span>Ingresos de caja</span><b className="stk-ok">+{money(current.movIn)}</b></div>}
+            {current.movOut > 0 && <div className="cash-cell"><span>Retiros de caja</span><b className="stk-low">−{money(current.movOut)}</b></div>}
             <div className="cash-cell cash-strong"><span>Efectivo esperado en caja</span><b>{money(current.expectedCash)}</b></div>
+          </div>
+
+          {/* Movimientos de efectivo (no ventas) */}
+          <div className="cash-movs">
+            <h3 className="serif" style={{ fontSize: "1.05rem", margin: "0 0 4px" }}>Movimientos de efectivo</h3>
+            <p className="pos-muted" style={{ marginTop: 0 }}>Plata que entra o sale de la caja sin ser una venta (ej. pagar un proveedor, agregar cambio).</p>
+            <div className="cash-mov-form">
+              <div className="seg cash-mov-seg">
+                <button type="button" className={movType === "EGRESO" ? "on" : ""} onClick={() => setMovType("EGRESO")}>Retiro (sale)</button>
+                <button type="button" className={movType === "INGRESO" ? "on" : ""} onClick={() => setMovType("INGRESO")}>Ingreso (entra)</button>
+              </div>
+              <div className="cash-mov-row">
+                <div className="cash-money" style={{ flex: "0 0 150px" }}><span className="cash-cur">$</span><input type="number" min="0" value={movAmount} onChange={(e) => setMovAmount(e.target.value)} placeholder="0" /></div>
+                <input className="cash-mov-reason" value={movReason} onChange={(e) => setMovReason(e.target.value)} placeholder="Motivo (ej. pago proveedor, cambio)" />
+                <button className="btn btn-ghost" type="button" onClick={doMovement} disabled={pending}>Registrar</button>
+              </div>
+            </div>
+            {current.movements.length > 0 && (
+              <div className="cash-mov-list">
+                {current.movements.map((m) => (
+                  <div className="cash-mov-item" key={m.id}>
+                    <span className={m.type === "INGRESO" ? "stk-ok" : "stk-low"}>{m.type === "INGRESO" ? "+" : "−"}{money(m.amount)}</span>
+                    <span className="cash-mov-reason-t">{m.reason}</span>
+                    <span style={{ color: "var(--gray)", fontSize: ".76rem" }}>{fmtDate(m.at)}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="cash-close">

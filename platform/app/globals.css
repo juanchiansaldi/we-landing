@@ -934,3 +934,15 @@ a.man-card:hover{border-color:var(--red)}
 .vd-editbar b{color:var(--white)}
 .vd-editbar button{background:rgba(255,255,255,.06);border:1px solid var(--border2);color:var(--cream);border-radius:9px;padding:.4rem .8rem;font-size:.8rem;cursor:pointer;font-family:inherit;white-space:nowrap}
 .vd-editbar button:hover{border-color:var(--red);color:var(--white)}
+
+/* Caja: movimientos de efectivo (no ventas) */
+.cash-movs{border-top:1px solid var(--border);padding-top:16px;margin-top:6px}
+.cash-mov-form{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.cash-mov-seg{max-width:340px}
+.cash-mov-row{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+.cash-mov-reason{flex:1;min-width:160px;background:var(--surf2);border:1px solid var(--border2);border-radius:11px;color:var(--white);font-family:inherit;font-size:.9rem;padding:.55rem .8rem;outline:none}
+.cash-mov-reason:focus{border-color:var(--red)}
+.cash-mov-list{display:flex;flex-direction:column;gap:2px;margin-top:14px}
+.cash-mov-item{display:grid;grid-template-columns:90px 1fr auto;gap:10px;align-items:center;padding:.45rem 0;border-bottom:1px solid var(--border);font-size:.88rem}
+.cash-mov-item>span:first-child{font-family:var(--font-spectral);font-weight:600}
+.cash-mov-reason-t{color:var(--cream);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
