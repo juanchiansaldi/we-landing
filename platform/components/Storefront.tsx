@@ -211,6 +211,13 @@ export default function Storefront({ store, products, cats, loggedIn, me }: Prop
   const discount = coupon ? Math.min(coupon.discount, subtotal) : 0;
   const total = subtotal - discount;
 
+  // sugerencia para el carrito vacío: una oferta con stock, o un vino con stock
+  const suggestion = useMemo(() => {
+    const inStock = products.filter((p) => p.stock && !isCombo(p));
+    const vinos = inStock.filter((p) => /tinto|blanco|rosado|espumante|malbec|vino|cabernet|syrah|chardonnay/i.test(`${p.cat} ${p.name}`));
+    return inStock.find((p) => p.promo != null) || vinos[0] || inStock[0] || null;
+  }, [products]);
+
   async function applyCoupon() {
     const code = couponInput.trim();
     if (!code) return;
@@ -654,20 +661,40 @@ export default function Storefront({ store, products, cats, loggedIn, me }: Prop
       <aside className={`cart${cartOpen ? " open" : ""}`} aria-hidden={!cartOpen}>
         <div className="cart-head">
           <h2 className="serif">Tu carrito</h2>
-          <button className="cart-close" type="button" onClick={() => setCartOpen(false)} aria-label="Cerrar">
-            <Icon d={ICONS.x} />
-          </button>
+          <div className="cart-head-actions">
+            {cartLines.length > 0 && (
+              <button className="cart-clear" type="button" onClick={() => setCart({})}>Vaciar</button>
+            )}
+            <button className="cart-close" type="button" onClick={() => setCartOpen(false)} aria-label="Cerrar">
+              <Icon d={ICONS.x} />
+            </button>
+          </div>
         </div>
 
         {cartLines.length === 0 ? (
           <div className="cart-items">
             <div className="cart-empty">
-              <Icon d={ICONS.cart} />
-              <div>
-                Tu carrito está vacío.
-                <br />
-                Sumá algo rico de la cava.
-              </div>
+              <span className="cart-empty-ico">🍷</span>
+              <p className="cart-empty-t">Tu carrito está vacío</p>
+              <p className="cart-empty-s">Sumá algo rico de la cava.</p>
+              {suggestion && (
+                <button className="cart-suggest" type="button" onClick={() => addToCart(suggestion)}>
+                  <span className="cart-suggest-label">¿Empezamos por este?</span>
+                  <span className="cart-suggest-row">
+                    <span className="cart-suggest-img">
+                      {suggestion.img ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={suggestion.img} alt={suggestion.name} />
+                      ) : <span className="cart-suggest-ph">We</span>}
+                    </span>
+                    <span className="cart-suggest-info">
+                      <b>{suggestion.name}</b>
+                      <em>{fmt(priceOf(suggestion))}</em>
+                    </span>
+                    <span className="cart-suggest-add"><Icon d={ICONS.plus} /></span>
+                  </span>
+                </button>
+              )}
             </div>
           </div>
         ) : (
