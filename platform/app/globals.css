@@ -546,6 +546,17 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
   .cash-close-row .cash-money,.cash-mov-row .cash-money{flex:none!important;width:100%}
   .cash-btn-inline{width:100%}
   .buy-line{align-items:stretch}
+  /* ── Tablas → tarjetas en celular: sin scroll lateral, acciones siempre visibles ── */
+  .admin-table{overflow:visible}
+  .admin-tr.admin-th{display:none}
+  .admin-tr{display:flex!important;flex-direction:column;align-items:stretch;gap:5px;min-width:0!important;grid-template-columns:none!important;padding:13px 15px!important}
+  .admin-tr>*{min-width:0}
+  .admin-tr>[data-label]{display:flex;justify-content:space-between;align-items:center;gap:14px;font-size:.92rem}
+  .admin-tr>[data-label]::before{content:attr(data-label);color:var(--gray);font-size:.66rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;flex:none}
+  .admin-tr>.admin-name{align-items:flex-start;gap:1px}
+  .admin-tr>.admin-name b{white-space:normal}
+  .admin-tr>.admin-row-actions{justify-content:stretch;gap:8px;margin-top:7px}
+  .admin-tr>.admin-row-actions button{flex:1;padding:.55rem .6rem;font-size:.85rem}
 }
 
 /* ===== POS · Vender ===== */

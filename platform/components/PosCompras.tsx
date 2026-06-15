@@ -71,11 +71,11 @@ export default function PosCompras({ purchases, suppliers, catalog }: { purchase
         {purchases.length === 0 && <div className="admin-empty">Sin compras registradas.</div>}
         {purchases.map((p) => (
           <div className="admin-tr" key={p.id} style={{ gridTemplateColumns: "1fr 1.4fr 1fr .8fr 1fr" }}>
-            <span style={{ color: "var(--gray)" }}>{fmtDate(p.at)}</span>
+            <span data-label="Fecha" style={{ color: "var(--gray)" }}>{fmtDate(p.at)}</span>
             <span className="admin-name"><b>{p.supplier}</b></span>
-            <span style={{ color: "var(--gray)" }}>{p.invoice || "—"}</span>
-            <span>{p.items}</span>
-            <span><b style={{ fontFamily: "var(--font-spectral)" }}>{money(p.total)}</b></span>
+            <span data-label="Factura" style={{ color: "var(--gray)" }}>{p.invoice || "—"}</span>
+            <span data-label="Ítems">{p.items}</span>
+            <span data-label="Total"><b style={{ fontFamily: "var(--font-spectral)" }}>{money(p.total)}</b></span>
           </div>
         ))}
       </div>

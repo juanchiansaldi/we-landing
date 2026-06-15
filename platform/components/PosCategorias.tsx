@@ -40,9 +40,9 @@ export default function PosCategorias({ categorias }: { categorias: Row[] }) {
         {categorias.length === 0 && <div className="admin-empty">Sin categorías.</div>}
         {categorias.map((c) => (
           <div className="admin-tr" key={c.id} style={{ gridTemplateColumns: "2fr .6fr .8fr 1fr" }}>
-            <span><b style={{ fontFamily: "var(--font-spectral)" }}>{c.name}</b></span>
-            <span>{c.order}</span>
-            <span>{c.count}</span>
+            <span className="admin-name"><b style={{ fontFamily: "var(--font-spectral)" }}>{c.name}</b></span>
+            <span data-label="Orden">{c.order}</span>
+            <span data-label="Productos">{c.count}</span>
             <span className="admin-row-actions">
               <button type="button" onClick={() => setEditing(c)}>Editar</button>
               <button type="button" className="admin-del" onClick={() => onDelete(c)}>Borrar</button>

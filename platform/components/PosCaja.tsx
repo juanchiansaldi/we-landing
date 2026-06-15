@@ -134,11 +134,11 @@ export default function PosCaja({ current, history }: { current: Current | null;
         {history.length === 0 && <div className="admin-empty">Sin cierres todavía.</div>}
         {history.map((h) => (
           <div className="admin-tr" key={h.id} style={{ gridTemplateColumns: "1fr 1fr .9fr .9fr .9fr" }}>
-            <span style={{ color: "var(--gray)", fontSize: ".82rem" }}>{fmtDate(h.openedAt)}</span>
-            <span style={{ color: "var(--gray)", fontSize: ".82rem" }}>{fmtDate(h.closedAt)}</span>
-            <span>{money(h.expected)}</span>
-            <span>{money(h.counted)}</span>
-            <span><b className={h.difference === 0 ? "stk-ok" : "stk-low"}>{h.difference > 0 ? "+" : ""}{money(h.difference)}</b></span>
+            <span data-label="Abierta" style={{ color: "var(--gray)", fontSize: ".82rem" }}>{fmtDate(h.openedAt)}</span>
+            <span data-label="Cerrada" style={{ color: "var(--gray)", fontSize: ".82rem" }}>{fmtDate(h.closedAt)}</span>
+            <span data-label="Esperado">{money(h.expected)}</span>
+            <span data-label="Contado">{money(h.counted)}</span>
+            <span data-label="Diferencia"><b className={h.difference === 0 ? "stk-ok" : "stk-low"}>{h.difference > 0 ? "+" : ""}{money(h.difference)}</b></span>
           </div>
         ))}
       </div>

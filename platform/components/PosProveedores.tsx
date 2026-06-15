@@ -97,9 +97,9 @@ export default function PosProveedores({ proveedores }: { proveedores: Row[] }) 
               {mapsLink(p) && <a className="prov-map" href={mapsLink(p)} target="_blank" rel="noopener">📍 Cómo llegar</a>}
               {!p.activo && <em style={{ color: "var(--gray)" }}>inactivo</em>}
             </span>
-            <span>{p.cuit || "—"}</span>
-            <span>{p.telefono || "—"}</span>
-            <span>{p.count}</span>
+            <span data-label="CUIT">{p.cuit || "—"}</span>
+            <span data-label="Teléfono">{p.telefono || "—"}</span>
+            <span data-label="Productos">{p.count}</span>
             <span className="admin-row-actions">
               <button type="button" onClick={() => open(p)}>Editar</button>
               <button type="button" className="admin-del" onClick={() => onDelete(p)}>Borrar</button>

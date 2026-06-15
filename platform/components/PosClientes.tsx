@@ -82,9 +82,9 @@ export default function PosClientes({ customers, ledger }: { customers: Row[]; l
         {filtered.map((c) => (
           <div className="admin-tr" key={c.id} style={{ gridTemplateColumns: "1.4fr 1fr 1fr 1fr 1.3fr" }}>
             <span className="admin-name"><b>{c.vip && <span className="vd-code" style={{ background: "#caa14a" }}>VIP</span>}{c.name || "(sin nombre)"}</b>{c.email && <em>{c.email}</em>}</span>
-            <span style={{ color: "var(--gray)" }}>{c.phone || "—"}</span>
-            <span style={{ color: "var(--gray)" }}>{c.cuit || "—"}</span>
-            <span><b className={c.ccBalance > 0 ? "stk-low" : "stk-ok"}>{money(c.ccBalance)}</b></span>
+            <span data-label="Teléfono" style={{ color: "var(--gray)" }}>{c.phone || "—"}</span>
+            <span data-label="CUIT" style={{ color: "var(--gray)" }}>{c.cuit || "—"}</span>
+            <span data-label="Saldo"><b className={c.ccBalance > 0 ? "stk-low" : "stk-ok"}>{money(c.ccBalance)}</b></span>
             <span className="admin-row-actions">
               <button type="button" onClick={() => { setCc(c); setCcType("PAGO"); setCcAmount(""); setCcNote(""); }}>Cuenta</button>
               <button type="button" onClick={() => setEdit(c)}>Editar</button>

@@ -103,10 +103,10 @@ export default function PosCombos({ combos, catalog }: { combos: Combo[]; catalo
         {combos.map((c) => (
           <div className="admin-tr" key={c.id} style={{ gridTemplateColumns: "1.6fr 1.4fr .7fr .6fr .8fr 1fr", opacity: c.active ? 1 : 0.5 }}>
             <span className="admin-name"><b>{c.quickCode && <span className="vd-code">{c.quickCode}</span>}{c.name}</b>{!c.active && <em>inactivo</em>}</span>
-            <span style={{ fontSize: ".82rem", color: "var(--gray)" }}>{c.components.map((x) => `${x.qty}× ${x.name}`).join(" + ")}</span>
-            <span style={{ color: "var(--gray)" }}>{money(c.cost)}</span>
-            <span>{c.margin != null ? `${c.margin}%` : "—"}</span>
-            <span><b style={{ fontFamily: "var(--font-spectral)" }}>{money(c.price)}</b></span>
+            <span data-label="Contenido" style={{ fontSize: ".82rem", color: "var(--gray)" }}>{c.components.map((x) => `${x.qty}× ${x.name}`).join(" + ")}</span>
+            <span data-label="Costo" style={{ color: "var(--gray)" }}>{money(c.cost)}</span>
+            <span data-label="Margen">{c.margin != null ? `${c.margin}%` : "—"}</span>
+            <span data-label="Precio"><b style={{ fontFamily: "var(--font-spectral)" }}>{money(c.price)}</b></span>
             <span className="admin-row-actions">
               <button type="button" onClick={() => open(c)}>Editar</button>
               <button type="button" className="admin-del" onClick={() => onDelete(c)}>Borrar</button>

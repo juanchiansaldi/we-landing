@@ -86,10 +86,10 @@ export default function PosVentas({ sales }: { sales: Sale[] }) {
         {filtered.map((s) => (
           <div className="admin-tr" key={s.id} style={{ gridTemplateColumns: "1fr 1.1fr 1fr 1fr .9fr .8fr", opacity: s.voided ? 0.5 : 1 }}>
             <span className="admin-name"><b>#{s.code}{s.voided && <span className="vt-anulada">anulada</span>}</b>{s.customer && <em>{s.customer}</em>}</span>
-            <span style={{ color: "var(--gray)", fontSize: ".82rem" }}>{fmtDate(s.at)}</span>
-            <span style={{ color: "var(--gray)" }}>{s.seller || "—"}</span>
-            <span style={{ color: "var(--gray)" }}>{PAY[s.payMethod] || s.payMethod}</span>
-            <span><b style={{ fontFamily: "var(--font-spectral)", textDecoration: s.voided ? "line-through" : "none" }}>{money(s.total)}</b></span>
+            <span data-label="Fecha" style={{ color: "var(--gray)", fontSize: ".82rem" }}>{fmtDate(s.at)}</span>
+            <span data-label="Vendedor" style={{ color: "var(--gray)" }}>{s.seller || "—"}</span>
+            <span data-label="Pago" style={{ color: "var(--gray)" }}>{PAY[s.payMethod] || s.payMethod}</span>
+            <span data-label="Total"><b style={{ fontFamily: "var(--font-spectral)", textDecoration: s.voided ? "line-through" : "none" }}>{money(s.total)}</b></span>
             <span className="admin-row-actions"><button type="button" onClick={() => setOpen(s)}>Ver</button></span>
           </div>
         ))}

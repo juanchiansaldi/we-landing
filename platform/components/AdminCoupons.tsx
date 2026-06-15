@@ -65,10 +65,10 @@ export default function AdminCoupons({ coupons }: { coupons: Row[] }) {
         {coupons.length === 0 && <div className="admin-empty">Todavía no hay cupones. Creá el primero.</div>}
         {coupons.map((c) => (
           <div className="admin-tr" key={c.id} style={{ gridTemplateColumns: "1.2fr 1fr 1fr .8fr 1fr" }}>
-            <span><b style={{ fontFamily: "var(--font-spectral)" }}>{c.code}</b></span>
-            <span>{c.type === "PERCENT" ? `${c.value}%` : `$ ${c.value.toLocaleString("es-AR")}`}</span>
-            <span>{c.expiresAt || "—"}</span>
-            <span style={{ color: c.active ? "#3fb950" : "var(--gray)" }}>{c.active ? "Sí" : "No"}</span>
+            <span className="admin-name"><b style={{ fontFamily: "var(--font-spectral)" }}>{c.code}</b></span>
+            <span data-label="Descuento">{c.type === "PERCENT" ? `${c.value}%` : `$ ${c.value.toLocaleString("es-AR")}`}</span>
+            <span data-label="Vence">{c.expiresAt || "—"}</span>
+            <span data-label="Activo" style={{ color: c.active ? "#3fb950" : "var(--gray)" }}>{c.active ? "Sí" : "No"}</span>
             <span className="admin-row-actions">
               <button type="button" onClick={() => setEditing(c)}>Editar</button>
               <button type="button" className="admin-del" onClick={() => onDelete(c)}>Borrar</button>

@@ -48,9 +48,9 @@ export default function PosUsuarios({ users, activeId }: { users: Row[]; activeI
           return (
             <div className="admin-tr" key={u.id} style={{ gridTemplateColumns: "1.3fr 1fr .8fr .7fr 1.4fr", opacity: u.activo ? 1 : 0.5 }}>
               <span className="admin-name"><b>{active && <span className="vd-code" style={{ background: "#3fb950" }}>activo</span>}{u.nombre}</b>{!u.activo && <em>inactivo</em>}</span>
-              <span style={{ color: "var(--gray)" }}>@{u.username}</span>
-              <span>{u.role === "ADMIN" ? "Admin" : "Vendedor"}</span>
-              <span>{u.sales}</span>
+              <span data-label="Usuario" style={{ color: "var(--gray)" }}>@{u.username}</span>
+              <span data-label="Rol">{u.role === "ADMIN" ? "Admin" : "Vendedor"}</span>
+              <span data-label="Ventas">{u.sales}</span>
               <span className="admin-row-actions">
                 {!active && u.activo && <button type="button" onClick={() => setActive(u.id)}>Activar</button>}
                 {active && <button type="button" onClick={() => setActive("")}>Salir</button>}

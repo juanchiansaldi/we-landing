@@ -149,12 +149,12 @@ export default function PosProducts({
               {(p.brand || p.varietal || p.vintage) && <em>{[p.brand, p.varietal, p.vintage].filter(Boolean).join(" · ")}</em>}
               {p.highValue && <em style={{ color: "var(--red)" }}>★ Alto valor</em>}
             </span>
-            <span>{p.categoryName || "—"}</span>
-            <span>
+            <span data-label="Categoría">{p.categoryName || "—"}</span>
+            <span data-label="Precio">
               {p.promo != null ? (<><s style={{ color: "var(--gray)", fontSize: ".78rem" }}>{money(p.price)}</s> <b style={{ color: "var(--red)" }}>{money(p.promo)}</b></>) : money(p.price)}
             </span>
-            <span style={{ color: "var(--gray)" }}>{money(p.cost)}</span>
-            <span className={lowStock(p) ? "admin-nostock" : ""}>{p.stock}{lowStock(p) ? " ⚠" : ""}</span>
+            <span data-label="Costo" style={{ color: "var(--gray)" }}>{money(p.cost)}</span>
+            <span data-label="Stock" className={lowStock(p) ? "admin-nostock" : ""}>{p.stock}{lowStock(p) ? " ⚠" : ""}</span>
             <span className="admin-row-actions">
               <button type="button" onClick={() => openEditor(p)}>Editar</button>
               <button type="button" className="admin-del" onClick={() => onDelete(p)}>Borrar</button>

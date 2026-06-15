@@ -78,10 +78,10 @@ export default function PosStock({ products, movements }: { products: Row[]; mov
           return (
             <div className="admin-tr" key={p.id} style={{ gridTemplateColumns: "1.8fr .8fr .7fr .7fr 1fr .8fr", opacity: p.active ? 1 : 0.5 }}>
               <span className="admin-name"><b>{p.quickCode && <span className="vd-code">{p.quickCode}</span>}{p.name}</b>{p.sku && <em>{p.sku}</em>}</span>
-              <span><b className={low ? "stk-low" : "stk-ok"}>{p.stock}</b></span>
-              <span style={{ color: "var(--gray)" }}>{p.stockMin}</span>
-              <span style={{ color: "var(--gray)" }}>{p.cost ? money(p.cost) : "—"}</span>
-              <span>{money(p.stock * p.cost)}</span>
+              <span data-label="Stock"><b className={low ? "stk-low" : "stk-ok"}>{p.stock}</b></span>
+              <span data-label="Mínimo" style={{ color: "var(--gray)" }}>{p.stockMin}</span>
+              <span data-label="Costo" style={{ color: "var(--gray)" }}>{p.cost ? money(p.cost) : "—"}</span>
+              <span data-label="Valor">{money(p.stock * p.cost)}</span>
               <span className="admin-row-actions"><button type="button" onClick={() => openAdjust(p)}>Ajustar</button></span>
             </div>
           );
@@ -96,11 +96,11 @@ export default function PosStock({ products, movements }: { products: Row[]; mov
         {movements.length === 0 && <div className="admin-empty">Sin movimientos todavía.</div>}
         {movements.map((m) => (
           <div className="admin-tr" key={m.id} style={{ gridTemplateColumns: "1fr 1.6fr 1fr .7fr .9fr" }}>
-            <span style={{ color: "var(--gray)", fontSize: ".82rem" }}>{fmtDate(m.at)}</span>
-            <span>{m.name}</span>
-            <span style={{ color: "var(--gray)" }}>{m.reason}</span>
-            <span><b className={m.qty >= 0 ? "stk-ok" : "stk-low"}>{m.qty >= 0 ? "+" : ""}{m.qty}</b></span>
-            <span style={{ color: "var(--gray)" }}>{m.resultingStock}</span>
+            <span data-label="Fecha" style={{ color: "var(--gray)", fontSize: ".82rem" }}>{fmtDate(m.at)}</span>
+            <span data-label="Producto">{m.name}</span>
+            <span data-label="Motivo" style={{ color: "var(--gray)" }}>{m.reason}</span>
+            <span data-label="Cant."><b className={m.qty >= 0 ? "stk-ok" : "stk-low"}>{m.qty >= 0 ? "+" : ""}{m.qty}</b></span>
+            <span data-label="Resultó" style={{ color: "var(--gray)" }}>{m.resultingStock}</span>
           </div>
         ))}
       </div>
