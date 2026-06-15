@@ -39,6 +39,7 @@ export default function Vender({ catalog, clients, store, sellerName, cashOpen }
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [printTicket, setPrintTicket] = useState(false);
   const [done, setDone] = useState<Done | null>(null);
+  const [sheetOpen, setSheetOpen] = useState(false); // hoja del ticket en celular
   const [editing, setEditing] = useState<{ id: string; code: string } | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const [pending, start] = useTransition();
@@ -121,6 +122,8 @@ export default function Vender({ catalog, clients, store, sellerName, cashOpen }
   const total = Math.max(0, subtotal - discount);
   const change = pay === "EFECTIVO" && cashGiven ? Math.max(0, Number(cashGiven) - total) : 0;
   const count = cart.reduce((s, l) => s + l.qty, 0);
+  // en celular, abrir la hoja del ticket al cobrar (para ver la confirmación)
+  useEffect(() => { if (done) setSheetOpen(true); }, [done]);
 
   function cobrar() {
     if (!cart.length || pending) return;
@@ -209,9 +212,9 @@ export default function Vender({ catalog, clients, store, sellerName, cashOpen }
         </div>
 
         {/* DERECHA: ticket + cobro */}
-        <div className="vd-right">
+        <div className={`vd-right${sheetOpen ? " sheet-open" : ""}`}>
           <div className="vd-ticketcard">
-            <div className="vd-tk-head"><b>Ticket</b><span>{count} {count === 1 ? "ítem" : "ítems"}</span></div>
+            <div className="vd-tk-head"><b>Ticket</b><span>{count} {count === 1 ? "ítem" : "ítems"}</span><button type="button" className="vd-sheet-close" onClick={() => setSheetOpen(false)} aria-label="Cerrar ticket">✕</button></div>
 
             {done ? (
               <div className="vd-done">
@@ -220,7 +223,7 @@ export default function Vender({ catalog, clients, store, sellerName, cashOpen }
                 <p className="vd-done-s">{money(done.total)} · {PAY_LABEL[done.pay]}</p>
                 {done.change > 0 && <p className="vd-done-change">Vuelto {money(done.change)}</p>}
                 <p className="vd-done-code">#{done.code}</p>
-                <button type="button" className="btn btn-primary" onClick={() => { setDone(null); focusInput(); }}>Nueva venta</button>
+                <button type="button" className="btn btn-primary" onClick={() => { setDone(null); setSheetOpen(false); focusInput(); }}>Nueva venta</button>
               </div>
             ) : cart.length === 0 ? (
               <div className="vd-empty"><span>🧾</span>Carrito vacío<em>Tocá un producto o escaneá un código</em></div>
@@ -295,6 +298,14 @@ export default function Vender({ catalog, clients, store, sellerName, cashOpen }
           )}
         </div>
       </div>
+
+      {/* Barra fija (celular): resumen del ticket + abrir hoja */}
+      <button type="button" className="vd-mbar" onClick={() => setSheetOpen((v) => !v)}>
+        <span className="vd-mbar-ico">🧾</span>
+        <span className="vd-mbar-txt"><b>{count} {count === 1 ? "ítem" : "ítems"}</b><em>{money(total)}</em></span>
+        <span className="vd-mbar-cta">{cart.length ? "Ver y cobrar" : "Ver ticket"}</span>
+      </button>
+      {sheetOpen && <div className="vd-sheet-backdrop" onClick={() => setSheetOpen(false)} />}
 
       {/* TICKET imprimible */}
       {ticket && (

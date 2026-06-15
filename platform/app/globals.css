@@ -642,7 +642,26 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .vd-pays button.on{background:var(--red);border-color:var(--red);color:#fff}
 .vd-cash .vd-change{color:#4ade80}
 .vd-cobrar{margin-top:6px;font-size:1.05rem;padding:.9rem}
-@media(max-width:880px){.vender-grid{grid-template-columns:1fr}.vd-right{position:static}.vd-items{max-height:none}}
+.vd-mbar{display:none}
+.vd-sheet-close{display:none}
+@media(max-width:880px){
+  .vender{padding-bottom:86px}
+  .vender-grid{grid-template-columns:1fr}
+  .vd-items{max-height:none}
+  /* barra fija abajo: resumen del ticket + abrir hoja (feedback al tocar productos) */
+  .vd-mbar{display:flex;align-items:center;gap:12px;position:fixed;left:10px;right:10px;bottom:10px;z-index:1100;background:linear-gradient(180deg,#1d1d25,#16161c);border:1px solid var(--border2);border-radius:14px;padding:11px 14px;box-shadow:0 12px 30px rgba(0,0,0,.5);color:var(--white);cursor:pointer;font-family:inherit}
+  .vd-mbar-ico{font-size:1.25rem}
+  .vd-mbar-txt{display:flex;flex-direction:column;align-items:flex-start;line-height:1.15;flex:1;text-align:left}
+  .vd-mbar-txt b{font-size:.96rem}
+  .vd-mbar-txt em{font-style:normal;color:var(--gray);font-size:.8rem}
+  .vd-mbar-cta{background:var(--red);color:#fff;border-radius:9px;padding:.5rem .85rem;font-size:.85rem;font-weight:600;white-space:nowrap}
+  /* ticket como hoja inferior deslizable */
+  .vd-sheet-backdrop{position:fixed;inset:0;background:rgba(6,4,4,.6);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:1200}
+  .vd-right{position:fixed!important;left:0;right:0;bottom:0;top:auto;z-index:1250;max-height:88dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--surf);border-top:1px solid var(--border2);border-radius:18px 18px 0 0;padding:14px 14px calc(16px + env(safe-area-inset-bottom));margin:0;gap:12px;transform:translateY(102%);transition:transform .26s ease;box-shadow:0 -14px 40px rgba(0,0,0,.55)}
+  .vd-right.sheet-open{transform:translateY(0)}
+  .vd-sheet-close{display:inline-flex;align-items:center;justify-content:center;margin-left:auto;width:30px;height:30px;border-radius:50%;border:1px solid var(--border2);background:var(--surf2);color:var(--cream);font-size:.95rem;cursor:pointer;flex:none}
+  .vd-tk-head{display:flex;align-items:center;gap:8px}
+}
 
 /* ticket */
 .vd-ticket-overlay{position:fixed;inset:0;z-index:1300;background:rgba(6,4,4,.7);backdrop-filter:blur(4px);display:grid;place-items:center;padding:18px}
