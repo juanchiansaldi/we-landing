@@ -530,14 +530,22 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
 .rep-foot{margin-top:8px;color:var(--cream);font-size:.85rem;text-align:center}
 .rep-foot b{color:var(--white)}
 
-/* ===== Fix responsive del editor (modales) en mobile ===== */
+/* ===== Modales en mobile: hoja scrolleable con footer fijo (Guardar siempre a mano) ===== */
 @media(max-width:600px){
-  .admin-modal{padding:14px 8px;align-items:flex-start}
-  .admin-editor{padding:20px 16px;width:100%!important;max-width:100%}
+  .admin-modal{padding:8px;align-items:flex-start;overflow:hidden}
+  .admin-editor{width:100%!important;max-width:100%;max-height:calc(100dvh - 16px);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 16px 0;border-radius:16px}
+  .admin-editor-foot{position:sticky;bottom:0;background:#191921;margin:14px -16px 0;padding:13px 16px;border-top:1px solid var(--border);z-index:2}
   .admin-grid2,.admin-grid3{grid-template-columns:1fr;gap:10px}
+  /* 16px evita que iOS Safari haga zoom al tocar un input */
+  input,select,textarea{font-size:16px}
   .admin-editor input,.admin-editor select,.admin-editor textarea{width:100%;max-width:100%}
   .img-upload{flex-wrap:wrap}
   .admin-editor .admin-opt{display:block}
+  /* Caja: apilar inputs+botones en celular */
+  .cash-close-row,.cash-mov-row{flex-direction:column;align-items:stretch}
+  .cash-close-row .cash-money,.cash-mov-row .cash-money{flex:none!important;width:100%}
+  .cash-btn-inline{width:100%}
+  .buy-line{align-items:stretch}
 }
 
 /* ===== POS · Vender ===== */
