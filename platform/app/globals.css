@@ -548,7 +548,7 @@ nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-c
   .buy-line{align-items:stretch}
   /* ── Tablas → tarjetas en celular: sin scroll lateral, acciones siempre visibles ── */
   .admin-table{overflow:visible}
-  .admin-tr.admin-th{display:none}
+  .admin-tr.admin-th{display:none!important}
   .admin-tr{display:flex!important;flex-direction:column;align-items:stretch;gap:5px;min-width:0!important;grid-template-columns:none!important;padding:13px 15px!important}
   .admin-tr>*{min-width:0}
   .admin-tr>[data-label]{display:flex;justify-content:space-between;align-items:center;gap:14px;font-size:.92rem}
