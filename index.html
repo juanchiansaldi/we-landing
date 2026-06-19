@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300..600&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="./assets/frames/we-0001.webp" media="(pointer:fine) and (min-width:761px)">
-<link rel="preload" as="image" href="./assets/frames/we-0150.webp" media="(pointer:coarse),(max-width:760px)">
+<link rel="preload" as="image" href="./assets/frames/we-0030.webp" media="(pointer:coarse),(max-width:760px)">
 <link rel="icon" href="./assets/favicon/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png">
@@ -601,7 +601,7 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
 /* ===== celular/touch: la secuencia del vino se reemplaza por UNA sola foto de fondo (más liviano, sin tranque) ===== */
 @media(pointer:coarse),(max-width:760px){
   .seq-sec{height:auto}
-  .seq-sticky{position:relative;height:78vh;background:#0d0a0a url(./assets/frames/we-0150.webp) center/cover no-repeat}
+  .seq-sticky{position:relative;height:78vh;background:#0d0a0a url(./assets/frames/we-0030.webp) center/cover no-repeat}
   .seq-sticky #seqCanvas,.seq-sticky .seq-load{display:none}
 }
 </style>
@@ -1158,7 +1158,7 @@ function initSequenceStatic(){
   let lenis=null;
   if(!REDUCE&&typeof Lenis!=='undefined'){
     document.documentElement.style.scrollBehavior='auto';
-    lenis=new Lenis({lerp:0.068,wheelMultiplier:0.85,smoothWheel:true,syncTouch:true,syncTouchLerp:0.07,touchMultiplier:0.92});
+    lenis=new Lenis({lerp:0.068,wheelMultiplier:0.85,smoothWheel:true,syncTouch:true,syncTouchLerp:0.06,touchMultiplier:0.72});
     lenis.on('scroll',ScrollTrigger.update);
     gsap.ticker.add(t=>lenis.raf(t*1000));
     gsap.ticker.lagSmoothing(0);
