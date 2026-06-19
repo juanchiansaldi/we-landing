@@ -1262,9 +1262,9 @@ function initSequenceStatic(){
     const canvas=document.getElementById('seqCanvas');if(!canvas)return;
     const FRAMES=193,ctx=canvas.getContext('2d');
     const path=i=>'./assets/frames/we-'+String(i).padStart(4,'0')+'.webp';
-    /* en mobile cargamos 1 de cada 2 frames: ~la mitad del peso (2.9MB -> ~1.5MB) */
-    const mobile=window.matchMedia('(max-width:760px)').matches;
-    const STEP=mobile?2:1;
+    /* en celular/touch cargamos 1 de cada 3 frames: ~65 en vez de 193 (de 2.9MB a ~0.45MB) */
+    const mobile=!FINE||window.matchMedia('(max-width:760px)').matches;
+    const STEP=mobile?3:1;
     const nums=[];for(let i=1;i<=FRAMES;i+=STEP)nums.push(i);if(nums[nums.length-1]!==FRAMES)nums.push(FRAMES);
     const N=nums.length;
     const imgs=new Array(N);let loaded=0,cur=-1;
@@ -1274,11 +1274,16 @@ function initSequenceStatic(){
       if(cr>ir){w=cw;h=cw/ir;}else{h=ch;w=ch*ir;}ctx.clearRect(0,0,cw,ch);ctx.drawImage(img,(cw-w)/2,(ch-h)/2,w,h);}
     function resize(){const dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.round(canvas.clientWidth*dpr);canvas.height=Math.round(canvas.clientHeight*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);if(cur>=0)draw(cur);}
     window.addEventListener('resize',resize);
-    nums.forEach((num,idx)=>{const img=new Image();img.decoding='async';
+    /* hero instantáneo con el primer frame (ya precargado) para que no quede vacío mientras llega el resto */
+    (function(){const fb=new Image();fb.decoding='async';fb.onload=()=>{if(cur>=0)return;const dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.round(canvas.clientWidth*dpr);canvas.height=Math.round(canvas.clientHeight*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);const cw=canvas.clientWidth,ch=canvas.clientHeight,ir=fb.naturalWidth/fb.naturalHeight,cr=cw/ch;let w,h;if(cr>ir){w=cw;h=cw/ir;}else{h=ch;w=ch*ir;}ctx.drawImage(fb,(cw-w)/2,(ch-h)/2,w,h);};fb.src=path(1);})();
+    /* descarga de la secuencia DIFERIDA hasta después del load: no bloquea el render inicial ni satura el celu */
+    function loadSeq(){nums.forEach((num,idx)=>{const img=new Image();img.decoding='async';
       img.onload=()=>{loaded++;if(bar)bar.style.width=(loaded/N*100)+'%';
         if(idx===0){resize();draw(0);}
         if(loaded>=N&&loadEl){loadEl.classList.add('done');ScrollTrigger.refresh();}};
-      img.src=path(num);imgs[idx]=img;});
+      img.src=path(num);imgs[idx]=img;});}
+    if(document.readyState==='complete')setTimeout(loadSeq,200);
+    else window.addEventListener('load',function(){setTimeout(loadSeq,200);});
     if(!REDUCE){
       const o={f:0};
       /* scrub alto = glide suave y pausado (sin jank); la altura 400vh lo hace deliberado */
