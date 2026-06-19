@@ -10,7 +10,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300..600&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="./assets/frames/we-0001.webp">
+<link rel="preload" as="image" href="./assets/frames/we-0001.webp" media="(pointer:fine) and (min-width:761px)">
+<link rel="preload" as="image" href="./assets/frames/we-0150.webp" media="(pointer:coarse),(max-width:760px)">
 <link rel="icon" href="./assets/favicon/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png">
@@ -595,6 +596,13 @@ a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--
   .seq-sec{height:auto}
   .seq-sticky{position:relative;height:80vh}
   .hz-track{transform:none!important}
+}
+
+/* ===== celular/touch: la secuencia del vino se reemplaza por UNA sola foto de fondo (más liviano, sin tranque) ===== */
+@media(pointer:coarse),(max-width:760px){
+  .seq-sec{height:auto}
+  .seq-sticky{position:relative;height:78vh;background:#0d0a0a url(./assets/frames/we-0150.webp) center/cover no-repeat}
+  .seq-sticky #seqCanvas,.seq-sticky .seq-load{display:none}
 }
 </style>
 </head>
@@ -1262,11 +1270,11 @@ function initSequenceStatic(){
   /* ---------- SEQUENCE · 193 frames canvas ---------- */
   (function(){
     const canvas=document.getElementById('seqCanvas');if(!canvas)return;
+    /* en celular/touch NO corremos la secuencia de frames (pesa y se traba): el #seq muestra una sola foto de fondo por CSS */
+    if(!FINE||window.matchMedia('(max-width:760px)').matches)return;
     const FRAMES=193,ctx=canvas.getContext('2d');
     const path=i=>'./assets/frames/we-'+String(i).padStart(4,'0')+'.webp';
-    /* en mobile cargamos 1 de cada 2 frames: ~la mitad del peso (2.9MB -> ~1.5MB) */
-    const mobile=window.matchMedia('(max-width:760px)').matches;
-    const STEP=mobile?2:1;
+    const STEP=1;
     const nums=[];for(let i=1;i<=FRAMES;i+=STEP)nums.push(i);if(nums[nums.length-1]!==FRAMES)nums.push(FRAMES);
     const N=nums.length;
     const imgs=new Array(N);let loaded=0,cur=-1;
