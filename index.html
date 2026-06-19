@@ -1234,7 +1234,9 @@ function initSequenceStatic(){
   /* ---------- HERO · isotipo fills on load (slow) ---------- */
   (function(){
     const wr=document.getElementById('wineRect');if(!wr)return;
-    if(REDUCE){wr.setAttribute('transform','translate(0 0)');return;}
+    /* en celular/touch la animación de llenado se traba: dejamos el isotipo lleno, sin animar */
+    const mobile=!FINE||window.matchMedia('(max-width:760px)').matches;
+    if(REDUCE||mobile){wr.setAttribute('transform','translate(0 0)');return;}
     const o={v:0};
     gsap.to(o,{v:1,duration:3.6,ease:'power2.inOut',delay:0.35,onUpdate:()=>wr.setAttribute('transform','translate(0 '+(299*(1-o.v))+')')});
   })();
@@ -1262,9 +1264,9 @@ function initSequenceStatic(){
     const canvas=document.getElementById('seqCanvas');if(!canvas)return;
     const FRAMES=193,ctx=canvas.getContext('2d');
     const path=i=>'./assets/frames/we-'+String(i).padStart(4,'0')+'.webp';
-    /* en celular/touch cargamos 1 de cada 3 frames: ~65 en vez de 193 (de 2.9MB a ~0.45MB) */
-    const mobile=!FINE||window.matchMedia('(max-width:760px)').matches;
-    const STEP=mobile?3:1;
+    /* en mobile cargamos 1 de cada 2 frames: ~la mitad del peso (2.9MB -> ~1.5MB) */
+    const mobile=window.matchMedia('(max-width:760px)').matches;
+    const STEP=mobile?2:1;
     const nums=[];for(let i=1;i<=FRAMES;i+=STEP)nums.push(i);if(nums[nums.length-1]!==FRAMES)nums.push(FRAMES);
     const N=nums.length;
     const imgs=new Array(N);let loaded=0,cur=-1;
